@@ -60,10 +60,7 @@ function LatestVideoList({ navigation }) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 19,
-  },
-  lowcontainer: {
-    height: 30,
+    padding: 10,
   },
 });
 

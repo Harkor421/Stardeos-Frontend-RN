@@ -6,6 +6,7 @@ import colors from '../../config/colors';
 import AppText from '../AppText';
 import AuthContext from '../../auth/context';
 import AppTextInput from '../AppTextInput';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Header = ({ navigation }) => {
   const { user, setUser } = useContext(AuthContext);
@@ -16,7 +17,7 @@ const Header = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.headerContainer}>
+    <SafeAreaView style={styles.headerContainer}>
       {/* Stardeos */}
       <View style={styles.stardeos}>
         <Image source={require('../../assets/stardeos-logo.png')} style={styles.stardeoslogo} />
@@ -26,10 +27,10 @@ const Header = ({ navigation }) => {
       <View style={styles.spacing} />
 
       {/* Stardusts */}
-      <View style={styles.stardusts}>
+      <TouchableOpacity style={styles.stardusts}>
         <AppText style={styles.stardustcount}>{user.data.user.stardusts}</AppText>
         <Image source={require('../../assets/stardust-icon.png')} style={styles.stardusticon} />
-      </View>
+      </TouchableOpacity>
 
       {/* Bell */}
       <TouchableOpacity onPress={() => navigation.navigate('Screen1')}>
@@ -68,7 +69,7 @@ const Header = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate('Account')}>
         <Image style={styles.avatar} source={{ uri: user.data.user.avatar }} />
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -133,12 +134,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.headerblue,
   },
   searchInput: {
-    height: 1,
+    height: 10, // Increased height
     borderWidth: 1,
     borderColor: colors.gray,
     color: colors.white,
-
+    paddingHorizontal: 10, // Added padding
+    borderRadius: 10, // Added border radius
   },
+  
 });
 
 export default Header;

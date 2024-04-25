@@ -13,18 +13,15 @@ import AuthContext from '../auth/context';
 import AppButton from '../components/AppButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import routes from '../components/navigation/routes';
-
-function formatDate(dateString) {
-  const date = new Date(dateString);
-  const options = { year: 'numeric', month: 'short', day: 'numeric' };
-  const formattedDate = date.toLocaleDateString('en-US', options);
-  return formattedDate.replace(/(\w+) (\d+),/, '$1 $2,');
-}
+import useDateFormat from '../hooks/useDateFormat';
+import useFormatViews from '../hooks/useFormatViews';
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
-  const formattedDate = formatDate(video.createdAt);
+  const formattedDate = useDateFormat(video.createdAt);
+  const formattedViews = useFormatViews(video.views);
   const { user } = useContext(AuthContext);
+  
 
   const { data: selectedvideo, error, loading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id));
 
@@ -37,52 +34,57 @@ function ListingDetailsScreen({ route, navigation }) {
     const fileUrls = selectedvideo?.files?.map(file => file.fileUrl) || [];
     
     console.log(fileUrls);
-  return (
-    <Screen style={styles.page}>
-      <Video
-        source={{ uri: fileUrls[0]}} // Use your video URL here
-        rate={1.0}
-        volume={1.0}
-        isMuted={false}
-        resizeMode={ResizeMode.COVER}
-        style={styles.video}
-        useNativeControls 
-        shouldPlay
-        shouldRasterizeIOS
-      />
-      <View style={styles.detailsContainer}>
-        <AppText style={styles.title}>{video.title}</AppText>
-        <AppText style={styles.visitas}>{video.views + ' visitas • ' + formattedDate}</AppText>
-        <View style={styles.interactions}>
-          <Interaction image={require('../assets/like-icon.png')} text={video.likeCount} style={styles.like} />
-          <Interaction image={require('../assets/dislike-icon.png')} text={video.dislikeCount} style={styles.dislike} />
-          <Interaction image={require('../assets/share-icon.png')} text={'Compartir'} style={styles.dislike} />
-          <Interaction image={require('../assets/stardust-icon.png')} text={'Dona'} style={styles.dislike} />
-        </View>
-        <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginTop: 10}} />
-        <View style={styles.userContainer}>
-        <View style = {styles.listitem}>
-          <ListItem
-            avatar={video.creator.avatar}
-            title={video.channelId.displayName}
-            subTitle={video.channelId.subscriberCount + ' seguidores'}
-            showVerified={false}
-          />
+    return (
+      <Screen style={styles.page}>
+        <ScrollView
+        style = {{flex: 1}}
+        keyboardShouldPersistTaps="always" // Add this prop
+      >
+        <Video
+          source={{ uri: fileUrls[0] }}
+          rate={1.0}
+          volume={1.0}
+          isMuted={false}
+          resizeMode={ResizeMode.COVER}
+          style={styles.video}
+          useNativeControls
+          shouldPlay
+          shouldRasterizeIOS
+        />
+        <View style={styles.detailsContainer}>
+          <AppText style={styles.title}>{video.title}</AppText>
+          <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>
+          <View style={styles.interactions}>
+            <Interaction image={require('../assets/like-icon.png')} text={video.likeCount} style={styles.like} />
+            <Interaction image={require('../assets/dislike-icon.png')} text={video.dislikeCount} style={styles.dislike} />
+            <Interaction image={require('../assets/share-icon.png')} text={'Compartir'} style={styles.dislike} />
+            <Interaction image={require('../assets/stardust-icon.png')} text={'Dona'} style={styles.dislike} />
           </View>
-          <View style = {styles.viewchannel}>
-          <AppButton title = "Ver canal" style = {styles.vercanal}/>
-          </View>
-        </View>
-        <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
-        <TouchableOpacity style = {styles.commentcontainer} onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, video)}>
-            <View style = {styles.commentcontainer2}>
-              <Image source = {require('../assets/comments-icon.png')} style ={styles.commentsicon}/>
-              <AppText style = {styles.comentariostitle}>{"Comentarios"}</AppText>
+          <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginTop: 10 }} />
+          <View style={styles.userContainer}>
+            <View style={styles.listitem}>
+              <ListItem
+                avatar={video.creator.avatar}
+                title={video.channelId.displayName}
+                subTitle={video.channelId.subscriberCount + ' seguidores'}
+                showVerified={false}
+              />
             </View>
-        </TouchableOpacity>
-      </View>  
-    </Screen>
-  );
+            <View style={styles.viewchannel}>
+              <AppButton title="Ver canal" style={styles.vercanal} onPress={() => navigation.navigate(routes.CREATOR_DETAILS, video)} />
+            </View>
+          </View>
+          <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
+          <TouchableOpacity style={styles.commentcontainer} onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, video)}>
+            <View style={styles.commentcontainer2}>
+              <Image source={require('../assets/comments-icon.png')} style={styles.commentsicon} />
+              <AppText style={styles.comentariostitle}>{"Comentarios"}</AppText>
+            </View>
+          </TouchableOpacity>
+        </View>
+        </ScrollView>
+      </Screen>
+    );
 }
 
 const styles = StyleSheet.create({
@@ -91,7 +93,7 @@ const styles = StyleSheet.create({
   },
   video: {
     width: '100%',
-    height: '38%',
+    height: '60%',
     borderRadius: 10,
   },
   detailsContainer: {

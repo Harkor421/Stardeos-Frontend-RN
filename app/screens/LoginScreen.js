@@ -9,6 +9,7 @@ import {AppForm, ErrorMessage, AppFormField, SubmitButton} from '../components/f
 import authApi from '../api/auth'
 import AuthContext from '../auth/context';
 import authStorage from '../auth/storage';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().required().label('Username'),
@@ -76,9 +77,17 @@ function LoginScreen(props) {
                         placeholder="Contraseña"
                         placeholderTextColor = {colors.lightgray}
                         />
-                        <AppText style = {styles.forgotpassword}>Olvidaste tu Contraseña?</AppText>
-                        <AppText style = {styles.forgotusername}>Olvidaste tu Usuario?</AppText>
+                        <TouchableOpacity>
+                        <AppText style = {styles.forgotpassword}>¿Olvidaste tu contraseña?</AppText>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                        <AppText style = {styles.forgotusername}>¿Olvidaste tu usuario?</AppText>
+                        </TouchableOpacity>
                         <SubmitButton title="Iniciar Sesión" />
+                        <TouchableOpacity style = {styles.cuentacontainer}>
+                        <AppText style = {styles.crearcuenta}>¿No tienes una cuenta?</AppText>
+                        <AppText style = {styles.crearcuentaurl}>¡Creala aquí mismo!</AppText>
+                        </TouchableOpacity>
             </AppForm>
         </Screen>
     );
@@ -120,6 +129,24 @@ const styles = StyleSheet.create({
         marginTop: 12,
         marginBottom: 30,
     },
+    crearcuenta:{
+        color: colors.white,
+        marginRight: 10,
+        fontWeight: 500,
+        fontSize: 16,
+    },
+    crearcuentaurl:{
+        color: colors.bluelink,
+        fontWeight: 500,
+        textDecorationLine: 'underline',
+        fontSize: 16,
+    },
+    cuentacontainer:{
+        marginTop: 20,
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center'
+    }
 
 
 })

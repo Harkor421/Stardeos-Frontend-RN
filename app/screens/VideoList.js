@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-
 import Screen from '../components/Screen';
-import Card from '../components/Card';
-import videosApi from '../api/videos';
-import colors from '../config/colors';
-import routes from '../components/navigation/routes';
 import AppText from '../components/AppText';
 import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import useApi from '../hooks/useApi';
+import videosApi from '../api/videos';
+import colors from '../config/colors';
+import routes from '../components/navigation/routes';
+import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 
 function VideoList({ navigation }) {
   const [page, setPage] = useState(1);
@@ -26,22 +25,11 @@ function VideoList({ navigation }) {
     loadVideos();
   }, [page]);
 
-  const renderItem = ({ item }) => (
-    <Card
-      title={item.title}
-      subTitle={item.creator.username}
-      thumbnail={item.thumbnail}
-      views={item.views}
-      avatar={item.creator.avatar}
-      onPress={() => navigation.navigate(routes.VIDEO_DETAILS, item)}
-    />
-  );
-
   return (
     <Screen style={styles.screen}>
       {error && (
         <>
-          <AppText>No se puede conectar a Stardeos.</AppText>
+          <AppText style={styles.errortext}>No se puede conectar a Stardeos.</AppText>
           <AppButton title="Reintentar" onPress={loadVideos} />
         </>
       )}
@@ -49,7 +37,7 @@ function VideoList({ navigation }) {
       <FlatList
         data={allVideos}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={renderItem}
+        renderItem={({ item }) => <VideoItem item={item} navigation={navigation} />} // Use the VideoItem component here
         onEndReachedThreshold={0.1}
         onEndReached={() => setPage(page + 1)}
       />
@@ -60,10 +48,11 @@ function VideoList({ navigation }) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 19,
+    padding: 20,
   },
-  lowcontainer: {
-    height: 30,
+  errortext: {
+    color: colors.white,
+    textAlign: 'center',
   },
 });
 

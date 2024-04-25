@@ -1,53 +1,72 @@
-import React, { useEffect } from 'react';
-import { StyleSheet, Text, View, SafeAreaView} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import navigationTheme from './app/components/navigation/navigationTheme';
 import AppNavigator from './app/components/navigation/AppNavigator';
-import colors from './app/config/colors'; // Import your colors configuration
 import AuthNavigator from './app/components/navigation/AuthNavigator';
-import { useState } from 'react';
 import AuthContext from './app/auth/context';
 import authStorage from './app/auth/storage';
-import AppLoading from 'expo-app-loading';
-
+import colors from './app/config/colors';
+import ActivityIndicator from './app/components/ActivityIndicator'; // Update the import path
 
 export default function App() {
-
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
-  
-  const restoreToken = async () => {
-    try {
-      const userData = await authStorage.getToken();
-      console.log('Retrieved user data:', userData); // Log retrieved data
-      
-      if (userData) {
-        setUser(userData);
-        console.log('User state set:', userData); // Log after setting user state
+  const [isLoadingError, setIsLoadingError] = useState(false);
+
+  useEffect(() => {
+    const restoreToken = async () => {
+      try {
+        const userData = await authStorage.getToken();
+        console.log('Retrieved user data:', userData);
+        
+        if (userData) {
+          setUser(userData);
+          console.log('User state set:', userData);
+        }
+      } catch (error) {
+        console.error("Error restoring token:", error);
+        setIsLoadingError(true);
+      } finally {
+        setIsReady(true);
       }
-    } catch (error) {
-      console.error("Error restoring token:", error);
-    }
+    };
+
+    restoreToken();
+  }, []);
+
+  if (!isReady) {
+    return <ActivityIndicator visible={true} />;
   }
 
-if (!isReady) return <AppLoading 
-                        startAsync={restoreToken} 
-                        onFinish={() => setIsReady(true)} 
-                        onError={() => setIsLoadingError(true)} />  
+  if (isLoadingError) {
+    // Handle error state, e.g., display an error message
     return (
-        <AuthContext.Provider value = {{user, setUser}}>
-        <NavigationContainer theme={navigationTheme}>
-            <SafeAreaView style={styles.container}>
-                {user ? <AppNavigator/> : <AuthNavigator/>}
-            </SafeAreaView>
-        </NavigationContainer>
-      </AuthContext.Provider>
+      <SafeAreaView style={styles.errorContainer}>
+        <Text>Error loading data</Text>
+      </SafeAreaView>
     );
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, setUser }}>
+      <NavigationContainer theme={navigationTheme}>
+        <SafeAreaView style={styles.container}>
+          {user ? <AppNavigator /> : <AuthNavigator />}
+        </SafeAreaView>
+      </NavigationContainer>
+    </AuthContext.Provider>
+  );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: colors.headerblue, // Set your desired background color
-    },
+  container: {
+    flex: 1,
+    backgroundColor: colors.headerblue,
+  },
+  errorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
