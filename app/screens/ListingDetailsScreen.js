@@ -12,7 +12,7 @@ import { useEffect, useContext } from 'react';
 import AuthContext from '../auth/context';
 import AppButton from '../components/AppButton';
 import { ScrollView } from 'react-native-gesture-handler';
-
+import routes from '../components/navigation/routes';
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -21,7 +21,7 @@ function formatDate(dateString) {
   return formattedDate.replace(/(\w+) (\d+),/, '$1 $2,');
 }
 
-function ListingDetailsScreen({ route }) {
+function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
   const formattedDate = formatDate(video.createdAt);
   const { user } = useContext(AuthContext);
@@ -74,9 +74,10 @@ function ListingDetailsScreen({ route }) {
           </View>
         </View>
         <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
-        <TouchableOpacity style = {styles.commentcontainer}>
+        <TouchableOpacity style = {styles.commentcontainer} onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, video)}>
             <View style = {styles.commentcontainer2}>
-            <AppText style = {styles.comentariostitle}>{"Comentarios"}</AppText>
+              <Image source = {require('../assets/comments-icon.png')} style ={styles.commentsicon}/>
+              <AppText style = {styles.comentariostitle}>{"Comentarios"}</AppText>
             </View>
         </TouchableOpacity>
       </View>  
@@ -145,11 +146,19 @@ const styles = StyleSheet.create({
   },
   commentcontainer2:{
     padding: 10,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   comentariostitle:{
     color: colors.white,
     fontWeight: 600,
     fontSize: 14,
+    fontWeight: 700,
+  },
+  commentsicon:{
+    width: 10,
+    height:10,
+    marginRight: 10,
   }
  
 });

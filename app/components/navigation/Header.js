@@ -1,13 +1,19 @@
-import React, { useContext } from 'react';
-import { TouchableOpacity, View, Text, StyleSheet, Image } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { TouchableOpacity, View, StyleSheet, Image, TextInput } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import colors from '../../config/colors';
 import AppText from '../AppText';
 import AuthContext from '../../auth/context';
+import AppTextInput from '../AppTextInput';
 
 const Header = ({ navigation }) => {
   const { user, setUser } = useContext(AuthContext);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  const handleSearchIconPress = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
 
   return (
     <View style={styles.headerContainer}>
@@ -16,7 +22,6 @@ const Header = ({ navigation }) => {
         <Image source={require('../../assets/stardeos-logo.png')} style={styles.stardeoslogo} />
         <Image source={require('../../assets/stardeos-letters.png')} style={styles.stardeosletters} />
       </View>
-
       {/* Spacing */}
       <View style={styles.spacing} />
 
@@ -35,9 +40,26 @@ const Header = ({ navigation }) => {
       <View style={styles.spacing} />
 
       {/* Magnify */}
-      <TouchableOpacity onPress={() => navigation.navigate('Screen1')}>
+      <TouchableOpacity onPress={handleSearchIconPress}>
         <MaterialCommunityIcons name="magnify" size={22} color="white" />
       </TouchableOpacity>
+
+      {/* Search Input */}
+      {isSearchOpen && (
+        <View style={styles.searchInputContainer}>
+          <AppTextInput
+            style={styles.searchInput}
+            placeholder="Search..."
+            placeholderTextColor={colors.gray}
+            autoFocus
+            returnKeyType="search"
+            onSubmitEditing={() => {
+              // Handle search here
+              console.log('Search submitted');
+            }}
+          />
+        </View>
+      )}
 
       {/* Spacing */}
       <View style={styles.spacing} />
@@ -56,7 +78,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
     alignItems: 'center',
     backgroundColor: colors.headerblue,
-    height: 60.5,
+    height: 60,
     borderBottomWidth: 1,
     borderBottomColor: colors.grayline,
   },
@@ -85,6 +107,7 @@ const styles = StyleSheet.create({
     width: 22,
     height: 22,
     marginLeft: 5.5,
+    marginRight: 5,
   },
   stardustcount: {
     color: colors.white,
@@ -100,6 +123,21 @@ const styles = StyleSheet.create({
   },
   spacing: {
     width: 11,
+  },
+  searchInputContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 0,
+    right: 0,
+    paddingHorizontal: 11,
+    backgroundColor: colors.headerblue,
+  },
+  searchInput: {
+    height: 1,
+    borderWidth: 1,
+    borderColor: colors.gray,
+    color: colors.white,
+
   },
 });
 

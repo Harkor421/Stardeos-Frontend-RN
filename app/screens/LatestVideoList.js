@@ -11,10 +11,10 @@ import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import useApi from '../hooks/useApi';
 
-function VideoList({ navigation }) {
+function LatestVideoList({ navigation }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getLatestVideos(page));
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VideoList;
+export default LatestVideoList;

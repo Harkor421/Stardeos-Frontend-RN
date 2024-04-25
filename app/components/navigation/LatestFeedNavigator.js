@@ -7,11 +7,10 @@ const Stack = createStackNavigator();
 import LatestVideoList from "../../screens/LatestVideoList";
 
 import colors from '../../config/colors'
-import SearchedVideoList from "../../screens/SearchedVideoList";
 
-const FeedNavigator = () => (
+const LatestFeedNavigator = () => (
 <Stack.Navigator screenOptions={{headerShown: false}}>
-    <Stack.Screen name = "Videos" component={SearchedVideoList}/>
+    <Stack.Screen name = "Videos" component={LatestVideoList}/>
     <Stack.Screen name = "VideoDetails" component={ListingDetailsScreen}/>
     <Stack.Screen 
       name="Comments" 
@@ -23,4 +22,4 @@ const FeedNavigator = () => (
 </Stack.Navigator>
 );
 
-export default FeedNavigator;
+export default LatestFeedNavigator;

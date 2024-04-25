@@ -6,6 +6,8 @@ import colors from '../../config/colors';
 import FeedNavigator from "./FeedNavigator";
 import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
+import LatestFeedNavigator from './LatestFeedNavigator';
+import ComingSoon from '../../screens/ComingSoon';
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +31,7 @@ const AppNavigator = () => (
       component={FeedNavigator}
       options={({ navigation }) => ({
         headerShown: true,
-        header: () => <Header navigation={navigation} />, // Use the Header component
+        header: () => <Header navigation={navigation}/>, // Use the Header component
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="home" color={color} size={size} />
         ),
@@ -37,7 +39,7 @@ const AppNavigator = () => (
     />
     <Tab.Screen
       name="Crear"
-      component={FeedNavigator}
+      component={ComingSoon}
       options={{
         headerShown: false,
         tabBarIcon: ({ color, size }) => (
@@ -46,15 +48,24 @@ const AppNavigator = () => (
       }}
     />
     <Tab.Screen
-      name="Account"
-      component={AccountScreen}
-      options={{
-        headerShown: false,
+      name="Recientes"
+      component={LatestFeedNavigator}
+      options={({ navigation }) => ({
+        headerShown: true,
+        header: () => <Header navigation={navigation}/>, // Use the Header component
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="clock" color={color} size={size} />
         ),
-      }}
+      })}
     />
+   <Tab.Screen name="Account" component={AccountScreen} 
+    options={{
+        tabBarButton: () => null,
+        headerShown: false,
+        tabBarVisible:false //hide tab bar on this screen
+
+    }}
+  />
   </Tab.Navigator>
 );
 

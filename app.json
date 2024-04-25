@@ -1,6 +1,9 @@
 {
   "expo": {
     "name": "Stardeos",
+    "plugins": [
+      "expo-secure-store"
+    ],
     "slug": "Stardeos",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -15,7 +18,8 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "ios"
     },
     "android": {
       "adaptiveIcon": {
@@ -25,9 +29,10 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "plugins": [
-      "expo-secure-store"
-    ]
+    }
+  },
+  "react-native-google-mobile-ads": {
+    "android_app_id": "ca-app-pub-12345678910~123456459",
+    "ios_app_id": "ca-app-pub-2801407808045625~4796974958"
   }
 }

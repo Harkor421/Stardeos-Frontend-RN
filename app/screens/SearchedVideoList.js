@@ -11,10 +11,10 @@ import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import useApi from '../hooks/useApi';
 
-function VideoList({ navigation }) {
+function SearchedVideoList({ navigation }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: 'el fin de los ', page: 1 }));
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -67,4 +67,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VideoList;
+export default SearchedVideoList;

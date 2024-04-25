@@ -18,7 +18,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors.primary
     },
     container:{
-        padding:10
+        paddingHorizontal: 10,
     }
 })
 
