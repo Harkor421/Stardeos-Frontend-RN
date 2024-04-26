@@ -1,4 +1,4 @@
-import { createStackNavigator } from "@react-navigation/stack";
+import { createStackNavigator, TransitionPresets } from "@react-navigation/stack";
 import React from 'react'
 import VideoList from "../../screens/VideoList";
 import ListingDetailsScreen from "../../screens/ListingDetailsScreen";
@@ -7,18 +7,30 @@ const Stack = createStackNavigator();
 import CreatorScreen from "../../screens/CreatorScreen";
 
 const FeedNavigator = () => (
-<Stack.Navigator screenOptions={{headerShown: false}}>
-    <Stack.Screen name = "Videos" component={VideoList}/>
-    <Stack.Screen name = "VideoDetails" component={ListingDetailsScreen}/>
-    <Stack.Screen name = "CreatorDetails" component={CreatorScreen}/>
-    <Stack.Screen 
-      name="Comments" 
-      component={Comments} 
+  <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Screen name="Videos" component={VideoList} />
+    <Stack.Screen
+      name="VideoDetails"
+      component={ListingDetailsScreen}
       options={{
-        presentation: 'modal', // Show Comments screen as a modal
+        ...TransitionPresets.ScaleFromCenterAndroid,
       }}
     />
-</Stack.Navigator>
+    <Stack.Screen
+      name="CreatorDetails"
+      component={CreatorScreen}
+      options={{
+        animationEnabled: false, // Disable animation for CreatorScreen
+      }}
+    />
+    <Stack.Screen
+      name="Comments"
+      component={Comments}
+      options={{
+        presentation: 'modal',
+      }}
+    />
+  </Stack.Navigator>
 );
 
 export default FeedNavigator;

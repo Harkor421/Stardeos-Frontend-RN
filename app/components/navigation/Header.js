@@ -7,6 +7,9 @@ import AppText from '../AppText';
 import AuthContext from '../../auth/context';
 import AppTextInput from '../AppTextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import routes from './routes';
+import FeedNavigator from './FeedNavigator';
+import LatestFeedNavigator from './LatestFeedNavigator';
 
 const Header = ({ navigation }) => {
   const { user, setUser } = useContext(AuthContext);
@@ -54,10 +57,7 @@ const Header = ({ navigation }) => {
             placeholderTextColor={colors.gray}
             autoFocus
             returnKeyType="search"
-            onSubmitEditing={() => {
-              // Handle search here
-              console.log('Search submitted');
-            }}
+            onSubmitEditing={() => navigation.navigate('SearchedVideoList')}
           />
         </View>
       )}

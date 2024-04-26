@@ -11,21 +11,8 @@ import CommentItem from '../components/CommentItem';
 import colors from '../config/colors';
 
 function Comments({ navigation, route }) {
-    const video = route.params;
+    const comments = route.params;
 
-    const [comments, setComments] = useState([]);
-    const { data, error, loading, request: loadComments } = useApi(() => client.get(`/comments/${video.id}?page=1`));
-
-    useEffect(() => {
-        loadComments();
-    }, []);
-
-    useEffect(() => {
-        if (data) {
-            setComments(data.comments);
-            console.log(data);
-        }
-    }, [data]);
 
     const handleCloseModal = () => {
         navigation.goBack(); // Close the modal
@@ -33,12 +20,12 @@ function Comments({ navigation, route }) {
 
     const renderComment = ({ item }) => (
         <CommentItem
-            title={item.author.username}
-            subTitle={item.content}
-            avatar={item.author.avatar} // Assuming you have an avatar field in the author object
-            date={item.createdAt}
+          title={item.author.username}
+          subTitle={item.content}
+          avatar={item.author.avatar ? {uri: item.author.avatar} : require('../assets/default-avatar-icon.jpeg')} // Use default avatar if empty
+          date={item.createdAt}
         />
-    );
+      );
     
     return (
         <Screen style={styles.container}>
@@ -53,18 +40,12 @@ function Comments({ navigation, route }) {
 
             {/* Body Content */}
             <View style={styles.body}>
-                {loading ? (
-                    <AppText>Loading...</AppText>
-                ) : error ? (
-                    <AppText>Error loading comments</AppText>
-                ) : (
                     <FlatList
                         data={comments}
                         keyExtractor={(item) => item._id.toString()}
                         renderItem={renderComment}
                         contentContainerStyle={styles.commentsContainer}
                     />
-                )}
             </View>
         </Screen>
     );
@@ -79,11 +60,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: '#1f233e',
+        padding: 15,
     },
     headerText: {
-        fontSize: 18,
-        fontWeight: 800,
-        color: colors.white
+        fontSize: 16,
+        fontWeight: 600,
+        color: colors.white,
+        marginLeft: 20,
     },
     body: {
         flex: 1,

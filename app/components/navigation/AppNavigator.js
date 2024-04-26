@@ -8,6 +8,7 @@ import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
 import LatestFeedNavigator from './LatestFeedNavigator';
 import ComingSoon from '../../screens/ComingSoon';
+import SearchedVideoList from '../../screens/SearchedVideoList';
 
 const Tab = createBottomTabNavigator();
 

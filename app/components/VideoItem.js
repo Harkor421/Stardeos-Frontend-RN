@@ -7,14 +7,18 @@ import useFormatViews from '../hooks/useFormatViews';
 function VideoItem({ item, navigation }) {
   const formattedViews = useFormatViews(item.views);
 
+  // Use the creator's username if available, otherwise use the avatar
+  const subTitle = item.creator.username ? item.creator.username : item.creator.avatar;
+
   return (
     <Card
       title={item.title}
-      subTitle={item.creator.username}
+      subTitle={subTitle}
       thumbnail={item.thumbnail}
       views={formattedViews}
       avatar={item.creator.avatar}
       onPress={() => navigation.navigate(routes.VIDEO_DETAILS, item)}
+      duration={item.duration}
     />
   );
 }
