@@ -8,7 +8,7 @@ import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
 import LatestFeedNavigator from './LatestFeedNavigator';
 import ComingSoon from '../../screens/ComingSoon';
-import SearchedVideoList from '../../screens/SearchedVideoList';
+import SearchNavigator from './SearchNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -67,6 +67,18 @@ const AppNavigator = () => (
 
     }}
   />
+   <Tab.Screen 
+      name="SearchedVideoList" 
+      component={SearchNavigator} 
+      initialParams={{ search: '',}} // Set an initial empty search parameter
+      options={{
+        tabBarButton: () => null,
+        headerShown: false,
+        tabBarVisible:false 
+
+    }}
+  />
+
   </Tab.Navigator>
 );
 

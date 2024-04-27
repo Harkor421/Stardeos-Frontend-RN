@@ -11,10 +11,14 @@ import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import useApi from '../hooks/useApi';
 
-function SearchedVideoList({ navigation }) {
+function SearchedVideoList({ navigation, search}) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: 'el fin de los ', page: 1 }));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: search, page: 1 }));
+
+
+  console.log(search);
+
 
   useEffect(() => {
     if (videos && videos.videos) {

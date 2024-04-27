@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import Screen from '../components/Screen';
 import AppText from '../components/AppText';
@@ -14,6 +14,11 @@ function VideoList({ navigation }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
+
+  // Memoized renderItem function to prevent unnecessary re-renders
+  const renderItem = useCallback(({ item }) => {
+    return <VideoItem item={item} navigation={navigation} />;
+  }, [navigation]);
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -37,8 +42,8 @@ function VideoList({ navigation }) {
       <FlatList
         data={allVideos}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <VideoItem item={item} navigation={navigation} />} // Use the VideoItem component here
-        onEndReachedThreshold={0.1}
+        renderItem={renderItem}
+        onEndReachedThreshold={0.2}
         onEndReached={() => setPage(page + 1)}
       />
       <View style={styles.lowcontainer} />

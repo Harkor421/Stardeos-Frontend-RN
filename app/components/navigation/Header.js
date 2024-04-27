@@ -12,20 +12,27 @@ import FeedNavigator from './FeedNavigator';
 import LatestFeedNavigator from './LatestFeedNavigator';
 
 const Header = ({ navigation }) => {
-  const { user, setUser } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchText, setSearchText] = useState('');
 
   const handleSearchIconPress = () => {
     setIsSearchOpen(!isSearchOpen);
   };
 
+  const handleSearchSubmit = () => {
+    setIsSearchOpen(false);
+    navigation.navigate('SearchedVideoList', { search: searchText });
+  };
+  
+
   return (
     <SafeAreaView style={styles.headerContainer}>
       {/* Stardeos */}
-      <View style={styles.stardeos}>
+      <TouchableOpacity style={styles.stardeos} onPress= {() => navigation.navigate('Inicio')}>
         <Image source={require('../../assets/stardeos-logo.png')} style={styles.stardeoslogo} />
         <Image source={require('../../assets/stardeos-letters.png')} style={styles.stardeosletters} />
-      </View>
+      </TouchableOpacity>
       {/* Spacing */}
       <View style={styles.spacing} />
 
@@ -56,8 +63,9 @@ const Header = ({ navigation }) => {
             placeholder="Search..."
             placeholderTextColor={colors.gray}
             autoFocus
-            returnKeyType="search"
-            onSubmitEditing={() => navigation.navigate('SearchedVideoList')}
+            value={searchText}
+            onChangeText={setSearchText}
+            onSubmitEditing={handleSearchSubmit}
           />
         </View>
       )}
@@ -79,7 +87,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 11,
     alignItems: 'center',
     backgroundColor: colors.headerblue,
-    height: 60,
+    paddingVertical: 15,
+    alignSelf: 'stretch',
     borderBottomWidth: 1,
     borderBottomColor: colors.grayline,
   },
