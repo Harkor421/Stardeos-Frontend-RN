@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Image } from 'react-native';
+import { StyleSheet, Image, Linking } from 'react-native';
 import * as Yup from 'yup'
 
 import Screen from '../components/Screen';
@@ -77,14 +77,14 @@ function LoginScreen(props) {
                         placeholder="Contraseña"
                         placeholderTextColor = {colors.lightgray}
                         />
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() =>Linking.openURL('https://stardeos.com/forget-password')}>
                         <AppText style = {styles.forgotpassword}>¿Olvidaste tu contraseña?</AppText>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={() =>Linking.openURL('https://stardeos.com/forget-username')}>
                         <AppText style = {styles.forgotusername}>¿Olvidaste tu usuario?</AppText>
                         </TouchableOpacity>
                         <SubmitButton title="Iniciar Sesión" />
-                        <TouchableOpacity style = {styles.cuentacontainer}>
+                        <TouchableOpacity style = {styles.cuentacontainer} onPress={() => Linking.openURL('https://stardeos.com/signup')}>
                         <AppText style = {styles.crearcuenta}>¿No tienes una cuenta?</AppText>
                         <AppText style = {styles.crearcuentaurl}>¡Creala aquí mismo!</AppText>
                         </TouchableOpacity>

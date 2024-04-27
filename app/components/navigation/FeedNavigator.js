@@ -20,7 +20,7 @@ const FeedNavigator = () => (
       name="CreatorDetails"
       component={CreatorScreen}
       options={{
-        animationEnabled: false, // Disable animation for CreatorScreen
+        ...TransitionPresets.ScaleFromCenterAndroid,
       }}
     />
     <Stack.Screen

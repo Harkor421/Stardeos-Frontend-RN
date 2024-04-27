@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, Share } from 'react-native';
 import AppText from '../components/AppText';
 import ListItem from '../components/ListItem';
 import Screen from '../components/Screen';
@@ -47,6 +47,28 @@ function ListingDetailsScreen({ route, navigation, key }) {
     return unsubscribe;
   }, [navigation]);
 
+
+  const handleShare = async () => {
+    try {
+      const result = await Share.share({
+        message: `Mira este video de: ${video.channelId.displayName} https://stardeos.com/video/${video.id}`,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // Shared via activity type
+        } else {
+          // Shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // Dismissed
+      }
+    } catch (error) {
+      alert('Error sharing video');
+    }
+  };
+
+
+
   return (
     <Screen style={styles.page}>
       <ActivityIndicator visible={videoLoading || commentsLoading} />
@@ -67,7 +89,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
         <View style={styles.interactions}>
           <Interaction image={require('../assets/like-icon.png')} text={video.likeCount} style={styles.like} />
           <Interaction image={require('../assets/dislike-icon.png')} text={video.dislikeCount} style={styles.dislike} />
-          <Interaction image={require('../assets/share-icon.png')} text={'Compartir'} style={styles.dislike} />
+          <Interaction image={require('../assets/share-icon.png')} text={'Compartir'} style={styles.dislike} onPress={handleShare}/>
           <Interaction image={require('../assets/stardust-icon.png')} text={'Dona'} style={styles.dislike} />
         </View>
         <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginTop: 10 }} />

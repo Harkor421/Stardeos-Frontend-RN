@@ -19,7 +19,8 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "ios"
+      "bundleIdentifier": "com.stardeosapps.stardeos",
+      "buildNumber": "0.0.1"
     },
     "android": {
       "adaptiveIcon": {
@@ -29,6 +30,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b4ea833f-dcef-4d53-af07-614c2a152527"
+      }
     }
   },
   "react-native-google-mobile-ads": {

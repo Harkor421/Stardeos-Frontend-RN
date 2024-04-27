@@ -36,7 +36,7 @@ const Header = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Bell */}
-      <TouchableOpacity onPress={() => navigation.navigate('Screen1')}>
+      <TouchableOpacity>
         <MaterialCommunityIcons name="bell" size={22} color="white" />
       </TouchableOpacity>
 
