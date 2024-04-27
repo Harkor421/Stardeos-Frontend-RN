@@ -37,7 +37,6 @@ function Comments({ navigation, route }) {
                     <MaterialCommunityIcons name="close" size={30} color="white" />
                 </TouchableOpacity>
             </View>
-
             {/* Body Content */}
             <View style={styles.body}>
                     <FlatList

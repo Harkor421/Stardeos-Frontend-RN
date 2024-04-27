@@ -10,10 +10,11 @@ import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 
-function ChannelVideoList({ navigation }) {
+function ChannelVideoList({ navigation, channelid }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
+  
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getChannelVideos(channelid, page));
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -35,6 +36,7 @@ function ChannelVideoList({ navigation }) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
+        scrollEnabled={false} 
         data={allVideos}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => <VideoItem item={item} navigation={navigation} />} // Use the VideoItem component here

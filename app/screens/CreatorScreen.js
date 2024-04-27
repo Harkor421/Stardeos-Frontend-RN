@@ -5,12 +5,14 @@ import AppText from '../components/AppText';
 import colors from '../config/colors';
 import VideoList from './VideoList'; // Import the VideoList component
 import { ScrollView } from 'react-native-gesture-handler';
+import ChannelVideoList from './ChannelVideoList';
 
 function CreatorScreen({ navigation, route }) {
     const creator = route.params;
 
     return (
         <Screen>
+            <ScrollView>
             <View style={styles.creatorcontainer}>
                 <Image style={styles.creatoravatar} source={{ uri: creator.creator.avatar }} />
                 <View style={styles.creatortitle}>
@@ -24,8 +26,9 @@ function CreatorScreen({ navigation, route }) {
                 </View>
             </View>
             <View style = {{flex: 1}}>
-                <VideoList navigation={navigation} />
+                <ChannelVideoList navigation={navigation} channelid= {creator.channelId.id} />
             </View>
+            </ScrollView>
         </Screen>
     );
 }

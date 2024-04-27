@@ -9,9 +9,15 @@ const getVideo = (id) => { //retrieves video information with video id
   return client.get('/videos/' + id);
 };
 
+
 const getLatestVideos = (page) => {
   return client.get(`/videos/?filter=LATEST&page=${page}`);
 };
+
+const getChannelVideos = (id, page) => {
+  return client.get(`/channels/${id}/videos?page=${page}`);
+};
+
 
 const getComments = (id) => { //Video id
   return client.get(`/comments/${id}?page=1`);
@@ -35,4 +41,5 @@ export default{
     getLatestVideos,
     searchVideo,
     getComments,
+    getChannelVideos,
 }

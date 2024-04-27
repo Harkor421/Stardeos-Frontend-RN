@@ -86,23 +86,28 @@ function ListingDetailsScreen({ route, navigation, key }) {
         </View>
         <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
         <TouchableOpacity
-          style={styles.commentcontainer}
-          onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, comments.comments)}>
-          <View style={styles.commentcontainer2}>
-            <View style = {{flexDirection: 'row', alignItems: 'center'}}>
-            <Image source={require('../assets/comments-icon.png')} style={styles.commentsicon} />
-            <AppText style={styles.comentariostitle}>{"Comentarios"}</AppText>
+            style={styles.commentcontainer}
+            onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, comments.comments)}>
+            <View style={styles.commentcontainer2}>
+              <View style = {{flexDirection: 'row', alignItems: 'center'}}>
+              <Image source={require('../assets/comments-icon.png')} style={styles.commentsicon} />
+              <AppText style={styles.comentariostitle}>{"Comentarios"}</AppText>
+              </View>
+              <AppText style={styles.commentAmount}>{totalComments}</AppText>
             </View>
-            <AppText style={styles.commentAmount}>{totalComments}</AppText>
-          </View>
-          <View style={styles.randomComment}>
-            {randomComment?.author?.avatar ? (
-              <Image source={{ uri: randomComment.author.avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} />
-            ) : (
-              <Image source={require('../assets/default-avatar-icon.jpeg')} style={{ width: 20, height: 20, borderRadius: 10 }} />
-            )}
-            <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
-          </View>
+            <View style={styles.randomComment}>
+              {randomComment?.author?.avatar ? (
+                <Image source={{ uri: randomComment.author.avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} />
+              ) : (
+                <Image source={require('../assets/default-avatar-icon.jpeg')} style={{ width: 20, height: 20, borderRadius: 10 }} />
+              )}
+              <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
+            </View>
+            <View>
+                <View style = {{backgroundColor: colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, paddingVertical: 5,}}>
+                  <AppText style = {{color: colors.grayline, fontSize: 14,}}>{"Dejar un comentario"}</AppText>
+                </View>
+              </View>
         </TouchableOpacity>
       </View>
     </Screen>
