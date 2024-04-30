@@ -6,9 +6,12 @@ import colors from '../config/colors';
 import VideoList from './VideoList'; // Import the VideoList component
 import { ScrollView } from 'react-native-gesture-handler';
 import ChannelVideoList from './ChannelVideoList';
+import useFormatViews from '../hooks/useFormatViews'
 
 function CreatorScreen({ navigation, route }) {
     const creator = route.params;
+    const formattedFollowers = useFormatViews(creator.channelId.subscriberCount)
+    const formattedSubs = useFormatViews(creator.channelId.user.subscriptionCount)
 
     return (
         <Screen>
@@ -20,9 +23,9 @@ function CreatorScreen({ navigation, route }) {
                     <AppText style={styles.creatorname}>{creator.channelId.displayName}</AppText>
                 </View>
                 <View style={styles.statscontainer}>
-                    <AppText style={styles.followers}>{creator.channelId.subscriberCount + " Seguidores "}</AppText>
+                    <AppText style={styles.followers}>{formattedFollowers + " Seguidores "}</AppText>
                     <AppText style={styles.followers}>{"• "}</AppText>
-                    <AppText style={styles.subscribers}>{creator.channelId.user.subscriptionCount + " Suscriptores"}</AppText>
+                    <AppText style={styles.subscribers}>{formattedSubs + " Suscriptores"}</AppText>
                 </View>
             </View>
             <View style = {{flex: 1}}>

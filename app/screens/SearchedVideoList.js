@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-
 import Screen from '../components/Screen';
-import Card from '../components/Card';
-import videosApi from '../api/videos';
-import colors from '../config/colors';
-import routes from '../components/navigation/routes';
 import AppText from '../components/AppText';
 import AppButton from '../components/AppButton';
 import ActivityIndicator from '../components/ActivityIndicator';
 import useApi from '../hooks/useApi';
+import videosApi from '../api/videos';
+import colors from '../config/colors';
+import routes from '../components/navigation/routes';
+import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 
-function SearchedVideoList({ navigation, search}) {
+function SearchedVideoList({ navigation, search }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: search, page: 1 }));
+  const [refresh, setRefresh] = useState(false); // State variable to force refresh
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: search, page: page }));
 
-
-  console.log(search);
-
+  // Memoized renderItem function to prevent unnecessary re-renders
+  const renderItem = useCallback(({ item }) => {
+    return <VideoItem item={item} navigation={navigation} />;
+  }, [navigation]);
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -28,18 +29,18 @@ function SearchedVideoList({ navigation, search}) {
 
   useEffect(() => {
     loadVideos();
-  }, [page]);
+  }, [page, search, refresh]); // Update when the page, search term, or refresh state changes
 
-  const renderItem = ({ item }) => (
-    <Card
-      title={item.title}
-      subTitle={item.creator.username}
-      thumbnail={item.thumbnail}
-      views={item.views}
-      avatar={item.creator.avatar}
-      onPress={() => navigation.navigate(routes.VIDEO_DETAILS, item)}
-    />
-  );
+  useEffect(() => {
+    setPage(1); // Reset page to 1 whenever the search term changes
+    setAllVideos([]); // Clear the list when search term changes
+  }, [search]);
+
+  // Function to force refresh
+  const handleRefresh = () => {
+    setRefresh(!refresh);
+    setAllVideos([]); // Clear the list when refreshing
+  };
 
   return (
     <Screen style={styles.screen}>
@@ -56,6 +57,8 @@ function SearchedVideoList({ navigation, search}) {
         renderItem={renderItem}
         onEndReachedThreshold={0.1}
         onEndReached={() => setPage(page + 1)}
+        refreshing={loading} // Set refreshing state based on loading status
+        onRefresh={handleRefresh} // Call handleRefresh when pull-to-refresh is triggered
       />
       <View style={styles.lowcontainer} />
     </Screen>
@@ -65,9 +68,6 @@ function SearchedVideoList({ navigation, search}) {
 const styles = StyleSheet.create({
   screen: {
     padding: 19,
-  },
-  lowcontainer: {
-    height: 30,
   },
 });
 

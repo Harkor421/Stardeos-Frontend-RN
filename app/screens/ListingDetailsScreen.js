@@ -21,15 +21,7 @@ import useShareVideo from '../hooks/useShareVideo';
 function ListingDetailsScreen({ route, navigation, key }) {
   const video = route.params;
   const [reloadKey, setReloadKey] = useState(key);
-
-
-  const formattedDate = useDateFormat(video.createdAt);
-  const formattedViews = useFormatViews(video.views);
-  const randomComment = useRandomComment(comments?.comments);
-  const handleShare = useShareVideo(video);
-  
-  console.log(randomComment);
-  
+  const [videoLoad, setVideoLoad] = useState(true);
   const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
 
@@ -47,6 +39,14 @@ function ListingDetailsScreen({ route, navigation, key }) {
     return unsubscribe;
   }, [navigation]);
 
+
+  const formattedDate = useDateFormat(video.createdAt);
+  const formattedViews = useFormatViews(video.views);
+  const formattedFollowers = useFormatViews(video.channelId.subscriberCount)
+  const randomComment = useRandomComment(comments?.comments);
+  const handleShare = useShareVideo(video);
+  
+
   const fileUrls = selectedvideo?.files?.map(file => file.fileUrl) || [];
   const creatorTitle = video.channelId.displayName ? video.channelId.displayName : video.creator.username;
 
@@ -56,8 +56,8 @@ function ListingDetailsScreen({ route, navigation, key }) {
 
   return (
     <Screen style={styles.page}>
+      <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad}/>
       <ScrollView>
-        <ActivityIndicator visible={videoLoading || commentsLoading} />
         <Video
           source={{ uri: fileUrls[0] }}
           rate={1.0}
@@ -68,6 +68,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
           useNativeControls
           shouldPlay
           shouldRasterizeIOS
+          onReadyForDisplay={() => setVideoLoad(false)}
         />
         <View style={styles.detailsContainer}>
           <AppText style={styles.title}>{video.title}</AppText>
@@ -84,7 +85,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
               <ListItem
                 avatar={video.creator.avatar}
                 title={creatorTitle}
-                subTitle={video.channelId.subscriberCount + ' seguidores'}
+                subTitle={formattedFollowers + ' seguidores'}
                 showVerified={false}
               />
             </View>

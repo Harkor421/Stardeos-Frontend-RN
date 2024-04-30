@@ -13,6 +13,7 @@ import VideoItem from '../components/VideoItem'; // Import the VideoItem compone
 function VideoList({ navigation }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
+  const [refresh, setRefresh] = useState(false); // State variable to force refresh
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
 
   // Memoized renderItem function to prevent unnecessary re-renders
@@ -28,7 +29,14 @@ function VideoList({ navigation }) {
 
   useEffect(() => {
     loadVideos();
-  }, [page]);
+  }, [page, refresh]); // Update when the page or refresh state changes
+
+  // Function to force refresh
+  const handleRefresh = () => {
+    setPage(1); // Reset page to 1
+    setAllVideos([]); // Clear the list
+    setRefresh(!refresh);
+  };
 
   return (
     <Screen style={styles.screen}>
@@ -41,10 +49,12 @@ function VideoList({ navigation }) {
       <ActivityIndicator visible={loading} />
       <FlatList
         data={allVideos}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}
         onEndReachedThreshold={0.2}
         onEndReached={() => setPage(page + 1)}
+        refreshing={loading} // Set refreshing state based on loading status
+        onRefresh={handleRefresh} // Call handleRefresh when pull-to-refresh is triggered
       />
       <View style={styles.lowcontainer} />
     </Screen>

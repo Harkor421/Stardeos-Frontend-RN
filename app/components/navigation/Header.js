@@ -21,10 +21,10 @@ const Header = ({ navigation }) => {
   };
 
   const handleSearchSubmit = () => {
-    setIsSearchOpen(false);
-    navigation.navigate('SearchedVideoList', { search: searchText });
-  };
-  
+  setIsSearchOpen(false);
+  navigation.navigate('SearchedVideoList', { search: searchText });
+};
+
 
   return (
     <SafeAreaView style={styles.headerContainer}>

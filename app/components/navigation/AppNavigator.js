@@ -71,12 +71,13 @@ const AppNavigator = () => (
       name="SearchedVideoList" 
       component={SearchNavigator} 
       initialParams={{ search: '',}} // Set an initial empty search parameter
-      options={{
+      options={({ navigation }) => ({
         tabBarButton: () => null,
-        headerShown: false,
-        tabBarVisible:false 
+        headerShown: true,
+        tabBarVisible:false,
+        header: () => <Header navigation={navigation}/> // Use the Header component
 
-    }}
+    })}
   />
 
   </Tab.Navigator>

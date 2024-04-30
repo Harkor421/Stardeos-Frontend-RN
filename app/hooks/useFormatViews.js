@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 
-const useFormatViews = (views) => {
-  const [formattedViews, setFormattedViews] = useState('');
+const useFormatNumber = (number) => {
+  const [formattedNumber, setFormattedNumber] = useState('');
 
   useEffect(() => {
-    if (views || views === 0) {
-      const formatted = views.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      setFormattedViews(formatted);
+    if (number || number === 0) {
+      let formatted = '';
+      if (number >= 1000000) {
+        formatted = `${(number / 1000000).toFixed(1)}M`;
+      } else if (number >= 1000) {
+        formatted = `${(number / 1000).toFixed(1)}K`;
+      } else {
+        formatted = number.toString();
+      }
+      setFormattedNumber(formatted);
     }
-  }, [views]);
+  }, [number]);
 
-  return formattedViews;
+  return formattedNumber;
 };
 
-export default useFormatViews;
+export default useFormatNumber;

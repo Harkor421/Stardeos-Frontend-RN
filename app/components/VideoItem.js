@@ -23,6 +23,7 @@ function VideoItem({ item, index, navigation }) {
       avatar={item.creator.avatar}
       onPress={() => navigation.navigate(routes.VIDEO_DETAILS, item)}
       duration={item.duration}
+      subsOnly={item.subscribersOnly}
     />
   );
 }

@@ -6,15 +6,21 @@ import ListItem from './ListItem';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFormatDuration from '../hooks/useFormatDuration';
 
-function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration }) {
+function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly }) {
     const formattedDuration = useFormatDuration(duration);
 
-    return (
-        <TouchableOpacity onPress={onPress}>
+    if (subsOnly) {
+        return (
             <View style={styles.card}>
-                <Image style={styles.image} source={{ uri: thumbnail }} />
-                <View style={styles.durationContainer}>
-                    <AppText style={{ color: colors.white, fontSize: 14, }}>{formattedDuration}</AppText>
+                <View style={styles.imageContainer}>
+                    <Image style={styles.image} source={{ uri: thumbnail }} />
+                    <View style={styles.bannerContainer}>
+                        <AppText style={styles.bannerText}>Subscríbete para ver</AppText>
+                    </View>
+                    {/* Container for duration text */}
+                    <View style={styles.durationContainer}>
+                        <AppText style={styles.durationText}>{formattedDuration}</AppText>
+                    </View>
                 </View>
                 <View style={styles.detailsContainer}>
                     <ListItem
@@ -26,8 +32,31 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration }) 
                 </View>
                 <AppText style={styles.views}>{views}</AppText>
             </View>
-        </TouchableOpacity>
-    );
+        );
+    } else {
+        return (
+            <TouchableOpacity onPress={onPress}>
+                <View style={styles.card}>
+                    <View style={styles.imageContainer}>
+                        <Image style={styles.image} source={{ uri: thumbnail }} />
+                        {/* Container for duration text */}
+                        <View style={styles.durationContainer}>
+                            <AppText style={styles.durationText}>{formattedDuration}</AppText>
+                        </View>
+                    </View>
+                    <View style={styles.detailsContainer}>
+                        <ListItem
+                            title={title}
+                            subTitle={subTitle}
+                            avatar={avatar}
+                            showVerified={true}
+                        />
+                    </View>
+                    <AppText style={styles.views}>{views}</AppText>
+                </View>
+            </TouchableOpacity>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
@@ -37,32 +66,44 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         overflow: 'hidden',
     },
+    imageContainer: {
+        position: 'relative',
+    },
     image: {
         width: '100%',
         height: 220,
         borderRadius: 15,
     },
-    durationContainer: {
-        bottom: 30,
-        marginRight: 15,
+    bannerContainer: {
+        position: 'absolute',
+        top: 10,
+        left: 10,
+        backgroundColor: colors.primary,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 5,
+    },
+    bannerText: {
+        color: colors.white,
         fontSize: 14,
-        justifyContent: 'flex-end', // Align to the right
-        alignItems: 'flex-end', // Align content to the right
+    },
+    durationContainer: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10,
+        backgroundColor: 'rgba(0, 0, 0, 0.6)', // Black with 60% opacity
+        borderRadius: 5,
+        paddingHorizontal: 5,
+    },
+    durationText: {
+        color: colors.white,
+        fontSize: 14,
     },
     detailsContainer: {
         marginTop: 10,
         paddingLeft: 5,
         flexDirection: 'row',
         alignItems: 'center',
-    },
-    title: {
-        color: colors.white,
-        fontSize: 18,
-        fontWeight: 900,
-        marginBottom: 1,
-    },
-    subTitle: {
-        color: colors.secondary,
     },
     views: {
         color: colors.secondary,
