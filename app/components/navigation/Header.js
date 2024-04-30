@@ -9,7 +9,6 @@ import AppTextInput from '../AppTextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import routes from './routes';
 import FeedNavigator from './FeedNavigator';
-import LatestFeedNavigator from './LatestFeedNavigator';
 
 const Header = ({ navigation }) => {
   const { user } = useContext(AuthContext);

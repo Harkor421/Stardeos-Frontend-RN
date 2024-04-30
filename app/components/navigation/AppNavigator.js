@@ -6,7 +6,6 @@ import colors from '../../config/colors';
 import FeedNavigator from "./FeedNavigator";
 import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
-import LatestFeedNavigator from './LatestFeedNavigator';
 import ComingSoon from '../../screens/ComingSoon';
 import SearchNavigator from './SearchNavigator';
 
@@ -50,14 +49,13 @@ const AppNavigator = () => (
     />
     <Tab.Screen
       name="Recientes"
-      component={LatestFeedNavigator}
-      options={({ navigation }) => ({
-        headerShown: true,
-        header: () => <Header navigation={navigation}/>, // Use the Header component
+      component={ComingSoon}
+      options={{
+        headerShown: false,
         tabBarIcon: ({ color, size }) => (
           <MaterialCommunityIcons name="clock" color={color} size={size} />
         ),
-      })}
+      }}
     />
    <Tab.Screen name="Account" component={AccountScreen} 
     options={{
