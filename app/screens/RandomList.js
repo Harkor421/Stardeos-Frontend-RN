@@ -10,15 +10,13 @@ import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 
-function SearchedVideoList({ navigation, search }) {
-  const [page, setPage] = useState(1);
+function RandomList({ navigation }) {
   const [allVideos, setAllVideos] = useState([]);
-  const [refresh, setRefresh] = useState(false); // State variable to force refresh
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: search, page: page }));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(randomPage()));
 
   // Memoized renderItem function to prevent unnecessary re-renders
   const renderItem = useCallback(({ item }) => {
-    return <VideoItem item={item} navigation={navigation} replace={false}/>;
+    return <VideoItem item={item} navigation={navigation} replace={true} />;
   }, [navigation]);
 
   useEffect(() => {
@@ -29,36 +27,27 @@ function SearchedVideoList({ navigation, search }) {
 
   useEffect(() => {
     loadVideos();
-  }, [page, search, refresh]); // Update when the page, search term, or refresh state changes
+  }, []); // Load videos only once when the component mounts
 
-  useEffect(() => {
-    setPage(1); // Reset page to 1 whenever the search term changes
-    setAllVideos([]); // Clear the list when search term changes
-  }, [search]);
-
-  // Function to force refresh
-  const handleRefresh = () => {
-    setRefresh(!refresh);
-    setAllVideos([]); // Clear the list when refreshing
+  // Function to generate a random page number
+  const randomPage = () => {
+    return Math.floor(Math.random() * 100) + 1; // Assuming there are 100 pages of videos
   };
 
   return (
     <Screen style={styles.screen}>
       {error && (
         <>
-          <AppText>No se puede conectar a Stardeos.</AppText>
+          <AppText style={styles.errortext}>No se puede conectar a Stardeos.</AppText>
           <AppButton title="Reintentar" onPress={loadVideos} />
         </>
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
         data={allVideos}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}
-        onEndReachedThreshold={0.1}
-        onEndReached={() => setPage(page + 1)}
-        refreshing={loading} // Set refreshing state based on loading status
-        onRefresh={handleRefresh} // Call handleRefresh when pull-to-refresh is triggered
+        scrollEnabled={false}
       />
       <View style={styles.lowcontainer} />
     </Screen>
@@ -67,8 +56,12 @@ function SearchedVideoList({ navigation, search }) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 19,
+    padding: 20,
+  },
+  errortext: {
+    color: colors.white,
+    textAlign: 'center',
   },
 });
 
-export default SearchedVideoList;
+export default RandomList;

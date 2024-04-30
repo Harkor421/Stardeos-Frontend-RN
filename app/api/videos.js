@@ -3,7 +3,8 @@ import client from './client'
 
 const getRecommendedVideos = (page) => {
     return client.get(`/videos?page=${page}`);
-  };
+};
+
 
 const getVideo = (id) => { //retrieves video information with video id
   return client.get('/videos/' + id);

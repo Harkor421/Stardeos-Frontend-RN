@@ -18,7 +18,7 @@ function VideoList({ navigation }) {
 
   // Memoized renderItem function to prevent unnecessary re-renders
   const renderItem = useCallback(({ item }) => {
-    return <VideoItem item={item} navigation={navigation} />;
+    return <VideoItem item={item} navigation={navigation} replace={true}/>;
   }, [navigation]);
 
   useEffect(() => {

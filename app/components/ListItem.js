@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AppText from './AppText';
 
 import colors from '../config/colors';
 import AppButton from './AppButton';
+import { TouchableHighlight } from 'react-native-gesture-handler';
 
-function ListItem({ title, subTitle, avatar, showVerified }) {
+function ListItem({ title, subTitle, avatar, showVerified, navigate}) {
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={navigate}>
       <Image style={styles.image} source={{ uri: avatar }} />
       <View style={styles.userInfo}>
         <AppText style={styles.user} numberOfLines={1} ellipsizeMode="tail">
@@ -20,7 +21,7 @@ function ListItem({ title, subTitle, avatar, showVerified }) {
           </AppText>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

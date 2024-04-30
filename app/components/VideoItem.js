@@ -4,7 +4,7 @@ import Card from '../components/Card';
 import routes from '../components/navigation/routes';
 import useFormatViews from '../hooks/useFormatViews';
 
-function VideoItem({ item, index, navigation }) {
+function VideoItem({ item, index, navigation, replace }) {
   const formattedViews = useFormatViews(item.views);
 
   // Use the creator's username if available, otherwise use the avatar
@@ -12,6 +12,15 @@ function VideoItem({ item, index, navigation }) {
 
   // Generate a unique key by concatenating the item's id with its index
   const uniqueKey = item.id + '-' + index;
+
+  const handlePress = () => {
+    if(replace == true){
+      navigation.replace(routes.VIDEO_DETAILS, { ...item }); 
+    }else{
+      navigation.navigate(routes.VIDEO_DETAILS, { ...item }); 
+    }
+  };
+  
 
   return (
     <Card
@@ -21,7 +30,7 @@ function VideoItem({ item, index, navigation }) {
       thumbnail={item.thumbnail}
       views={formattedViews}
       avatar={item.creator.avatar}
-      onPress={() => navigation.navigate(routes.VIDEO_DETAILS, item)}
+      onPress={handlePress}
       duration={item.duration}
       subsOnly={item.subscribersOnly}
     />

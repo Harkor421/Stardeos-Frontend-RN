@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity, Share, ScrollView, Dimensions } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, Share, ScrollView, Dimensions, PanResponder } from 'react-native';
 import AppText from '../components/AppText';
 import ListItem from '../components/ListItem';
 import Screen from '../components/Screen';
@@ -16,7 +16,9 @@ import ActivityIndicator from '../components/ActivityIndicator';
 import VideoList from './VideoList';
 import useRandomComment from '../hooks/useRandomComment'; // Import the useRandomComment hook
 import useShareVideo from '../hooks/useShareVideo';
-
+import RandomList from './RandomList';
+import ChannelVideoList from './ChannelVideoList';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 function ListingDetailsScreen({ route, navigation, key }) {
   const video = route.params;
@@ -54,6 +56,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
   const aspectRatio = selectedvideo?.files?.[0]?.aspectRatio || 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
 
+
   return (
     <Screen style={styles.page}>
       <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad}/>
@@ -87,10 +90,10 @@ function ListingDetailsScreen({ route, navigation, key }) {
                 title={creatorTitle}
                 subTitle={formattedFollowers + ' seguidores'}
                 showVerified={false}
-              />
+                navigate={() => navigation.navigate(routes.CREATOR_DETAILS, video)}/>
             </View>
             <View style={styles.vercanalContainer}>
-              <AppButton title="Ver canal" style={styles.vercanal} onPress={() => navigation.navigate(routes.CREATOR_DETAILS, video)} />
+              <AppButton title="Seguir" style={styles.vercanal} />
             </View>
           </View>
           <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
@@ -114,12 +117,13 @@ function ListingDetailsScreen({ route, navigation, key }) {
                 <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
               </View>
               <View>
-                  <View style = {{backgroundColor: colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, paddingVertical: 5,}}>
-                    <AppText style = {{color: colors.grayline, fontSize: 14,}}>{"Dejar un comentario"}</AppText>
+                  <View style = {{backgroundColor: colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, paddingVertical: 5, marginBottom: 20,}}>
+                    <AppText style = {{color: colors.grayline, fontSize: 14}}>{"Dejar un comentario"}</AppText>
                   </View>
                 </View>
           </TouchableOpacity>
         </View>
+        <RandomList navigation={navigation} />
       </ScrollView>
     </Screen>
   );
@@ -164,9 +168,9 @@ const styles = StyleSheet.create({
     marginLeft: 'auto', // Aligns the button to the right
   },
   vercanal: {
-    width: 125,
+    width: 110,
     height: 50,
-    borderRadius: 25
+    borderRadius: 18
   },
   commentcontainer: {
     backgroundColor: colors.graybox,
