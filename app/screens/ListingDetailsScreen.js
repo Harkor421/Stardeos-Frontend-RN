@@ -122,6 +122,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
                   </View>
                 </View>
           </TouchableOpacity>
+          <AppText style = {{color: colors.white, fontSize: 20, fontWeight: 800, marginBottom: 30,}}>{"Más videos"}</AppText>
         </View>
         <RandomList navigation={navigation} />
       </ScrollView>

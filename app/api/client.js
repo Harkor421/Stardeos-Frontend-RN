@@ -8,13 +8,10 @@ const apiClient = create({
   },
 });
 
-// Add a request interceptor to set the Authorization header
-apiClient.addRequestTransform(async request => {
-  const authTokenData = await authStorage.getToken();
-  
-  if (authTokenData && authTokenData.token) {
-    request.headers['Authorization'] = `Bearer ${authTokenData.data.access_token}`;
-  }
+apiClient.addAsyncRequestTransform(request => async () => {
+  const authToken = await authStorage.getToken();
+  if (!authToken) return;
+  request.headers["Authorization"] = "Bearer " + authToken.data.access_token;
 });
 
 export default apiClient;

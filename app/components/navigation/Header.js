@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { TouchableOpacity, View, StyleSheet, Image, TextInput } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-
+import { useEffect } from 'react';
 import colors from '../../config/colors';
 import AppText from '../AppText';
 import AuthContext from '../../auth/context';
@@ -9,11 +9,14 @@ import AppTextInput from '../AppTextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import routes from './routes';
 import FeedNavigator from './FeedNavigator';
+import notificationsApi from '../../api/notifications';
+import useApi from '../../hooks/useApi';
 
 const Header = ({ navigation }) => {
   const { user } = useContext(AuthContext);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
+  const [hasNotifications, setHasNotifications] = useState(false);
 
   const handleSearchIconPress = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -24,6 +27,18 @@ const Header = ({ navigation }) => {
   navigation.navigate('SearchedVideoList', { search: searchText });
 };
 
+  const { data: notifications, error, loading, request: loadNotifications } = useApi(() => notificationsApi.getNotifications());
+
+  useEffect(() => {
+      loadNotifications();
+      console.log(notifications);
+  }, []);
+  
+  useEffect(() => {
+    if (notifications && notifications.notifications) {
+      setHasNotifications(notifications.notifications.length > 0);
+    }
+  }, [notifications]);
 
   return (
     <SafeAreaView style={styles.headerContainer}>
@@ -42,8 +57,9 @@ const Header = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Bell */}
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => navigation.navigate('Notifications', notifications)}>
         <MaterialCommunityIcons name="bell" size={22} color="white" />
+        {hasNotifications && <View style={styles.notificationBubble} />}
       </TouchableOpacity>
 
       {/* Spacing */}
@@ -148,6 +164,14 @@ const styles = StyleSheet.create({
     color: colors.white,
     paddingHorizontal: 10, // Added padding
     borderRadius: 10, // Added border radius
+  },
+  notificationBubble: {
+    position: 'absolute',
+    right: -1,
+    backgroundColor: 'red',
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   
 });

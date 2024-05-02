@@ -10,16 +10,30 @@ import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 
+import notificationsApi from '../api/notifications'
+
 function VideoList({ navigation }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const [refresh, setRefresh] = useState(false); // State variable to force refresh
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
 
-  // Memoized renderItem function to prevent unnecessary re-renders
-  const renderItem = useCallback(({ item }) => {
-    return <VideoItem item={item} navigation={navigation} replace={true}/>;
+
+  const renderItem = useCallback(({ item, index }) => {
+    if ((index + 1) % 5 === 0) {
+      // Render ad card every 5th item
+      return (
+        <View style={styles.adCard}>
+          <AppText style = {{color: colors.white}}>{"Ad Card"}</AppText> 
+        </View>
+      );
+    } else {
+      // Render video item
+      return <VideoItem item={item} navigation={navigation} replace={true} />;
+    }
   }, [navigation]);
+  
+
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -68,6 +82,15 @@ const styles = StyleSheet.create({
   errortext: {
     color: colors.white,
     textAlign: 'center',
+  },
+  adCard: {
+    // Styles for the ad card container
+    backgroundColor: colors.lightGray,
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

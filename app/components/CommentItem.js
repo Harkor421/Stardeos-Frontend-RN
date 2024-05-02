@@ -4,6 +4,7 @@ import AppText from './AppText';
 
 import colors from '../config/colors';
 import useTimeAgo from '../hooks/useTimeAgo';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 function CommentItem({ title, subTitle, avatar, date }) {
   const elapsedTime = useTimeAgo(date);
@@ -33,6 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginLeft: 10,
     marginTop: 30,
+    alignItems: 'center'
   },
   userInfo: {
     flex: 1,
@@ -44,7 +46,6 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     marginRight: 10,
-    marginTop: 10,
   },
   user: {
     color: colors.white,

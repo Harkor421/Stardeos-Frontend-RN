@@ -17,9 +17,20 @@ function SearchedVideoList({ navigation, search }) {
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.searchVideo({ search: search, page: page }));
 
   // Memoized renderItem function to prevent unnecessary re-renders
-  const renderItem = useCallback(({ item }) => {
-    return <VideoItem item={item} navigation={navigation} replace={false}/>;
+  const renderItem = useCallback(({ item, index }) => {
+    if ((index + 1) % 5 === 0) {
+      // Render ad card every 5th item
+      return (
+        <View style={styles.adCard}>
+          <AppText style = {{color: colors.white}}>{"Ad Card"}</AppText> 
+        </View>
+      );
+    } else {
+      // Render video item
+      return <VideoItem item={item} navigation={navigation} replace={true} />;
+    }
   }, [navigation]);
+  
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -68,6 +79,15 @@ function SearchedVideoList({ navigation, search }) {
 const styles = StyleSheet.create({
   screen: {
     padding: 19,
+  },
+  adCard: {
+    // Styles for the ad card container
+    backgroundColor: colors.lightGray,
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

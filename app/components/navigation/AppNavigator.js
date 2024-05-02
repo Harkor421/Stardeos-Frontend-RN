@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -8,10 +8,35 @@ import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
 import ComingSoon from '../../screens/ComingSoon';
 import SearchNavigator from './SearchNavigator';
+import NotificationScreen from '../../screens/NotificationScreen';
+import * as Notifications from "expo-notifications";
+import * as Permissions from 'expo-permissions';
+
+
+
+
 
 const Tab = createBottomTabNavigator();
 
-const AppNavigator = () => (
+const AppNavigator = () => {
+
+  useEffect(()=>{
+    registerForPushNotifications();
+  },[]);
+
+
+  const registerForPushNotifications = async () =>{
+    try{
+      const token = await Notifications.getExpoPushTokenAsync();
+      console.log(token);
+
+    }
+    catch (error){
+      console.log('Error getting push token', error);
+    }
+  }
+  
+  return (
   <Tab.Navigator
     screenOptions={{
       tabBarActiveBackgroundColor: colors.headerblue,
@@ -65,6 +90,14 @@ const AppNavigator = () => (
 
     }}
   />
+  <Tab.Screen name="Notifications" component={NotificationScreen} 
+    options={{
+        tabBarButton: () => null,
+        headerShown: false,
+        tabBarVisible:false //hide tab bar on this screen
+
+    }}
+  />
    <Tab.Screen 
       name="SearchedVideoList" 
       component={SearchNavigator} 
@@ -80,5 +113,6 @@ const AppNavigator = () => (
 
   </Tab.Navigator>
 );
+}
 
 export default AppNavigator;
