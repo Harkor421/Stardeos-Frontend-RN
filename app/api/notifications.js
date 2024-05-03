@@ -5,6 +5,7 @@ const getNotifications = () => {
     return client.get(`/notifications`);
   };
 
+
 export default {
     getNotifications,
 };
