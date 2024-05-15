@@ -26,6 +26,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
   const [videoLoad, setVideoLoad] = useState(true);
   const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
+  const videoRef = React.useRef(null);
 
   useEffect(() => { //Load videos and pre load comments
     loadVideo();
@@ -33,13 +34,18 @@ function ListingDetailsScreen({ route, navigation, key }) {
   }, [reloadKey]);
 
 
-  useEffect(() => { //Page refresh
-    const unsubscribe = navigation.addListener('focus', () => {
-      setReloadKey(Date.now());
+  useEffect(() => { //Load videos and pre load comments
+    loadVideo();
+    loadComments();
+    const unsubscribe = navigation.addListener('blur', () => {
+      // Stop the video when the screen loses focus
+      if (videoRef.current) {
+        videoRef.current.pauseAsync();
+      }
     });
-
     return unsubscribe;
-  }, [navigation]);
+  }, [navigation, reloadKey]);
+
 
 
   const formattedDate = useDateFormat(video.createdAt);
@@ -62,6 +68,7 @@ function ListingDetailsScreen({ route, navigation, key }) {
       <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad}/>
       <ScrollView>
         <Video
+          ref={videoRef}
           source={{ uri: fileUrls[0] }}
           rate={1.0}
           volume={1.0}

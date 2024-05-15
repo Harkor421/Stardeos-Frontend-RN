@@ -8,6 +8,8 @@ import AuthContext from './app/auth/context';
 import authStorage from './app/auth/storage';
 import colors from './app/config/colors';
 import ActivityIndicator from './app/components/ActivityIndicator'; // Update the import path
+import * as Notifications from 'expo-notifications';
+
 
 export default function App() {
   const [user, setUser] = useState(null);

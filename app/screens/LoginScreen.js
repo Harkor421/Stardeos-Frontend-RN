@@ -56,7 +56,6 @@ function LoginScreen(props) {
             onSubmit={handleSubmit}
             validationSchema={validationSchema}
             >
-                <ErrorMessage error = "Usuario o contraseña no es valido" visible={loginFailed}/>
                         <AppFormField
                         autoCapitalize="none"
                         name="username"
@@ -77,6 +76,7 @@ function LoginScreen(props) {
                         placeholder="Contraseña"
                         placeholderTextColor = {colors.lightgray}
                         />
+                        <ErrorMessage error = "Usuario o contraseña no es valido" visible={loginFailed}/>
                         <TouchableOpacity onPress={() =>Linking.openURL('https://stardeos.com/forget-password')}>
                         <AppText style = {styles.forgotpassword}>¿Olvidaste tu contraseña?</AppText>
                         </TouchableOpacity>

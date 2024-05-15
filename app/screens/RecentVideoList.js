@@ -9,22 +9,31 @@ import videosApi from '../api/videos';
 import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
-import BannerAdComponent from '../components/BannerAd';
 
-function RandomList({ navigation }) {
+import notificationsApi from '../api/notifications'
+
+function RecentVideoList({ navigation, route}) {
+  const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(randomPage()));
+  const [refresh, setRefresh] = useState(false); // State variable to force refresh
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
 
-  // Memoized renderItem function to prevent unnecessary re-renders
+
   const renderItem = useCallback(({ item, index }) => {
     if ((index + 1) % 5 === 0) {
       // Render ad card every 5th item
-      return <BannerAdComponent style={styles.adCard} />;
+      return (
+        <View style={styles.adCard}>
+          <AppText style = {{color: colors.white}}>{"Ad Card"}</AppText> 
+        </View>
+      );
     } else {
       // Render video item
-      return <VideoItem item={item} navigation={navigation} replace={0} />;
+      return <VideoItem item={item} navigation={navigation} replace={true} />;
     }
   }, [navigation]);
+  
+
 
   useEffect(() => {
     if (videos && videos.videos) {
@@ -34,11 +43,13 @@ function RandomList({ navigation }) {
 
   useEffect(() => {
     loadVideos();
-  }, []); // Load videos only once when the component mounts
+  }, [page, refresh]); // Update when the page or refresh state changes
 
-  // Function to generate a random page number
-  const randomPage = () => {
-    return Math.floor(Math.random() * 100) + 1; // Assuming there are 100 pages of videos
+  // Function to force refresh
+  const handleRefresh = () => {
+    setPage(1); // Reset page to 1
+    setAllVideos([]); // Clear the list
+    setRefresh(!refresh);
   };
 
   return (
@@ -54,9 +65,11 @@ function RandomList({ navigation }) {
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}
-        scrollEnabled={false}
+        onEndReachedThreshold={0.2}
+        onEndReached={() => setPage(page + 1)}
+        refreshing={loading} // Set refreshing state based on loading status
+        onRefresh={handleRefresh} // Call handleRefresh when pull-to-refresh is triggered
       />
-      <View style={styles.lowcontainer} />
     </Screen>
   );
 }
@@ -70,9 +83,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   adCard: {
-    marginVertical: 20,
+    // Styles for the ad card container
+    padding: 20,
+    marginVertical: 10,
+    borderRadius: 10,
     alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 
-export default RandomList;
+export default RecentVideoList;

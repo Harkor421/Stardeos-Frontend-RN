@@ -7,7 +7,7 @@ const Stack = createStackNavigator();
 import CreatorScreen from "../../screens/CreatorScreen";
 
 const FeedNavigator = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false }}>
+  <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true, freezeOnBlur: true } }>
     <Stack.Screen name="Videos" component={VideoList} />
     <Stack.Screen
       name="VideoDetails"

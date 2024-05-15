@@ -9,6 +9,7 @@ import videosApi from '../api/videos';
 import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
+import BannerAdComponent from '../components/BannerAd';
 
 function SearchedVideoList({ navigation, search }) {
   const [page, setPage] = useState(1);
@@ -20,14 +21,10 @@ function SearchedVideoList({ navigation, search }) {
   const renderItem = useCallback(({ item, index }) => {
     if ((index + 1) % 5 === 0) {
       // Render ad card every 5th item
-      return (
-        <View style={styles.adCard}>
-          <AppText style = {{color: colors.white}}>{"Ad Card"}</AppText> 
-        </View>
-      );
+      return <BannerAdComponent style={styles.adCard} />;
     } else {
       // Render video item
-      return <VideoItem item={item} navigation={navigation} replace={true} />;
+      return <VideoItem item={item} navigation={navigation} replace={0} />;
     }
   }, [navigation]);
   
@@ -88,6 +85,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  adCard: {
+    marginVertical: 20,
+    alignItems: 'center',
   },
 });
 

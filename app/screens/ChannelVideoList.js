@@ -39,7 +39,7 @@ function ChannelVideoList({ navigation, channelid }) {
         scrollEnabled={false} 
         data={allVideos}
         keyExtractor={(item) => item.id.toString()}
-        renderItem={({ item }) => <VideoItem item={item} navigation={navigation} />} // Use the VideoItem component here
+        renderItem={({ item }) => <VideoItem item={item} navigation={navigation} replace = {0}/>} // Use the VideoItem component here
         onEndReachedThreshold={0.1}
         onEndReached={() => setPage(page + 1)}
       />

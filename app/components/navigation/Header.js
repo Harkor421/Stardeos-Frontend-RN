@@ -43,7 +43,7 @@ const Header = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.headerContainer}>
       {/* Stardeos */}
-      <TouchableOpacity style={styles.stardeos} onPress= {() => navigation.navigate('Videos')}>
+      <TouchableOpacity style={styles.stardeos} onPress= {() => navigation.navigate(routes.VIDEO_LIST)}>
         <Image source={require('../../assets/stardeos-logo.png')} style={styles.stardeoslogo} />
         <Image source={require('../../assets/stardeos-letters.png')} style={styles.stardeosletters} />
       </TouchableOpacity>

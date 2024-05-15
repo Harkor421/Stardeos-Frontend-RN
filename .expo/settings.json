@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": "HYWUYIE",
   "https": false,
-  "scheme": "exp+stardeos",
+  "scheme": null,
   "devClient": false
 }

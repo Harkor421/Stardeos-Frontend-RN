@@ -12,7 +12,7 @@ import colors from '../config/colors';
 
 function Comments({ navigation, route }) {
     const comments = route.params;
-
+    console.log(comments);
 
     const handleCloseModal = () => {
         navigation.goBack(); // Close the modal
@@ -24,6 +24,7 @@ function Comments({ navigation, route }) {
           subTitle={item.content}
           avatar={item.author.avatar ? {uri: item.author.avatar} : require('../assets/default-avatar-icon.jpeg')} // Use default avatar if empty
           date={item.createdAt}
+          stardustamount={item.stardusts}
         />
       );
     

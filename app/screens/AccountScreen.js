@@ -8,6 +8,7 @@ import AppText from '../components/AppText';
 import colors from '../config/colors'
 import AppButton from '../components/AppButton';
 import authStorage from '../auth/storage';
+import BannerAdComponent from '../components/BannerAd';
 
 function AccountScreen({ navigation }) {
 
@@ -30,6 +31,7 @@ function AccountScreen({ navigation }) {
                 <AppText style= {styles.stardustcount}>{user.data.user.stardusts}</AppText>
                 </View>
                 <AppButton onPress={handleLogOut} title = "Cerrar Sesión"></AppButton>
+                <BannerAdComponent style={styles.adCard} />
             </View>
         </Screen>
     );
@@ -71,6 +73,9 @@ const styles = StyleSheet.create({
     stardustcount:{
         color: colors.white,
         fontWeight: 900,
+    },
+    adCard:{
+        marginTop: 50,
     }
 });
 

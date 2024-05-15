@@ -14,11 +14,18 @@ function VideoItem({ item, index, navigation, replace }) {
   const uniqueKey = item.id + '-' + index;
 
   const handlePress = () => {
-    if(replace == true){
-      navigation.replace(routes.VIDEO_DETAILS, { ...item }); 
-    }else{
-      navigation.navigate(routes.VIDEO_DETAILS, { ...item }); 
+    if(replace == 0){
+       navigation.push(routes.VIDEO_DETAILS, { ...item }); 
+      if(replace == 1)
+      {
+        navigation.navigate(routes.VIDEO_DETAILS, { ...item }); 
+      }
+      else
+      {
+        navigation.replace(routes.VIDEO_DETAILS, { ...item }); 
+      }
     }
+
   };
   
 

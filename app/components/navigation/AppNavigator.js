@@ -110,6 +110,17 @@ const AppNavigator = () => {
 
     })}
   />
+  <Tab.Screen 
+      name="RecentVideoList" 
+      component={FeedNavigator} 
+      options={({ navigation }) => ({
+        tabBarButton: () => null,
+        headerShown: true,
+        tabBarVisible:false,
+        header: () => <Header navigation={navigation}/> // Use the Header component
+
+    })}
+  />
 
   </Tab.Navigator>
 );
