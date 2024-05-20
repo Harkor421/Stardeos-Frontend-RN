@@ -65,8 +65,8 @@ function ListingDetailsScreen({ route, navigation, key }) {
 
   return (
     <Screen style={styles.page}>
-      <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad}/>
       <ScrollView>
+        <View>
         <Video
           ref={videoRef}
           source={{ uri: fileUrls[0] }}
@@ -80,6 +80,8 @@ function ListingDetailsScreen({ route, navigation, key }) {
           shouldRasterizeIOS
           onReadyForDisplay={() => setVideoLoad(false)}
         />
+        <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad}/>
+        </View>
         <View style={styles.detailsContainer}>
           <AppText style={styles.title}>{video.title}</AppText>
           <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>

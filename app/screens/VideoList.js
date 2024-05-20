@@ -49,13 +49,13 @@ function VideoList({ navigation, route}) {
 
   return (
     <Screen style={styles.screen}>
+         <ActivityIndicator visible={loading} />
       {error && (
         <>
           <AppText style={styles.errortext}>No se puede conectar a Stardeos.</AppText>
           <AppButton title="Reintentar" onPress={loadVideos} />
         </>
       )}
-      <ActivityIndicator visible={loading} />
       <FlatList
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
@@ -65,6 +65,7 @@ function VideoList({ navigation, route}) {
         refreshing={loading} // Set refreshing state based on loading status
         onRefresh={handleRefresh} // Call handleRefresh when pull-to-refresh is triggered
       />
+
     </Screen>
   );
 }

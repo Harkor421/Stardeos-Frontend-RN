@@ -15,6 +15,7 @@ import videosApi from '../api/videos';
 function StreamScreen({ route, navigation }) {
   const video = route.params;
   const [videoLoad, setVideoLoad] = useState(true);
+  const [streamEnded, setStreamEnded] = useState(false); // State to track if the stream has ended
   const videoRef = useRef(null);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id));
 
@@ -26,6 +27,22 @@ function StreamScreen({ route, navigation }) {
     });
     return unsubscribe;
   }, [navigation]);
+
+  useEffect(() => {
+    const updateStreamStatus = (status) => {
+      if (status.isPlaying && status.didJustFinish) {
+        setStreamEnded(true);
+      }
+    };
+
+    const interval = setInterval(() => {
+      if (videoRef.current) {
+        videoRef.current.getStatusAsync().then(updateStreamStatus);
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleShare = useShareVideo(video);
 
@@ -48,6 +65,11 @@ function StreamScreen({ route, navigation }) {
           shouldPlay
           shouldRasterizeIOS
           onReadyForDisplay={() => setVideoLoad(false)}
+          onPlaybackStatusUpdate={(status) => {
+            if (status.isPlaying && status.didJustFinish) {
+              setStreamEnded(true);
+            }
+          }}
         />
       </View>
       <View style={styles.detailsContainer}>
@@ -71,6 +93,11 @@ function StreamScreen({ route, navigation }) {
           </View>
         </View>
       </View>
+      {streamEnded && (
+        <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18 }}>
+          Este directo ha terminado.
+        </AppText>
+      )}
       <RandomList navigation={navigation} />
     </ScrollView>
   );
