@@ -1,68 +1,104 @@
-import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, View, Image, TouchableOpacity, ScrollView } from 'react-native';
 import Screen from '../components/Screen';
 import AppText from '../components/AppText';
 import colors from '../config/colors';
-import VideoList from './VideoList'; // Import the VideoList component
-import { ScrollView } from 'react-native-gesture-handler';
 import ChannelVideoList from './ChannelVideoList';
-import useFormatViews from '../hooks/useFormatViews'
+import useFormatViews from '../hooks/useFormatViews';
+import useApi from '../hooks/useApi';
+import streamsApi from '../api/streams';
+import routes from '../components/navigation/routes';
 
 function CreatorScreen({ navigation, route }) {
     const creator = route.params;
-    const formattedFollowers = useFormatViews(creator.channelId.subscriberCount)
-    const formattedSubs = useFormatViews(creator.channelId.user.subscriptionCount)
+    const formattedFollowers = useFormatViews(creator.channelId.subscriberCount);
+    const formattedSubs = useFormatViews(creator.channelId.user.subscriptionCount);
+    const { data: stream, error, loading, request: loadStream } = useApi(() => streamsApi.getStreams(creator.channelId.user.username));
 
+    useEffect(() => {
+        loadStream();
+        console.log("stream === ", stream)
+    }, []);
+
+    const handleLivePress = () => {
+        // Check if stream data is available and it's running
+        if (stream && !loading && stream.running) {
+            // Navigate to the video details screen and pass the stream details as a parameter
+            navigation.push("StreamScreen", stream);
+        } else {
+            console.log("No live stream available");
+        }
+    };
+    
     return (
         <Screen>
             <ScrollView>
-            <View style={styles.creatorcontainer}>
-                <Image style={styles.creatoravatar} source={{ uri: creator.creator.avatar }} />
-                <View style={styles.creatortitle}>
-                    <Image style={styles.verifiedicon} source={require('../assets/verified-icon.png')} />
-                    <AppText style={styles.creatorname}>{creator.channelId.displayName}</AppText>
+                <View style={styles.creatorContainer}>
+                    <Image style={styles.creatorAvatar} source={{ uri: creator.creator.avatar }} />
+                    <View style={styles.creatorTitle}>
+                        <Image style={styles.verifiedIcon} source={require('../assets/verified-icon.png')} />
+                        <AppText style={styles.creatorName}>{creator.channelId.displayName}</AppText>
+                    </View>
+                    {/* Conditional rendering based on whether stream data is available and it's running */}
+                    {stream && !loading && stream.running && (
+                        <TouchableOpacity style={styles.livePanel} onPress={handleLivePress}>
+                            <AppText style={styles.liveText}>{creator.channelId.user.username} está en vivo</AppText>
+                        </TouchableOpacity>
+                    )}
+                    <View style={styles.statsContainer}>
+                        <AppText style={styles.followers}>{formattedFollowers + " Seguidores "}</AppText>
+                        <AppText style={styles.followers}>{"• "}</AppText>
+                        <AppText style={styles.subscribers}>{formattedSubs + " Suscriptores"}</AppText>
+                    </View>
                 </View>
-                <View style={styles.statscontainer}>
-                    <AppText style={styles.followers}>{formattedFollowers + " Seguidores "}</AppText>
-                    <AppText style={styles.followers}>{"• "}</AppText>
-                    <AppText style={styles.subscribers}>{formattedSubs + " Suscriptores"}</AppText>
+                <View style={{ flex: 1 }}>
+                    <ChannelVideoList navigation={navigation} channelid={creator.channelId.id} />
                 </View>
-            </View>
-            <View style = {{flex: 1}}>
-                <ChannelVideoList navigation={navigation} channelid= {creator.channelId.id} />
-            </View>
             </ScrollView>
         </Screen>
     );
+    
 }
 
 const styles = StyleSheet.create({
-    creatorcontainer: {
+    creatorContainer: {
         alignItems: 'center',
         marginTop: 100,
     },
-    creatoravatar: {
+    creatorAvatar: {
         width: 100,
         height: 100,
         borderRadius: 50,
     },
-    creatortitle: {
+    creatorTitle: {
         flexDirection: 'row',
         alignItems: 'center',
         marginTop: 25,
-        justifyContent: 'center'
+        justifyContent: 'center',
     },
-    creatorname: {
+    creatorName: {
         color: colors.white,
         fontSize: 18,
-        fontWeight: 900,
+        fontWeight: '900',
     },
-    verifiedicon: {
+    verifiedIcon: {
         width: 15,
         height: 15,
         marginRight: 15,
     },
-    statscontainer: {
+    livePanel: {
+        backgroundColor: 'red',
+        borderRadius: 15,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        marginTop: 10,
+    },
+    liveText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 14,
+    },
+    statsContainer: {
         flexDirection: 'row',
         backgroundColor: colors.graybox,
         alignItems: 'center',
@@ -77,12 +113,12 @@ const styles = StyleSheet.create({
     followers: {
         color: colors.white,
         fontSize: 16,
-        fontWeight: 700,
+        fontWeight: '700',
     },
     subscribers: {
         color: colors.white,
         fontSize: 16,
-        fontWeight: 700,
+        fontWeight: '700',
     },
 });
 

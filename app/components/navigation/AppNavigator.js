@@ -52,16 +52,18 @@ const AppNavigator = () => {
       },
     }}>
     <Tab.Screen
-      name="Inicio"
-      component={FeedNavigator}
-      options={({ navigation }) => ({
-        headerShown: true,
-        header: () => <Header navigation={navigation}/>, // Use the Header component
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="home" color={color} size={size} />
-        ),
-      })}
-    />
+  name="Inicio"
+  component={FeedNavigator}
+  options={({ navigation }) => ({
+    headerShown: true,
+    header: () => <Header navigation={navigation} />, // Use the Header component
+    tabBarIcon: ({ color, size }) => (
+      <MaterialCommunityIcons name="home" color={color} size={size} />
+    ),
+  })}
+/>
+
+
     <Tab.Screen
       name="Crear"
       component={ComingSoon}
