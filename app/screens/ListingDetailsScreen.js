@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { View, Image, StyleSheet, Text, TouchableOpacity, Share, ScrollView, Dimensions, PanResponder } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, Share, ScrollView, Dimensions } from 'react-native';
 import AppText from '../components/AppText';
 import ListItem from '../components/ListItem';
 import Screen from '../components/Screen';
@@ -14,31 +14,31 @@ import useDateFormat from '../hooks/useDateFormat';
 import useFormatViews from '../hooks/useFormatViews';
 import ActivityIndicator from '../components/ActivityIndicator';
 import VideoList from './VideoList';
-import useRandomComment from '../hooks/useRandomComment'; // Import the useRandomComment hook
+import useRandomComment from '../hooks/useRandomComment';
 import useShareVideo from '../hooks/useShareVideo';
 import RandomList from './RandomList';
 import ChannelVideoList from './ChannelVideoList';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-function ListingDetailsScreen({ route, navigation, key }) {
+function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
-  const [reloadKey, setReloadKey] = useState(key);
+  const [reloadKey, setReloadKey] = useState(Date.now());
   const [videoLoad, setVideoLoad] = useState(true);
-  const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
-  const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
+  const [likeCount, setLikeCount] = useState(video.likeCount || 0);
+  const [dislikeCount, setDisLikeCount] = useState(video.dislikeCount || 0);
+  const [liked, setLiked] = useState(undefined);
+  const [loader, setLoader] = useState(false);
   const videoRef = React.useRef(null);
 
-  useEffect(() => { //Load videos and pre load comments
-    loadVideo();
-    loadComments();
-  }, [reloadKey]);
+  const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
+  const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
 
 
-  useEffect(() => { //Load videos and pre load comments
+
+  useEffect(() => {
     loadVideo();
     loadComments();
+    console.log(video.id);
     const unsubscribe = navigation.addListener('blur', () => {
-      // Stop the video when the screen loses focus
       if (videoRef.current) {
         videoRef.current.pauseAsync();
       }
@@ -46,50 +46,83 @@ function ListingDetailsScreen({ route, navigation, key }) {
     return unsubscribe;
   }, [navigation, reloadKey]);
 
+  const handleLikeDislike = async (type) => {
+    setLoader(true);
+    const data = { video: video.id };
+
+    if (type === "likes" && (typeof liked === "undefined" || liked === -1 || liked === 0)) {
+      await videosApi.markLikeOrDislike(data, "like");
+      setLikeCount((prev) => (prev !== null ? prev + 1 : 1));
+      setDisLikeCount((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+      setLiked(1);
+    } else if (type === "dislikes" && (typeof liked === "undefined" || liked === 1 || liked === 0)) {
+      await videosApi.markLikeOrDislike(data, "dislike");
+      setDisLikeCount((prev) => (prev !== null ? prev + 1 : 1));
+      setLikeCount((prev) => (prev !== null && prev > 0 ? prev - 1 : 0));
+      setLiked(-1);
+    }
+
+    setLoader(false);
+  };
 
 
   const formattedDate = useDateFormat(video.createdAt);
   const formattedViews = useFormatViews(video.views);
-  const formattedFollowers = useFormatViews(video.channelId.subscriberCount)
+  const formattedFollowers = useFormatViews(video.channelId.subscriberCount);
   const randomComment = useRandomComment(comments?.comments);
   const handleShare = useShareVideo(video);
-  
-
   const fileUrls = selectedvideo?.files?.map(file => file.fileUrl) || [];
   const creatorTitle = video.channelId.displayName ? video.channelId.displayName : video.creator.username;
-
   const windowWidth = Dimensions.get('window').width;
   const aspectRatio = selectedvideo?.files?.[0]?.aspectRatio || 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
-
 
   return (
     <Screen style={styles.page}>
       <ScrollView>
         <View>
-        <Video
-          ref={videoRef}
-          source={{ uri: fileUrls[0] }}
-          rate={1.0}
-          volume={1.0}
-          isMuted={false}
-          resizeMode={ResizeMode.COVER}
-          style={{ width: windowWidth, height: videoHeight }}
-          useNativeControls
-          shouldPlay
-          shouldRasterizeIOS
-          onReadyForDisplay={() => setVideoLoad(false)}
-        />
-        <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad}/>
+          <Video
+            ref={videoRef}
+            source={{ uri: fileUrls[0] }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode={ResizeMode.COVER}
+            style={{ width: windowWidth, height: videoHeight }}
+            useNativeControls
+            shouldPlay
+            shouldRasterizeIOS
+            onReadyForDisplay={() => setVideoLoad(false)}
+          />
+          <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad} />
         </View>
         <View style={styles.detailsContainer}>
           <AppText style={styles.title}>{video.title}</AppText>
           <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>
           <View style={styles.interactions}>
-            <Interaction image={require('../assets/like-icon.png')} text={video.likeCount} style={styles.like} />
-            <Interaction image={require('../assets/dislike-icon.png')} text={video.dislikeCount} style={styles.dislike} />
-            <Interaction image={require('../assets/share-icon.png')} text={'Compartir'} style={styles.dislike} onPress={handleShare}/>
-            <Interaction image={require('../assets/stardust-icon.png')} text={'Dona'} style={styles.dislike} />
+          <Interaction
+              image={require('../assets/like-icon.png')}
+              text={likeCount}
+              style={styles.like}
+              onPress={() => handleLikeDislike("likes")}
+            />
+            <Interaction
+              image={require('../assets/dislike-icon.png')}
+              text={dislikeCount}
+              style={styles.dislike}
+              onPress={() => handleLikeDislike("dislikes")}
+            />
+            <Interaction
+              image={require('../assets/share-icon.png')}
+              text={'Compartir'}
+              style={styles.dislike}
+              onPress={handleShare}
+            />
+            <Interaction
+              image={require('../assets/stardust-icon.png')}
+              text={'Dona'}
+              style={styles.dislike}
+            />
           </View>
           <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginTop: 10 }} />
           <View style={styles.userContainer}>
@@ -99,7 +132,8 @@ function ListingDetailsScreen({ route, navigation, key }) {
                 title={creatorTitle}
                 subTitle={formattedFollowers + ' seguidores'}
                 showVerified={false}
-                navigate={() => navigation.navigate(routes.CREATOR_DETAILS, video)}/>
+                navigate={() => navigation.navigate(routes.CREATOR_DETAILS, video)}
+              />
             </View>
             <View style={styles.vercanalContainer}>
               <AppButton title="Seguir" style={styles.vercanal} />
@@ -107,31 +141,30 @@ function ListingDetailsScreen({ route, navigation, key }) {
           </View>
           <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
           <TouchableOpacity
-              style={styles.commentcontainer}
-              onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, comments.comments)}>
-              <View style={styles.commentcontainer2}>
-                <View style = {{flexDirection: 'row', alignItems: 'center'}}>
+            style={styles.commentcontainer}
+            onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, comments.comments)}>
+            <View style={styles.commentcontainer2}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Image source={require('../assets/comments-icon.png')} style={styles.commentsicon} />
                 <AppText style={styles.comentariostitle}>{"Comentarios"}</AppText>
-                </View>
-                {/* Render totalComments only if it exists */}
-                <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
               </View>
-              <View style={styles.randomComment}>
-                {randomComment?.author?.avatar ? (
-                  <Image source={{ uri: randomComment.author.avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} />
-                ) : (
-                  <Image source={require('../assets/default-avatar-icon.jpeg')} style={{ width: 20, height: 20, borderRadius: 10 }} />
-                )}
-                <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
+              <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
+            </View>
+            <View style={styles.randomComment}>
+              {randomComment?.author?.avatar ? (
+                <Image source={{ uri: randomComment.author.avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} />
+              ) : (
+                <Image source={require('../assets/default-avatar-icon.jpeg')} style={{ width: 20, height: 20, borderRadius: 10 }} />
+              )}
+              <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
+            </View>
+            <View>
+              <View style={{ backgroundColor: colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, paddingVertical: 5, marginBottom: 20, }}>
+                <AppText style={{ color: colors.grayline, fontSize: 14 }}>{"Dejar un comentario"}</AppText>
               </View>
-              <View>
-                  <View style = {{backgroundColor: colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, paddingVertical: 5, marginBottom: 20,}}>
-                    <AppText style = {{color: colors.grayline, fontSize: 14}}>{"Dejar un comentario"}</AppText>
-                  </View>
-                </View>
+            </View>
           </TouchableOpacity>
-          <AppText style = {{color: colors.white, fontSize: 20, fontWeight: 800, marginBottom: 30,}}>{"Más videos"}</AppText>
+          <AppText style={{ color: colors.white, fontSize: 20, fontWeight: '800', marginBottom: 30, }}>{"Más videos"}</AppText>
         </View>
         <RandomList navigation={navigation} />
       </ScrollView>
@@ -159,7 +192,7 @@ const styles = StyleSheet.create({
   userContainer: {
     marginVertical: 8,
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   interactions: {
     flexDirection: 'row',
@@ -175,12 +208,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   vercanalContainer: {
-    marginLeft: 'auto', // Aligns the button to the right
+    marginLeft: 'auto',
   },
   vercanal: {
     width: 110,
     height: 50,
-    borderRadius: 18
+    borderRadius: 18,
   },
   commentcontainer: {
     backgroundColor: colors.graybox,
@@ -194,12 +227,12 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   comentariostitle: {
     color: colors.white,
     fontSize: 14,
-    fontWeight: 700,
+    fontWeight: '700',
     marginLeft: 10,
   },
   commentsicon: {
@@ -214,7 +247,7 @@ const styles = StyleSheet.create({
   commentAmount: {
     color: colors.secondary,
     fontSize: 14,
-    fontWeight: 800,
+    fontWeight: '800',
   },
   randomCommentContent: {
     color: colors.white,
@@ -222,7 +255,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexShrink: 1,
     marginLeft: 10,
-  }
+  },
 });
 
 export default ListingDetailsScreen;

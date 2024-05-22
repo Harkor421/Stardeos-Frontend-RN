@@ -24,7 +24,7 @@ const Header = ({ navigation }) => {
 
   const handleSearchSubmit = () => {
   setIsSearchOpen(false);
-  navigation.navigate('SearchedVideoList', { search: searchText });
+  navigation.navigate('SearchedVideos', { search: searchText });
 };
 
   const { data: notifications, error, loading, request: loadNotifications } = useApi(() => notificationsApi.getNotifications());

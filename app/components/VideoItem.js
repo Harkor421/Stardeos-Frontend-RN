@@ -25,7 +25,6 @@ function VideoItem({ item, index, navigation, replace }) {
         navigation.replace(routes.VIDEO_DETAILS, { ...item }); 
       }
     }
-
   };
   
 

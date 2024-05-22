@@ -7,7 +7,6 @@ import FeedNavigator from "./FeedNavigator";
 import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
 import ComingSoon from '../../screens/ComingSoon';
-import SearchNavigator from './SearchNavigator';
 import NotificationScreen from '../../screens/NotificationScreen';
 import * as Notifications from "expo-notifications";
 import * as Permissions from 'expo-permissions';
@@ -52,18 +51,17 @@ const AppNavigator = () => {
       },
     }}>
     <Tab.Screen
-  name="Inicio"
-  component={FeedNavigator}
-  options={({ navigation }) => ({
-    headerShown: true,
-    header: () => <Header navigation={navigation} />, // Use the Header component
-    tabBarIcon: ({ color, size }) => (
-      <MaterialCommunityIcons name="home" color={color} size={size} />
-    ),
-  })}
-/>
-
-
+    name="Inicio"
+    component={FeedNavigator}
+    initialParams={{ search: '',}}
+    options={({ navigation }) => ({
+      headerShown: true,
+      header: () => <Header navigation={navigation} />, // Use the Header component
+      tabBarIcon: ({ color, size }) => (
+        <MaterialCommunityIcons name="home" color={color} size={size} />
+      ),
+    })}
+    />
     <Tab.Screen
       name="Crear"
       component={ComingSoon}
@@ -100,18 +98,7 @@ const AppNavigator = () => {
 
     }}
   />
-   <Tab.Screen 
-      name="SearchedVideoList" 
-      component={SearchNavigator} 
-      initialParams={{ search: '',}} // Set an initial empty search parameter
-      options={({ navigation }) => ({
-        tabBarButton: () => null,
-        headerShown: true,
-        tabBarVisible:false,
-        header: () => <Header navigation={navigation}/> // Use the Header component
-
-    })}
-  />
+  
   <Tab.Screen 
       name="RecentVideoList" 
       component={FeedNavigator} 

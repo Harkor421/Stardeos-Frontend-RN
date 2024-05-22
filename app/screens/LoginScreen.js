@@ -13,7 +13,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().required().label('Username'),
-    password: Yup.string().required().min(8).label('Contraseña'),
+    password: Yup.string().required().label('Contraseña'),
 
 });
 

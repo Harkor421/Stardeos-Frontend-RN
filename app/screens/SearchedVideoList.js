@@ -11,7 +11,8 @@ import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 import BannerAdComponent from '../components/BannerAd';
 
-function SearchedVideoList({ navigation, search }) {
+function SearchedVideoList({ navigation, route}) {
+  const { search } = route.params;
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const [refresh, setRefresh] = useState(false); // State variable to force refresh

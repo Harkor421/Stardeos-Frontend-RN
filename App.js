@@ -11,7 +11,9 @@ import ActivityIndicator from './app/components/ActivityIndicator'; // Update th
 import * as Notifications from 'expo-notifications';
 
 
+
 export default function App() {
+
   const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
   const [isLoadingError, setIsLoadingError] = useState(false);

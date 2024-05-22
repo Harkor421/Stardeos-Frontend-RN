@@ -24,6 +24,19 @@ const getComments = (id) => { //Video id
   return client.get(`/comments/${id}?page=1`);
 };
 
+const markLikeOrDislike = async (data, action) => {
+  try {
+    const response = await client.post(`/videos/${action}`, data);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error("Error in markLikeOrDislike:", error);
+    throw error;
+  }
+};
+
+
+
 const searchVideo = ({ search, page = 1 }) => {
   const params = new URLSearchParams({
     q: search,
@@ -43,4 +56,5 @@ export default{
     searchVideo,
     getComments,
     getChannelVideos,
+    markLikeOrDislike
 }

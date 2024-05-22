@@ -6,10 +6,17 @@ import Comments from '../../screens/Comments'
 const Stack = createStackNavigator();
 import CreatorScreen from "../../screens/CreatorScreen";
 import StreamScreen from "../../screens/StreamScreen";
+import SearchedVideoList from "../../screens/SearchedVideoList";
 
-const FeedNavigator = () => (
-  <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true, freezeOnBlur: true } }>
+const FeedNavigator = ({ route }) => {
+  return (
+  
+    <Stack.Navigator
+    screenOptions={{ headerShown: false, gestureEnabled: true, freezeOnBlur: true }}
+    >
     <Stack.Screen name="Videos" component={VideoList} />
+    <Stack.Screen name="SearchedVideos" component={SearchedVideoList} />
+
     <Stack.Screen
       name="VideoDetails"
       component={ListingDetailsScreen}
@@ -40,5 +47,6 @@ const FeedNavigator = () => (
     />
   </Stack.Navigator>
 );
+}
 
 export default FeedNavigator;
