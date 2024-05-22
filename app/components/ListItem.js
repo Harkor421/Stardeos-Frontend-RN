@@ -1,12 +1,9 @@
 import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AppText from './AppText';
-
 import colors from '../config/colors';
-import AppButton from './AppButton';
-import { TouchableHighlight } from 'react-native-gesture-handler';
 
-function ListItem({ title, subTitle, avatar, showVerified, navigate}) {
+function ListItem({ title, subTitle, avatar, showVerified, navigate }) {
   return (
     <TouchableOpacity style={styles.container} onPress={navigate}>
       <Image style={styles.image} source={{ uri: avatar }} />
@@ -14,8 +11,8 @@ function ListItem({ title, subTitle, avatar, showVerified, navigate}) {
         <AppText style={styles.user} numberOfLines={1} ellipsizeMode="tail">
           {title}
         </AppText>
-        <View style={styles.usernamecontainer}>
-          {showVerified && <Image style={styles.verifiedicon} source={require('../assets/verified-icon.png')} />}
+        <View style={styles.usernameContainer}>
+          {showVerified && <Image style={styles.verifiedIcon} source={require('../assets/verified-icon.png')} />}
           <AppText style={styles.subTitle} numberOfLines={1} ellipsizeMode="tail">
             {subTitle}
           </AppText>
@@ -27,37 +24,34 @@ function ListItem({ title, subTitle, avatar, showVerified, navigate}) {
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: "row",
-    marginLeft: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   userInfo: {
-    marginTop: 2,
-    marginLeft: 4,
+    marginLeft: 10,
+    flex: 1,
   },
   image: {
     width: 40,
     height: 40,
-    borderRadius: 35,
-    marginRight: 10,
+    borderRadius: 20,
   },
   user: {
     color: colors.white,
     fontWeight: '900',
     fontSize: 15,
-    maxWidth: '100%', // Limiting text width
+    marginBottom: 2,
   },
   subTitle: {
     color: colors.secondary,
     fontSize: 14,
     fontWeight: '900',
-    maxWidth: '100%', // Limiting text width
   },
-  usernamecontainer: {
+  usernameContainer: {
     flexDirection: 'row',
-    marginTop: 3,
     alignItems: 'center',
   },
-  verifiedicon: {
+  verifiedIcon: {
     width: 12,
     height: 12,
     marginRight: 8,

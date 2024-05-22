@@ -7,6 +7,7 @@ const Stack = createStackNavigator();
 import CreatorScreen from "../../screens/CreatorScreen";
 import StreamScreen from "../../screens/StreamScreen";
 import SearchedVideoList from "../../screens/SearchedVideoList";
+import Description from "../../screens/Description";
 
 const FeedNavigator = ({ route }) => {
   return (
@@ -16,7 +17,6 @@ const FeedNavigator = ({ route }) => {
     >
     <Stack.Screen name="Videos" component={VideoList} />
     <Stack.Screen name="SearchedVideos" component={SearchedVideoList} />
-
     <Stack.Screen
       name="VideoDetails"
       component={ListingDetailsScreen}
@@ -41,6 +41,13 @@ const FeedNavigator = ({ route }) => {
     <Stack.Screen
       name="Comments"
       component={Comments}
+      options={{
+        presentation: 'modal',
+      }}
+    />
+    <Stack.Screen
+      name="Description"
+      component={Description}
       options={{
         presentation: 'modal',
       }}

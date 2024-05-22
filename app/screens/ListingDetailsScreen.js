@@ -17,7 +17,7 @@ import VideoList from './VideoList';
 import useRandomComment from '../hooks/useRandomComment';
 import useShareVideo from '../hooks/useShareVideo';
 import RandomList from './RandomList';
-import ChannelVideoList from './ChannelVideoList';
+import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo Icons library
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
@@ -27,17 +27,15 @@ function ListingDetailsScreen({ route, navigation }) {
   const [dislikeCount, setDisLikeCount] = useState(video.dislikeCount || 0);
   const [liked, setLiked] = useState(undefined);
   const [loader, setLoader] = useState(false);
+  const [showDescription, setShowDescription] = useState(false); // Step 1
   const videoRef = React.useRef(null);
 
   const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
 
-
-
   useEffect(() => {
     loadVideo();
     loadComments();
-    console.log(video.id);
     const unsubscribe = navigation.addListener('blur', () => {
       if (videoRef.current) {
         videoRef.current.pauseAsync();
@@ -65,6 +63,10 @@ function ListingDetailsScreen({ route, navigation }) {
     setLoader(false);
   };
 
+  const toggleDescription = () => {
+    navigation.navigate(routes.VIDEO_DESCRIPTION,  video.description);
+  };
+
 
   const formattedDate = useDateFormat(video.createdAt);
   const formattedViews = useFormatViews(video.views);
@@ -76,6 +78,7 @@ function ListingDetailsScreen({ route, navigation }) {
   const windowWidth = Dimensions.get('window').width;
   const aspectRatio = selectedvideo?.files?.[0]?.aspectRatio || 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
+
 
   return (
     <Screen style={styles.page}>
@@ -97,10 +100,17 @@ function ListingDetailsScreen({ route, navigation }) {
           <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad} />
         </View>
         <View style={styles.detailsContainer}>
-          <AppText style={styles.title}>{video.title}</AppText>
+        <TouchableOpacity onPress={toggleDescription} style={styles.titleContainer}>
+            <AppText style={styles.title}>{video.title}</AppText>
+            {showDescription ? (
+              <MaterialIcons name="keyboard-arrow-up" size={24} color={colors.white} />
+            ) : (
+              <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.white} />
+            )}
+          </TouchableOpacity>
           <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>
           <View style={styles.interactions}>
-          <Interaction
+            <Interaction
               image={require('../assets/like-icon.png')}
               text={likeCount}
               style={styles.like}
@@ -124,47 +134,45 @@ function ListingDetailsScreen({ route, navigation }) {
               style={styles.dislike}
             />
           </View>
-          <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginTop: 10 }} />
+          <Text style={styles.separator} />
           <View style={styles.userContainer}>
-            <View style={styles.listitem}>
+            <View style={styles.listItemContainer}>
               <ListItem
                 avatar={video.creator.avatar}
                 title={creatorTitle}
-                subTitle={formattedFollowers + ' seguidores'}
+                subTitle={`${formattedFollowers} seguidores`}
                 showVerified={false}
                 navigate={() => navigation.navigate(routes.CREATOR_DETAILS, video)}
               />
             </View>
-            <View style={styles.vercanalContainer}>
-              <AppButton title="Seguir" style={styles.vercanal} />
+            <View style={styles.followButtonContainer}>
+              <AppButton title="Seguir" style={styles.followButton} />
             </View>
           </View>
-          <Text style={{ borderColor: colors.grayline, borderWidth: 0.3, height: 1, marginBottom: 10 }} />
+          <Text style={styles.separator} />
           <TouchableOpacity
-            style={styles.commentcontainer}
+            style={styles.commentContainer}
             onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, comments.comments)}>
-            <View style={styles.commentcontainer2}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Image source={require('../assets/comments-icon.png')} style={styles.commentsicon} />
-                <AppText style={styles.comentariostitle}>{"Comentarios"}</AppText>
+            <View style={styles.commentHeader}>
+              <View style={styles.commentTitleContainer}>
+                <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
+                <AppText style={styles.commentsTitle}>{"Comentarios"}</AppText>
               </View>
               <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
             </View>
             <View style={styles.randomComment}>
               {randomComment?.author?.avatar ? (
-                <Image source={{ uri: randomComment.author.avatar }} style={{ width: 20, height: 20, borderRadius: 10 }} />
+                <Image source={{ uri: randomComment.author.avatar }} style={styles.commentAvatar} />
               ) : (
-                <Image source={require('../assets/default-avatar-icon.jpeg')} style={{ width: 20, height: 20, borderRadius: 10 }} />
+                <Image source={require('../assets/default-avatar-icon.jpeg')} style={styles.commentAvatar} />
               )}
               <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
             </View>
-            <View>
-              <View style={{ backgroundColor: colors.primary, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', borderRadius: 5, paddingVertical: 5, marginBottom: 20, }}>
-                <AppText style={{ color: colors.grayline, fontSize: 14 }}>{"Dejar un comentario"}</AppText>
-              </View>
+            <View style={styles.leaveCommentButton}>
+              <AppText style={styles.leaveCommentText}>{"Dejar un comentario"}</AppText>
             </View>
           </TouchableOpacity>
-          <AppText style={{ color: colors.white, fontSize: 20, fontWeight: '800', marginBottom: 30, }}>{"Más videos"}</AppText>
+          <AppText style={styles.moreVideosTitle}>{"Más videos"}</AppText>
         </View>
         <RandomList navigation={navigation} />
       </ScrollView>
@@ -179,10 +187,18 @@ const styles = StyleSheet.create({
   detailsContainer: {
     padding: 8,
   },
+  titleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
   title: {
     color: colors.white,
     fontSize: 18,
     fontWeight: '900',
+  },
+  transparentBackground: {
+    backgroundColor: colors.primary, // Adjust the alpha channel for transparency
   },
   visitas: {
     color: colors.secondary,
@@ -200,6 +216,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     alignItems: 'center',
     marginTop: 20,
+    marginBottom: 20,
   },
   like: {
     alignItems: 'center',
@@ -207,15 +224,16 @@ const styles = StyleSheet.create({
   dislike: {
     alignItems: 'center',
   },
-  vercanalContainer: {
+  followButtonContainer: {
     marginLeft: 'auto',
   },
-  vercanal: {
+  followButton: {
     width: 110,
     height: 50,
     borderRadius: 18,
   },
-  commentcontainer: {
+  commentContainer: {
+    marginTop: 20,
     backgroundColor: colors.graybox,
     width: '100%',
     height: 120,
@@ -223,39 +241,76 @@ const styles = StyleSheet.create({
     padding: 8,
     marginBottom: 30,
   },
-  commentcontainer2: {
+  commentHeader: {
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  comentariostitle: {
+  commentTitleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  commentsIcon: {
+    width: 15,
+    height: 15,
+  },
+  commentsTitle: {
     color: colors.white,
     fontSize: 14,
     fontWeight: '700',
     marginLeft: 10,
-  },
-  commentsicon: {
-    width: 15,
-    height: 15,
-  },
-  randomComment: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 10,
   },
   commentAmount: {
     color: colors.secondary,
     fontSize: 14,
     fontWeight: '800',
   },
+  randomComment: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+  },
+  commentAvatar: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+  },
   randomCommentContent: {
     color: colors.white,
     fontSize: 12,
-    alignItems: 'center',
     flexShrink: 1,
     marginLeft: 10,
   },
+  leaveCommentButton: {
+    backgroundColor: colors.primary,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
+    paddingVertical: 5,
+    marginBottom: 20,
+  },
+  leaveCommentText: {
+    color: colors.grayline,
+    fontSize: 14,
+  },
+  moreVideosTitle: {
+    color: colors.white,
+    fontSize: 20,
+    fontWeight: '800',
+    marginBottom: 30,
+  },
+  separator: {
+    borderColor: colors.grayline,
+    borderWidth: 0.3,
+    height: 1,
+  },
+  listItemContainer: {
+    flex: 1,
+    alignItems: 'center',
+  },
+
 });
 
 export default ListingDetailsScreen;
