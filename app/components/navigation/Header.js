@@ -51,7 +51,7 @@ const Header = ({ navigation }) => {
       <View style={styles.spacing} />
 
       {/* Stardusts */}
-      <TouchableOpacity style={styles.stardusts}>
+      <TouchableOpacity style={styles.stardusts} onPress={() => navigation.navigate('Stardust', user.data.user.stardusts)}>
         <AppText style={styles.stardustcount}>{user.data.user.stardusts}</AppText>
         <Image source={require('../../assets/stardust-icon.png')} style={styles.stardusticon} />
       </TouchableOpacity>

@@ -10,6 +10,7 @@ import ComingSoon from '../../screens/ComingSoon';
 import NotificationScreen from '../../screens/NotificationScreen';
 import * as Notifications from "expo-notifications";
 import * as Permissions from 'expo-permissions';
+import StardustScreen from '../../screens/StardustScreen';
 
 
 
@@ -91,6 +92,14 @@ const AppNavigator = () => {
     }}
   />
   <Tab.Screen name="Notifications" component={NotificationScreen} 
+    options={{
+        tabBarButton: () => null,
+        headerShown: false,
+        tabBarVisible:false //hide tab bar on this screen
+
+    }}
+  />
+  <Tab.Screen name="Stardust" component={StardustScreen} 
     options={{
         tabBarButton: () => null,
         headerShown: false,

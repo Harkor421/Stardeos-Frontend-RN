@@ -18,13 +18,16 @@ import useRandomComment from '../hooks/useRandomComment';
 import useShareVideo from '../hooks/useShareVideo';
 import RandomList from './RandomList';
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo Icons library
+import { setIsEnabledAsync } from 'expo-av/build/Audio';
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
+  
   const [reloadKey, setReloadKey] = useState(Date.now());
   const [videoLoad, setVideoLoad] = useState(true);
   const [likeCount, setLikeCount] = useState(video.likeCount || 0);
   const [dislikeCount, setDisLikeCount] = useState(video.dislikeCount || 0);
+
   const [liked, setLiked] = useState(undefined);
   const [loader, setLoader] = useState(false);
   const [showDescription, setShowDescription] = useState(false); // Step 1
@@ -129,9 +132,9 @@ function ListingDetailsScreen({ route, navigation }) {
               onPress={handleShare}
             />
             <Interaction
-              image={require('../assets/stardust-icon.png')}
-              text={'Dona'}
-              style={styles.dislike}
+            image={require('../assets/stardust-icon.png')}
+            text={selectedvideo.stardusts !== null ? selectedvideo.stardusts : 0}
+            style={styles.dislike}
             />
           </View>
           <Text style={styles.separator} />
@@ -151,27 +154,27 @@ function ListingDetailsScreen({ route, navigation }) {
           </View>
           <Text style={styles.separator} />
           <TouchableOpacity
-            style={styles.commentContainer}
-            onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, comments.comments)}>
-            <View style={styles.commentHeader}>
-              <View style={styles.commentTitleContainer}>
-                <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
-                <AppText style={styles.commentsTitle}>{"Comentarios"}</AppText>
-              </View>
-              <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
-            </View>
-            <View style={styles.randomComment}>
-              {randomComment?.author?.avatar ? (
-                <Image source={{ uri: randomComment.author.avatar }} style={styles.commentAvatar} />
-              ) : (
-                <Image source={require('../assets/default-avatar-icon.jpeg')} style={styles.commentAvatar} />
-              )}
-              <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
-            </View>
-            <View style={styles.leaveCommentButton}>
-              <AppText style={styles.leaveCommentText}>{"Dejar un comentario"}</AppText>
-            </View>
-          </TouchableOpacity>
+  style={styles.commentContainer}
+  onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, { comments: comments.comments, videoId: video.id, setStardust: video.stardusts })}>
+  <View style={styles.commentHeader}>
+    <View style={styles.commentTitleContainer}>
+      <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
+      <AppText style={styles.commentsTitle}>{"Comentarios"}</AppText>
+    </View>
+    <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
+  </View>
+  <View style={styles.randomComment}>
+    {randomComment?.author?.avatar ? (
+      <Image source={{ uri: randomComment.author.avatar }} style={styles.commentAvatar} />
+    ) : (
+      <Image source={require('../assets/default-avatar-icon.jpeg')} style={styles.commentAvatar} />
+    )}
+    <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
+  </View>
+  <View style={styles.leaveCommentButton}>
+    <AppText style={styles.leaveCommentText}>{"Dejar un comentario"}</AppText>
+  </View>
+</TouchableOpacity>
           <AppText style={styles.moreVideosTitle}>{"Más videos"}</AppText>
         </View>
         <RandomList navigation={navigation} />

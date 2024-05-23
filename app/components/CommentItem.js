@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   },
   stardust_text: {
     color: colors.white,
-    fontWeight: '700',
-    fontSize: 12,
+    fontWeight: '900',
+    fontSize: 13,
   },
   image: {
     width: 50,
@@ -98,8 +98,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   verifiedicon: {
-    width: 15,
-    height: 15,
+    width: 18,
+    height: 18,
     marginRight: 5,
   },
 });
