@@ -2,8 +2,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AppText from '../components/AppText';
-import Interaction from '../components/Interaction';
-import ListItem from '../components/ListItem';
 import AppButton from '../components/AppButton';
 import RandomList from './RandomList';
 import colors from '../config/colors';
@@ -11,11 +9,13 @@ import routes from '../components/navigation/routes';
 import useShareVideo from '../hooks/useShareVideo';
 import useApi from '../hooks/useApi';
 import videosApi from '../api/videos';
+import LiveChat from '../components/LiveChat'; 
+import GradientBorderButton from '../components/GradientBorderButton';
 
 function StreamScreen({ route, navigation }) {
   const video = route.params;
   const [videoLoad, setVideoLoad] = useState(true);
-  const [streamEnded, setStreamEnded] = useState(false); // State to track if the stream has ended
+  const [streamEnded, setStreamEnded] = useState(false);
   const videoRef = useRef(null);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id));
 
@@ -47,15 +47,16 @@ function StreamScreen({ route, navigation }) {
   const handleShare = useShareVideo(video);
 
   const windowWidth = Dimensions.get('window').width;
-  const aspectRatio = 16 / 9; // Default aspect ratio, change as needed
+  const aspectRatio = 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
 
+  console.log(video);
   return (
     <ScrollView style={styles.container}>
       <View style={[styles.videoContainer, { height: videoHeight }]}>
         <Video
           ref={videoRef}
-          source={{ uri: video.url }} // Use your live stream URL here
+          source={{ uri: video.url }}
           rate={1.0}
           volume={1.0}
           isMuted={false}
@@ -75,30 +76,17 @@ function StreamScreen({ route, navigation }) {
       <View style={styles.detailsContainer}>
         <AppText style={styles.title}>{video.title}</AppText>
         <View style={styles.interactions}>
-          <Interaction image={require('../assets/like-icon.png')} text={video.likeCount} style={styles.like} />
-          <Interaction image={require('../assets/dislike-icon.png')} text={video.dislikeCount} style={styles.dislike} />
-          <Interaction image={require('../assets/share-icon.png')} text={'Compartir'} style={styles.dislike} onPress={handleShare} />
-          <Interaction image={require('../assets/stardust-icon.png')} text={'Dona'} style={styles.dislike} />
+          <GradientBorderButton title="Suscribirse (1€)" style={{width: "50%"}} />
+          <GradientBorderButton title="Seguir" style={{width: "50%"}} />
         </View>
-        <View style={styles.userContainer}>
-          <ListItem
-            avatar=""
-            title={video.title}
-            subTitle="Seguidores"
-            showVerified={false}
-            navigate={() => navigation.navigate(routes.CREATOR_DETAILS, video)}
-          />
-          <View style={styles.vercanalContainer}>
-            <AppButton title="Seguir" style={styles.vercanal} />
-          </View>
-        </View>
+        <AppText style={styles.streamAnnouncement}>Hoy hacemos directo 24h!! 💥💪</AppText>
       </View>
       {streamEnded && (
         <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18 }}>
           Este directo ha terminado.
         </AppText>
       )}
-      <RandomList navigation={navigation} />
+      <LiveChat streamId={video.id}/>
     </ScrollView>
   );
 }
@@ -106,7 +94,7 @@ function StreamScreen({ route, navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.primary,
+    backgroundColor: colors.headerblue,
   },
   videoContainer: {
     width: '100%',
@@ -126,19 +114,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
   },
-  like: {},
-  dislike: {},
-  userContainer: {
-    flexDirection: 'row',
+  subscribeButton: {
+    backgroundColor: colors.secondary,
+    width: 150,
+    height: 40,
+    justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 20,
   },
-  vercanalContainer: {
-    marginLeft: 'auto',
+  followButton: {
+    backgroundColor: colors.secondary,
+    width: 100,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 20,
   },
-  vercanal: {
-    width: 110,
-    height: 50,
-    borderRadius: 18,
+  streamAnnouncement: {
+    color: colors.white,
+    fontSize: 16,
+    marginVertical: 10,
   },
 });
 

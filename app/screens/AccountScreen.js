@@ -146,6 +146,7 @@ const styles = StyleSheet.create({
     },
     logoutButton: {
         marginTop: 20,
+        width: 350,
     },
 });
 

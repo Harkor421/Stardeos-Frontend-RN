@@ -10,13 +10,15 @@ import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 import BannerAdComponent from '../components/BannerAd';
+import streamsApi from '../api/streams';
 
 function VideoList({ navigation, route}) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const [refresh, setRefresh] = useState(false); // State variable to force refresh
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getVideosWithStreams(page));
 
+  
 
   const renderItem = useCallback(({ item, index }) => {
     if ((index + 1) % 5 === 0) {

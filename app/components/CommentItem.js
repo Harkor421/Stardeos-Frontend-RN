@@ -77,11 +77,11 @@ const styles = StyleSheet.create({
   },
   user: {
     color: colors.white,
-    fontWeight: '400',
+    fontWeight: '900',
     fontSize: 18,
   },
   userpaid: {
-    fontWeight: '900',
+    fontWeight: '800',
     fontSize: 18,
   },
   date: {

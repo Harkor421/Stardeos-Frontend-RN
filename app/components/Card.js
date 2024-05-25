@@ -6,8 +6,8 @@ import ListItem from './ListItem';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFormatDuration from '../hooks/useFormatDuration';
 
-function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly }) {
-    const formattedDuration = useFormatDuration(duration);
+function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly, creator }) {
+    const formattedDuration = isNaN(duration) ? "En Directo" : useFormatDuration(duration);
 
     if (subsOnly) {
         return (
@@ -50,6 +50,7 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                             subTitle={subTitle}
                             avatar={avatar}
                             showVerified={true}
+                            creator = {creator}
                         />
                     </View>
                     <AppText style={styles.views}>{views}</AppText>

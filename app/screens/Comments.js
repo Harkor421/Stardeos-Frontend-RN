@@ -22,6 +22,7 @@ const createCommentSchema = Yup.object().shape({
 
 function Comments({ route, navigation }) {
     const { user } = useContext(AuthContext);
+    console.log(user);
     const { videoId, setStardust } = route.params;
     const [refresh, setRefresh] = useState(false);
     const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId), [videoId]);

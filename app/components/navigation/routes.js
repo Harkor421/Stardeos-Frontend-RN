@@ -4,5 +4,6 @@ export default Object.freeze({
     VIDEO_DESCRIPTION:'Description',
     VIDEO_COMMENTS: 'Comments',
     CREATOR_DETAILS: "CreatorDetails",
-    SEARCHED_VIDEO_LIST: "SearchedVideoList"
+    SEARCHED_VIDEO_LIST: "SearchedVideoList",
+    STREAM_DETAILS:'StreamScreen',
 })

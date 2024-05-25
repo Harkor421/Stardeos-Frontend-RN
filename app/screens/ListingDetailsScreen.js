@@ -147,6 +147,7 @@ function ListingDetailsScreen({ route, navigation }) {
                 subTitle={`${formattedFollowers} seguidores`}
                 showVerified={false}
                 navigate={() => navigation.navigate(routes.CREATOR_DETAILS, video)}
+                creator ={video.creator}
               />
             </View>
             <View style={styles.followButtonContainer}>
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   followButton: {
-    width: 140,
+    width: 120,
   },
   commentContainer: {
     marginTop: 20,

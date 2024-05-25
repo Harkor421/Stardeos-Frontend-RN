@@ -17,7 +17,6 @@ function CreatorScreen({ navigation, route }) {
 
     useEffect(() => {
         loadStream();
-        console.log("stream === ", stream)
     }, []);
 
     const handleLivePress = () => {

@@ -11,6 +11,8 @@ export default {
     errorcolor: "#c45854",
     neonpink: "#ff5093",
     graybox: '#191d32',
-    headerblue: '#181d32'
+    headerblue: '#181d32',
+    light_red: '#FF0000',
+    light_green: '#6DD177',
 
 }

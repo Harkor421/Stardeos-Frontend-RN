@@ -20,6 +20,10 @@ const getComments = (id) => { //Video id
   return client.get(`/comments/${id}?page=1`);
 };
 
+const getVideosWithStreams = (page) => {
+  return client.get(`/videos/streams/?filter=&page=${page}`);
+};
+
 const markLikeOrDislike = async (data, action) => {
   try {
     const response = await client.post(`/videos/${action}`, data);
@@ -59,5 +63,6 @@ export default {
   getComments,
   getChannelVideos,
   markLikeOrDislike,
-  createComment
+  createComment,
+  getVideosWithStreams
 };

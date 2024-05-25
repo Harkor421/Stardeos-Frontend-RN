@@ -4,10 +4,20 @@ import Screen from '../components/Screen';
 import TextGradient from '../components/TextGradient';
 import colors from '../config/colors';
 import { Image } from 'react-native';
+import GradientBorderButton from '../components/GradientBorderButton';
+import { Linking } from 'react-native';
+import AppText from '../components/AppText';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-function StardustScreen() {
+function StardustScreen({navigation}) {
     return (
         <Screen style={styles.container}>
+            <View style={styles.headertop}>
+                <AppText style={styles.headerText}>Stardust</AppText>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <MaterialCommunityIcons name="close" size={30} color="white" />
+                </TouchableOpacity>
+            </View>
             <View style={styles.header}>
                 <TextGradient style={styles.headerText}>Actualmente tienes:</TextGradient>
                 <Image source = {require("../assets/verified-icon.png")} style = {{marginVertical: 15, width: 25, height: 25, }}/>
@@ -16,23 +26,7 @@ function StardustScreen() {
 
             <Text style={styles.separator} />
 
-            <View style={styles.purchaseContainer}>
-                <TextGradient style={styles.purchaseText}>¿Quieres comprar Stardust?</TextGradient>
-                <View style={styles.option}>
-                    <TextGradient style={styles.price}>1.99 €</TextGradient>
-                    <TextGradient style={styles.description}>Recarga de 100 Stardust</TextGradient>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Comprar</Text>
-                    </TouchableOpacity>
-                </View>
-                <View style={styles.option}>
-                    <TextGradient style={styles.price}>5.97 €</TextGradient>
-                    <TextGradient style={styles.description}>Recarga de 300 Stardust</TextGradient>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Comprar</Text>
-                    </TouchableOpacity>
-                </View>
-            </View>
+            <GradientBorderButton title="Consigue Stardust" onPress={() =>Linking.openURL('https://stardeos.com/en/buy/buy-stardust')}/>
         </Screen>
     );
 }
@@ -102,8 +96,20 @@ const styles = StyleSheet.create({
         height: 1,
         width: "50%",
         alignSelf: 'center',
-        marginVertical: 20,
+        marginVertical: 40,
       },
+      headertop: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor: '#1f233e',
+    },
+    headerText: {
+        fontSize: 16,
+        fontWeight: '600',
+        color: colors.white,
+    },
 });
 
 export default StardustScreen;

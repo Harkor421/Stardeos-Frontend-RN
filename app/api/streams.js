@@ -7,5 +7,5 @@ const getStreams = (username) => {
 
 
 export default{
-    getStreams
+    getStreams,
 }
