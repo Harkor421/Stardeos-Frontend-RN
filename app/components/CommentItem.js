@@ -1,8 +1,9 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
+import { View, StyleSheet, Image, Text } from 'react-native';
 import AppText from './AppText';
 import colors from '../config/colors';
 import useTimeAgo from '../hooks/useTimeAgo';
+import TextGradient from './TextGradient'; // Import the TextGradient component
 
 function CommentItem({ title, subTitle, avatar, date, stardustamount }) {
   const elapsedTime = useTimeAgo(date);
@@ -14,14 +15,18 @@ function CommentItem({ title, subTitle, avatar, date, stardustamount }) {
         <View style={styles.userDetails}>
           <View style={styles.userbox}>
             {stardustamount > 0 ? (
-              <AppText style={styles.userpaid}>{title}</AppText>
+              <TextGradient style={styles.userpaid}>
+                <Text>{title}</Text>
+              </TextGradient>
             ) : (
               <AppText style={styles.user}>{title}</AppText>
             )}
             {stardustamount > 0 && (
               <View style={styles.stardustcontainer}>
                 <Image style={styles.verifiedicon} source={require('../assets/verified-icon.png')} />
-                <AppText style={styles.stardust_text}>{stardustamount}</AppText>
+                <TextGradient style={styles.stardust_text}>
+                  <Text>{stardustamount}</Text>
+                </TextGradient>
               </View>
             )}
           </View>
@@ -61,7 +66,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   stardust_text: {
-    color: colors.white,
     fontWeight: '900',
     fontSize: 13,
   },
@@ -77,7 +81,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   userpaid: {
-    color: colors.white,
     fontWeight: '900',
     fontSize: 18,
   },

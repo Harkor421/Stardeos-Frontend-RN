@@ -19,6 +19,7 @@ import useShareVideo from '../hooks/useShareVideo';
 import RandomList from './RandomList';
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo Icons library
 import { setIsEnabledAsync } from 'expo-av/build/Audio';
+import GradientBorderButton from '../components/GradientBorderButton';
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
@@ -149,7 +150,7 @@ function ListingDetailsScreen({ route, navigation }) {
               />
             </View>
             <View style={styles.followButtonContainer}>
-              <AppButton title="Seguir" style={styles.followButton} />
+              <GradientBorderButton title="Seguir" style={styles.followButton} />
             </View>
           </View>
           <Text style={styles.separator} />
@@ -231,9 +232,7 @@ const styles = StyleSheet.create({
     marginLeft: 'auto',
   },
   followButton: {
-    width: 110,
-    height: 50,
-    borderRadius: 18,
+    width: 140,
   },
   commentContainer: {
     marginTop: 20,

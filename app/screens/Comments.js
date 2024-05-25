@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { View, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Button } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator, Button, ScrollView } from 'react-native';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import Screen from '../components/Screen';
@@ -9,7 +9,11 @@ import useApi from '../hooks/useApi';
 import videosApi from '../api/videos';
 import CommentItem from '../components/CommentItem';
 import colors from '../config/colors';
-import AppTextInput from '../components/AppTextInput';
+import AuthContext from '../auth/context';
+import CustomTextInput from '../components/CustomTextInput'; // Import the custom component
+import { TextInput } from 'react-native-gesture-handler';
+import AppButton from '../components/AppButton';
+import GradientBorderButton from '../components/GradientBorderButton';
 
 const createCommentSchema = Yup.object().shape({
   body: Yup.string().required('Comment is required'),
@@ -17,13 +21,14 @@ const createCommentSchema = Yup.object().shape({
 });
 
 function Comments({ route, navigation }) {
-    const { comments, videoId, setStardust } = route.params;
-    const [newComment, setNewComment] = useState('');
+    const { user } = useContext(AuthContext);
+    const { videoId, setStardust } = route.params;
+    const [refresh, setRefresh] = useState(false);
     const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId), [videoId]);
 
     useEffect(() => {
         loadComments();
-    }, [videoId]);
+    }, [videoId, refresh]);
 
     const handleCloseModal = () => {
         navigation.goBack();
@@ -40,27 +45,21 @@ function Comments({ route, navigation }) {
                 if (amount > 0 && !body) {
                     body = "¡He enviado stardust! <3";
                 }
-
+        
                 const parsedBody = {
                     type: 1,
                     content: body,
                     parent: videoId,
                     stardusts: parseInt(amount) ?? null,
                 };
-
+        
                 const response = await videosApi.createComment(parsedBody);
                 console.log("Comment submit response:", response);
-
-                if (response.status === 201) {
-                    commentsDispatch({
-                        type: "ADD_COMMENT",
-                        payload: { body: response.data },
-                    });
-                    if (amount > 0) {
-                        setStardust((prevStardust) => prevStardust + amount);
-                    }
+        
+                if (!response.error) {
+                    await loadComments();
                 } else {
-                    console.error("Comment not sent");
+                    console.error(response.message);
                 }
             } catch (error) {
                 console.error("Error creating comment:", error);
@@ -89,46 +88,49 @@ function Comments({ route, navigation }) {
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>
-                <View style={styles.inputContainer}>
-                    <View style={styles.textInputContainer}>
-                        <AppTextInput
-                            icon="comment"
-                            placeholder="Add a comment"
-                            placeholderTextColor={colors.medium}
-                            value={formik.values.body}
-                            onChangeText={formik.handleChange('body')}
-                            onBlur={formik.handleBlur('body')}
-                            style={{ flex: 1, marginRight: 10 }} // Adjusted styles
-                        />
-                        <AppTextInput
-                            icon="stardust"
-                            placeholder="Stardust"
-                            placeholderTextColor={colors.medium}
-                            value={formik.values.amount.toString()}
-                            onChangeText={formik.handleChange('amount')}
-                            onBlur={formik.handleBlur('amount')}
-                            keyboardType="numeric"
-                            style={{ width: '30%', marginLeft: 5 }} // Adjusted styles with paddingLeft
-                        />
+                <ScrollView>
+                    <View style={styles.inputContainer}>
+                        <View style={styles.textInputContainer}>
+                            <CustomTextInput
+                                icon={{ uri: user.data.user.avatar }}
+                                placeholder="Add a comment"
+                                value={formik.values.body}
+                                onChangeText={formik.handleChange('body')}
+                                onBlur={formik.handleBlur('body')}
+                                multiline
+                                numberOfLines={4}
+                                style={styles.customTextInput}
+                            />
+                            <TextInput
+                                placeholder="Stardust"
+                                placeholderTextColor={colors.lightgray}
+                                value={formik.values.amount.toString()}
+                                onChangeText={formik.handleChange('amount')}
+                                onBlur={formik.handleBlur('amount')}
+                                keyboardType="numeric"
+                                style={styles.stardustInput}
+                            />
+                        </View>
+                        {(formik.touched.body && formik.errors.body) || (formik.touched.amount && formik.errors.amount) ? (
+                            <AppText style={styles.errorText}>{formik.errors.body || formik.errors.amount}</AppText>
+                        ) : null}
+                        <GradientBorderButton  style= {{width: "100%"}}title="Enviar" onPress={formik.handleSubmit} />
                     </View>
-                    {(formik.touched.body && formik.errors.body) || (formik.touched.amount && formik.errors.amount) ? (
-                        <AppText style={styles.errorText}>{formik.errors.body || formik.errors.amount}</AppText>
-                    ) : null}
-                    <Button title="Submit" onPress={formik.handleSubmit} />
-                </View>
-                {commentsLoading ? (
-                    <ActivityIndicator size="large" color={colors.white} />
-                ) : (
-                    <FlatList
-                        data={videoComments.comments}
-                        keyExtractor={(item) => item._id.toString()}
-                        renderItem={renderComment}
-                        contentContainerStyle={styles.commentsContainer}
-                    />
-                )}
+                    {commentsLoading ? (
+                        <ActivityIndicator size="large" color={colors.white} />
+                    ) : (
+                        <FlatList
+                            scrollEnabled={false}
+                            data={videoComments.comments}
+                            keyExtractor={(item) => item._id.toString()}
+                            renderItem={renderComment}
+                            contentContainerStyle={styles.commentsContainer}
+                        />
+                    )}
+                </ScrollView>
             </View>
         </Screen>
-    );          
+    );
 }
 
 const styles = StyleSheet.create({
@@ -165,18 +167,25 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        marginBottom: 10, // Added margin bottom for spacing
+        marginBottom: 10,
+    },
+    customTextInput: {
+        flex: 1,
+        marginRight: 10,
+    },
+    stardustInput: {
+        width: '20%',
+        marginLeft: 5,
+        height: 40,
+        borderColor: colors.lightgray,
+        borderWidth: 1,
+        paddingLeft: 10,
+        color: colors.white,
     },
     errorText: {
         color: 'red',
         marginBottom: 10,
     },
-    stardustInput: {
-        width: '30%',
-        paddingLeft: 5,
-        marginRight: 10, // Added margin to the right
-    },
 });
-
 
 export default Comments;
