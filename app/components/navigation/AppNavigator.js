@@ -12,116 +12,104 @@ import * as Notifications from "expo-notifications";
 import * as Permissions from 'expo-permissions';
 import StardustScreen from '../../screens/StardustScreen';
 
-
-
-
-
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
 
-  useEffect(()=>{
+  useEffect(() => {
     registerForPushNotifications();
-  },[]);
+  }, []);
 
-
-  const registerForPushNotifications = async () =>{
-    try{
+  const registerForPushNotifications = async () => {
+    try {
       const token = await Notifications.getExpoPushTokenAsync();
       console.log(token);
-
-    }
-    catch (error){
+    } catch (error) {
       console.log('Error getting push token', error);
     }
   }
-  
+
   return (
-  <Tab.Navigator
-    screenOptions={{
-      tabBarActiveBackgroundColor: colors.headerblue,
-      tabBarInactiveBackgroundColor: colors.headerblue,
-      tabBarActiveTintColor: colors.white,
-      tabBarStyle: {
-        borderTopColor: colors.grayline,
-        borderTopWidth: 0.8,
-      },
-      tabBarLabelStyle: {
-        fontSize: 14,
-        fontWeight: 'bold',
-      },
-    }}>
-    <Tab.Screen
-    name="Inicio"
-    component={FeedNavigator}
-    initialParams={{ search: '',}}
-    options={({ navigation }) => ({
-      headerShown: true,
-      header: () => <Header navigation={navigation} />, // Use the Header component
-      tabBarIcon: ({ color, size }) => (
-        <MaterialCommunityIcons name="home" color={color} size={size} />
-      ),
-    })}
-    />
-    <Tab.Screen
-      name="Crear"
-      component={ComingSoon}
-      options={{
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="plus-circle" color={color} size={size} />
-        ),
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveBackgroundColor: colors.headerblue,
+        tabBarInactiveBackgroundColor: colors.headerblue,
+        tabBarActiveTintColor: colors.white,
+        tabBarStyle: {
+          borderTopColor: colors.grayline,
+          borderTopWidth: 0.8,
+        },
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: 'bold',
+        },
       }}
-    />
-    <Tab.Screen
-      name="Recientes"
-      component={ComingSoon}
-      options={{
-        headerShown: false,
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="clock" color={color} size={size} />
-        ),
-      }}
-    />
-   <Tab.Screen name="Account" component={AccountScreen} 
-    options={{
-        tabBarButton: () => null,
-        headerShown: false,
-        tabBarVisible:false //hide tab bar on this screen
-
-    }}
-  />
-  <Tab.Screen name="Notifications" component={NotificationScreen} 
-    options={{
-        tabBarButton: () => null,
-        headerShown: false,
-        tabBarVisible:false //hide tab bar on this screen
-
-    }}
-  />
-  <Tab.Screen name="Stardust" component={StardustScreen} 
-    options={{
-        tabBarButton: () => null,
-        headerShown: false,
-        tabBarVisible:false //hide tab bar on this screen
-
-    }}
-  />
-  
-  <Tab.Screen 
-      name="RecentVideoList" 
-      component={FeedNavigator} 
-      options={({ navigation }) => ({
-        tabBarButton: () => null,
-        headerShown: true,
-        tabBarVisible:false,
-        header: () => <Header navigation={navigation}/> // Use the Header component
-
-    })}
-  />
-
-  </Tab.Navigator>
-);
+    >
+      <Tab.Screen
+        name="Inicio"
+        component={FeedNavigator}
+        initialParams={{ search: '', }}
+        options={({ navigation }) => ({
+          headerShown: true,
+          header: () => <Header navigation={navigation} />, // Use the Header component
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="home" color={color} size={size} />
+          ),
+        })}
+      />
+      <Tab.Screen
+        name="Crear"
+        component={ComingSoon}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="plus-circle" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Recientes"
+        component={ComingSoon}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="clock" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen name="Account" component={AccountScreen} 
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+          tabBarVisible: false // hide tab bar on this screen
+        }}
+      />
+      <Tab.Screen name="Notifications" component={NotificationScreen} 
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+          tabBarVisible: false // hide tab bar on this screen
+        }}
+      />
+      <Tab.Screen name="Stardust" component={StardustScreen} 
+        options={{
+          tabBarButton: () => null,
+          headerShown: false,
+          tabBarVisible: false // hide tab bar on this screen
+        }}
+      />
+      <Tab.Screen 
+        name="RecentVideoList" 
+        component={FeedNavigator} 
+        options={({ navigation }) => ({
+          tabBarButton: () => null,
+          headerShown: true,
+          tabBarVisible: false,
+          header: () => <Header navigation={navigation} /> // Use the Header component
+        })}
+      />
+    </Tab.Navigator>
+  );
 }
 
 export default AppNavigator;

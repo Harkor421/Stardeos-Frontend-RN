@@ -17,7 +17,6 @@ function StreamScreen({ route, navigation }) {
   const [videoLoad, setVideoLoad] = useState(true);
   const [streamEnded, setStreamEnded] = useState(false);
   const videoRef = useRef(null);
-  const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id));
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('blur', () => {
@@ -50,9 +49,9 @@ function StreamScreen({ route, navigation }) {
   const aspectRatio = 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
 
-  console.log(video);
+  console.log(video.url);
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={[styles.videoContainer, { height: videoHeight }]}>
         <Video
           ref={videoRef}
@@ -74,20 +73,19 @@ function StreamScreen({ route, navigation }) {
         />
       </View>
       <View style={styles.detailsContainer}>
-        <AppText style={styles.title}>{video.title}</AppText>
         <View style={styles.interactions}>
-          <GradientBorderButton title="Suscribirse (1€)" style={{width: "50%"}} />
-          <GradientBorderButton title="Seguir" style={{width: "50%"}} />
+          <GradientBorderButton title="Seguir" style={styles.followButton} />
         </View>
-        <AppText style={styles.streamAnnouncement}>Hoy hacemos directo 24h!! 💥💪</AppText>
+        <AppText style={styles.title}>{video.title}</AppText>
+        <AppText style={styles.streamAnnouncement}>{video.description}</AppText>
       </View>
       {streamEnded && (
-        <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18 }}>
+        <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18}}>
           Este directo ha terminado.
         </AppText>
       )}
-      <LiveChat streamId={video.id}/>
-    </ScrollView>
+      <LiveChat stream={video} />
+    </View>
   );
 }
 
@@ -106,34 +104,21 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   interactions: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginVertical: 10,
-  },
-  subscribeButton: {
-    backgroundColor: colors.secondary,
-    width: 150,
-    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
   },
+
   followButton: {
-    backgroundColor: colors.secondary,
-    width: 100,
-    height: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 20,
+    width: "100%",
+    marginBottom: 15,
   },
   streamAnnouncement: {
     color: colors.white,
-    fontSize: 16,
-    marginVertical: 10,
+    fontSize: 14,
+    fontWeight: 700,
   },
 });
 

@@ -2,26 +2,15 @@ import React from 'react';
 import { View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AppText from './AppText';
 import colors from '../config/colors';
-import useApi from '../hooks/useApi';
-import streamsApi from '../api/streams';
 import { useEffect } from 'react';
 
 function ListItem({ title, subTitle, avatar, showVerified, navigate, creator }) {
-  const { data: stream, error, loading, request: loadStream } = useApi(() => streamsApi.getStreams(creator.username));
 
-  // Define a style object to apply when the user is streaming
-  const containerStyle = stream && stream.running ? styles.containerStreaming : styles.container;
 
-  // Define a border color based on streaming status
-  const avatarBorderStyle = stream && stream.running ? { borderColor: colors.light_red} : null;
-
-  useEffect(() => {
-    loadStream();
-  }, []);
 
   return (
-    <TouchableOpacity style={containerStyle} onPress={navigate}>
-      <View style={[styles.avatarContainer, avatarBorderStyle]}>
+    <TouchableOpacity style={styles.container} onPress={navigate}>
+      <View style={styles.avatarContainer}>
         <Image style={styles.image} source={{ uri: avatar }} />
       </View>
       <View style={styles.userInfo}>

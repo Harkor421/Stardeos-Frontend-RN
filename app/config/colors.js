@@ -14,5 +14,7 @@ export default {
     headerblue: '#181d32',
     light_red: '#FF0000',
     light_green: '#6DD177',
+    light_blue: "#1F243E",
+
 
 }
