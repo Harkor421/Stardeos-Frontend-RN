@@ -9,10 +9,11 @@ import Interaction from './Interaction';
 import DonateModal from './DonateModal';
 const SOCKET_SERVER_URL = "ws://13.36.152.191:8881";
 
-export const LiveChat = ({ stream }) => {
+export const LiveChat = ({ stream, expand }) => {
   const { user } = useContext(AuthContext);
   const streamId = stream.id;
   const [time, setTime] = useState(0);
+  const [stardust, setStardust] = useState(0);
   const [inputText, setInputText] = useState(''); // State to store input text
   const [viewers, setViewers] = useState(0);
   const [messages, setMessages] = useState([]);
@@ -20,7 +21,6 @@ export const LiveChat = ({ stream }) => {
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const flatListRef = useRef(null);
   const ws = useRef(null);
-
   const NEW_CHAT_MESSAGE_EVENT = "event_message";
   const GET_CHAT_MESSAGE_EVENT = "new_message";
 
@@ -34,9 +34,13 @@ export const LiveChat = ({ stream }) => {
 
       ws.current.on('connect', () => {
         ws.current.emit('event_join', { room: streamId });
-        ws.current.emit('event_join', { room: `${streamId}_timer` });
         ws.current.emit('event_join', { room: `${streamId}_viewers` });
       });
+      
+      const intervalId = setInterval(() => {
+        ws.current.emit('event_join', { room: `${streamId}_timer` });
+      }, 1000);
+  
 
       ws.current.on('connect_error', (err) => {
         console.error("WebSocket connection error:", err.message);
@@ -96,22 +100,24 @@ export const LiveChat = ({ stream }) => {
     setMessages(prevMessages => [...prevMessages, message]);
   };
 
-  const sendMessage = (messageBody, stardusts = 1) => {
-    if (!messageBody || !user) return;
-
+  const sendMessage = () => {
+    if (!inputText || !user) return;
+  
     const token = user.data.access_token;
-
+  
     const message = {
-      message: messageBody,
+      message: inputText,
       room: streamId,
       token: token,
-      amount: stardusts,
+      amount: stardust,
       user: user.data.username // Ensure the user field is included
     };
-
+  
     ws.current.emit(NEW_CHAT_MESSAGE_EVENT, message);
-    setInputText('');
+    setInputText(''); // Clear the input text after sending the message
+    setStardust(0);
   };
+  
 
   const toggleChatHeight = () => {
     setIsExpanded(prevState => !prevState);
@@ -124,7 +130,9 @@ export const LiveChat = ({ stream }) => {
   const handleModalClose = () => {
     setModalVisible(false);
   };
-
+  const updateStardust = (newStardust) => {
+    setStardust(newStardust);
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -138,7 +146,7 @@ export const LiveChat = ({ stream }) => {
           <Text style={styles.chatCount}>{viewers.viewers}</Text>
           <MaterialIcons name="timer" size={20} color={colors.white} style={{ marginLeft: 10 }} />
           <Text style={styles.timer}>{time}</Text>
-          <TouchableOpacity style={{ alignItems: 'center' }} onPress={toggleChatHeight}>
+          <TouchableOpacity style={{ alignItems: 'center' }} onPress={expand}>
             <MaterialIcons name="keyboard-control-key" size={24} color={colors.white} style={{ marginLeft: 10 }} />
           </TouchableOpacity>
         </View>
@@ -187,11 +195,13 @@ export const LiveChat = ({ stream }) => {
             onChangeText={setInputText} // Update inputText state when input changes
             placeholderTextColor={colors.light}
             onPress={handleModalOpen}
+            stardustamount={stardust}
+            onEndEditing={sendMessage}
           />
         </View>
        
       </View>
-      <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} />
+      <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} handleStardustUpdate={updateStardust} stardust={stardust} />
 
     </KeyboardAvoidingView>
   );
@@ -228,6 +238,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 14,
     marginLeft: 5,
+    minWidth: 30, // Ensure consistent width
+    textAlign: 'center', // Center align the text
   },
   commentContainer: {
     flexDirection: 'row',
@@ -278,6 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 12,
+    marginHorizontal: 10,
   },
   commentInput: {
     flex: 1,
@@ -295,6 +308,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginLeft: 5,
     marginRight: 20,
+    minWidth: 60, // Ensure consistent width
+    textAlign: 'center', // Center align the text
   },
   addIcon: {
     marginHorizontal: 10,
@@ -328,5 +343,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
 
 export default LiveChat;

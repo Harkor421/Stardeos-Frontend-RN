@@ -19,15 +19,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.stardeosapps.stardeos",
-      "buildNumber": "0.0.1"
+      "bundleIdentifier": "com.appsstardeos.stardeos",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.stardeosapps.stardeos"
+      "package": "com.appsstardeos.stardeos"
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -12,22 +12,10 @@ import * as Notifications from "expo-notifications";
 import * as Permissions from 'expo-permissions';
 import StardustScreen from '../../screens/StardustScreen';
 
+
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
-
-  useEffect(() => {
-    registerForPushNotifications();
-  }, []);
-
-  const registerForPushNotifications = async () => {
-    try {
-      const token = await Notifications.getExpoPushTokenAsync();
-      console.log(token);
-    } catch (error) {
-      console.log('Error getting push token', error);
-    }
-  }
 
   return (
     <Tab.Navigator

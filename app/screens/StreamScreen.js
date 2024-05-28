@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AppText from '../components/AppText';
 import AppButton from '../components/AppButton';
@@ -11,6 +11,7 @@ import useApi from '../hooks/useApi';
 import videosApi from '../api/videos';
 import LiveChat from '../components/LiveChat'; 
 import GradientBorderButton from '../components/GradientBorderButton';
+import ActivityIndicator from '../components/ActivityIndicator';
 
 function StreamScreen({ route, navigation }) {
   const video = route.params;
@@ -49,29 +50,30 @@ function StreamScreen({ route, navigation }) {
   const aspectRatio = 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
 
-  console.log(video.url);
   return (
     <View style={styles.container}>
-      <View style={[styles.videoContainer, { height: videoHeight }]}>
-        <Video
-          ref={videoRef}
-          source={{ uri: video.url }}
-          rate={1.0}
-          volume={1.0}
-          isMuted={false}
-          resizeMode={ResizeMode.COVER}
-          style={{ width: windowWidth, height: videoHeight }}
-          useNativeControls
-          shouldPlay
-          shouldRasterizeIOS
-          onReadyForDisplay={() => setVideoLoad(false)}
-          onPlaybackStatusUpdate={(status) => {
-            if (status.isPlaying && status.didJustFinish) {
-              setStreamEnded(true);
-            }
-          }}
-        />
-      </View>
+        <View style={[styles.videoContainer, { height: videoHeight }]}>
+          <Video
+            ref={videoRef}
+            source={{ uri: video.url }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode={ResizeMode.COVER}
+            style={{ width: windowWidth, height: videoHeight }}
+            useNativeControls
+            shouldPlay
+            shouldRasterizeIOS
+            onReadyForDisplay={() => setVideoLoad(false)}
+            onPlaybackStatusUpdate={(status) => {
+              if (status.isPlaying && status.didJustFinish) {
+                setStreamEnded(true);
+              }
+            }}
+          />
+        <ActivityIndicator visible={videoLoad} />
+
+        </View>
       <View style={styles.detailsContainer}>
         <View style={styles.interactions}>
           <GradientBorderButton title="Seguir" style={styles.followButton} />
@@ -84,7 +86,7 @@ function StreamScreen({ route, navigation }) {
           Este directo ha terminado.
         </AppText>
       )}
-      <LiveChat stream={video} />
+      <LiveChat stream={video}/>
     </View>
   );
 }
@@ -110,7 +112,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   followButton: {
     width: "100%",
     marginBottom: 15,

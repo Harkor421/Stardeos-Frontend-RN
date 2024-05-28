@@ -1,12 +1,24 @@
-// DonateModal.js
-
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Modal, StyleSheet, Text, TextInput, TouchableOpacity, Button } from 'react-native';
 import colors from '../config/colors';
+import CustomTextInput from './CustomTextInput';
+import GradientBorderButton from './GradientBorderButton';
+import AppButton from './AppButton';
 
-const DonateModal = ({ modalVisible, onRequestClose }) => {
+const DonateModal = ({ modalVisible, onRequestClose, handleStardustUpdate, stardustaccount }) => {
+  const [stardustValue, setStardustValue] = useState('');
+
   const handleDonate = () => {
+    // Convert the stardust value to an integer, default to 0 if not a valid number
+    const newStardust = parseInt(stardustValue) || 0;
+    
     // Handle donation logic here
+    // For demonstration, let's assume the stardust is successfully added
+    if (!isNaN(newStardust)) {
+      handleStardustUpdate(newStardust); // Call the function to update stardust in LiveChat
+    }
+    // Close the modal
+    onRequestClose();
   };
 
   return (
@@ -20,21 +32,30 @@ const DonateModal = ({ modalVisible, onRequestClose }) => {
         <View style={styles.modalView}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={styles.modalText}>Donate</Text>
-            <Button title="Close" onPress={onRequestClose} />
+            <Text style={styles.modalText}>Añadir Stardust a tu comentario.</Text>
           </View>
 
           {/* Donation Input */}
-          <TextInput
+          <CustomTextInput
             style={styles.donationInput}
-            placeholder="Enter donation amount"
+            placeholder="Agregar Stardust..."
             keyboardType="numeric"
+            value={stardustValue}
+            onChangeText={setStardustValue}
+            stardustamount={stardustaccount - (parseInt(stardustValue) || 0)}
           />
 
-          {/* Donate Button */}
-          <TouchableOpacity style={styles.donateButton} onPress={handleDonate}>
-            <Text style={styles.donateButtonText}>Donate</Text>
-          </TouchableOpacity>
+          {/* Negative Stardust Message */}
+          {stardustaccount - (parseInt(stardustValue) || 0) < 0 && (
+            <Text style={styles.negativeStardustText}>No tienes suficientes stardust</Text>
+          )}
+
+          {/* Donation Button */}
+          <GradientBorderButton title="Añadir Stardust" style={{ width: "90%", marginBottom: 20, }} onPress={handleDonate} />
+         
+          {/* Close Button */}
+
+          <AppButton title= "Close" onPress={onRequestClose} style = {styles.closebutton}/>
         </View>
       </View>
     </Modal>
@@ -52,7 +73,6 @@ const styles = StyleSheet.create({
     width: 300,
     backgroundColor: colors.headerblue,
     borderRadius: 10,
-    padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -64,24 +84,33 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     marginBottom: 15,
+    backgroundColor: colors.light_blue,
+    width: "100%",
+    height: "15%",
+    borderTopStartRadius: 10,
+    borderTopEndRadius: 10,
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'left',
   },
   modalText: {
-    textAlign: 'center',
-    fontSize: 18,
+    textAlign: 'left',
+    fontSize: 14,
     fontWeight: 'bold',
     color: colors.white,
+    marginLeft: 20,
+  },
+  negativeStardustText: {
+    color: 'red',
+    marginBottom: 10,
   },
   donationInput: {
-    borderWidth: 1,
-    borderColor: colors.light_gray,
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-    width: '100%',
-    backgroundColor: colors.white,
+    width: '90%',
+    backgroundColor: colors.darkblue,
   },
   donateButton: {
     backgroundColor: colors.primary,
@@ -95,6 +124,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'bold',
   },
+ 
 });
 
 export default DonateModal;

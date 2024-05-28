@@ -7,22 +7,20 @@ function AppButton({ title, onPress, style }) {
     return (
         <TouchableOpacity style={[styles.button, style]} onPress={onPress}>
             <Text style={styles.text}>{title}</Text>
-            <Image source={require('../assets/arrow.png')} style={styles.arrow} />
         </TouchableOpacity>
     );
 }
 
 const styles = {
     button: {
-        backgroundColor: colors.black,
         borderRadius: 12,
         justifyContent: 'center',
         alignItems: 'center',
         padding: 15,
-        width: '100%',
-        borderColor: colors.neonpink,
+        width: '90%',
+        borderColor: "#3A4065",
         borderWidth: 1,
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     text: {
         color: colors.white,
@@ -30,10 +28,7 @@ const styles = {
         fontWeight: 'bold',
         marginRight: 10
     },
-    arrow: {
-        height: 20,
-        width: 20,
-    }
+
 };
 
 export default AppButton;

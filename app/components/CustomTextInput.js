@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
-import { View, TextInput, Image, StyleSheet, TouchableOpacity, Modal, Text } from 'react-native';
+import { View, TextInput, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import colors from '../config/colors'; // Adjust the import path as necessary
 import { MaterialIcons } from '@expo/vector-icons';
-
-const CustomTextInput = ({ icon, placeholder, value, onChangeText, onBlur, multiline, numberOfLines, style, onPress }) => {
+import TextGradient from './TextGradient';
+const CustomTextInput = ({ icon, placeholder, value, onChangeText, onBlur, multiline, numberOfLines, style, onPress, stardustamount, onSubmitEditing, onEndEditing}) => {
   const [inputHeight, setInputHeight] = useState(40); // Starting height
-
 
   return (
     <View style={[styles.container, style]}>
       <View style={styles.inputContainer}>
-        <Image source={icon} style={styles.icon} />
+        {icon && <Image source={icon} style={styles.icon} />}
         <TextInput
           placeholder={placeholder}
           placeholderTextColor={colors.lightgray}
+          onSubmitEditing={onSubmitEditing}
+          onEndEditing={onEndEditing}
           value={value}
           onChangeText={onChangeText}
           onBlur={onBlur}
@@ -27,7 +28,8 @@ const CustomTextInput = ({ icon, placeholder, value, onChangeText, onBlur, multi
       </View>
       <TouchableOpacity style={styles.addButton} onPress={onPress}>
         <Image source={require('../assets/verified-icon.png')} style={{ width: 15, height: 15, marginRight: 10 }} />
-        <MaterialIcons name="add" size={15} color={colors.white} />
+        <TextGradient style = {styles.stardustamount}>{stardustamount}</TextGradient>
+        <MaterialIcons name="add" size={15} color={colors.white} style = {{marginLeft: 5}} />
       </TouchableOpacity>
     </View>
   );
@@ -67,23 +69,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
   },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    backgroundColor: colors.white,
-    borderRadius: 10,
-    padding: 20,
-    elevation: 5,
-  },
-  closeButton: {
-    marginTop: 10,
-    color: colors.primary,
-    textAlign: 'center',
-  },
+  stardustamount:{
+    fontWeight: 'bold',
+    fontSize: 14,
+  }
 });
 
 export default CustomTextInput;

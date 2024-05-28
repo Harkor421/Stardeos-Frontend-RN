@@ -14,6 +14,7 @@ import CustomTextInput from '../components/CustomTextInput'; // Import the custo
 import { TextInput } from 'react-native-gesture-handler';
 import AppButton from '../components/AppButton';
 import GradientBorderButton from '../components/GradientBorderButton';
+import DonateModal from '../components/DonateModal';
 
 const createCommentSchema = Yup.object().shape({
   body: Yup.string().required('Comment is required'),
@@ -23,8 +24,11 @@ const createCommentSchema = Yup.object().shape({
 function Comments({ route, navigation }) {
     const { user } = useContext(AuthContext);
     console.log(user);
-    const { videoId, setStardust } = route.params;
+    const { videoId} = route.params;
     const [refresh, setRefresh] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
+    const [stardust, setStardust] = useState(0);
+
     const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId), [videoId]);
 
     useEffect(() => {
@@ -34,6 +38,18 @@ function Comments({ route, navigation }) {
     const handleCloseModal = () => {
         navigation.goBack();
     };
+
+    const handleModalOpen = () => {
+        setModalVisible(true);
+      };
+    
+      const handleModalClose = () => {
+        setModalVisible(false);
+      };
+
+      const updateStardust = (newStardust) => {
+        setStardust(newStardust);
+      };
 
     const formik = useFormik({
         initialValues: {
@@ -101,15 +117,8 @@ function Comments({ route, navigation }) {
                                 multiline
                                 numberOfLines={4}
                                 style={styles.customTextInput}
-                            />
-                            <TextInput
-                                placeholder="Stardust"
-                                placeholderTextColor={colors.lightgray}
-                                value={formik.values.amount.toString()}
-                                onChangeText={formik.handleChange('amount')}
-                                onBlur={formik.handleBlur('amount')}
-                                keyboardType="numeric"
-                                style={styles.stardustInput}
+                                onPress={handleModalOpen}
+                                stardustamount={stardust}
                             />
                         </View>
                         {(formik.touched.body && formik.errors.body) || (formik.touched.amount && formik.errors.amount) ? (
@@ -128,9 +137,12 @@ function Comments({ route, navigation }) {
                             contentContainerStyle={styles.commentsContainer}
                         />
                     )}
+                   <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} stardustaccount={user.data.user.stardusts} handleStardustUpdate={updateStardust} />
+
                 </ScrollView>
             </View>
         </Screen>
+        
     );
 }
 

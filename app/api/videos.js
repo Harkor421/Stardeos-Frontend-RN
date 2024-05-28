@@ -16,8 +16,8 @@ const getChannelVideos = (id, page) => {
   return client.get(`/channels/${id}/videos?page=${page}`);
 };
 
-const getComments = (id) => { //Video id
-  return client.get(`/comments/${id}?page=1`);
+const getComments = (id, page) => { //Video id
+  return client.get(`/comments/${id}?page=${page}`);
 };
 
 const getVideosWithStreams = (page) => {

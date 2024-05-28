@@ -4,9 +4,7 @@ import AppText from './AppText';
 import colors from '../config/colors';
 import { useEffect } from 'react';
 
-function ListItem({ title, subTitle, avatar, showVerified, navigate, creator }) {
-
-
+function ListItem({ title, subTitle, avatar, showVerified, navigate }) {
 
   return (
     <TouchableOpacity style={styles.container} onPress={navigate}>
