@@ -8,8 +8,12 @@ import GradientBorderButton from '../components/GradientBorderButton';
 import { Linking } from 'react-native';
 import AppText from '../components/AppText';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AuthContext from '../auth/context';
+import { useContext } from 'react';
 
 function StardustScreen({navigation}) {
+    const { user } = useContext(AuthContext);
+
     return (
         <Screen style={styles.container}>
             <View style={styles.headertop}>
@@ -21,7 +25,7 @@ function StardustScreen({navigation}) {
             <View style={styles.header}>
                 <TextGradient style={styles.headerText}>Actualmente tienes:</TextGradient>
                 <Image source = {require("../assets/verified-icon.png")} style = {{marginVertical: 15, width: 25, height: 25, }}/>
-                <TextGradient style={styles.stardustAmount}>3712</TextGradient>
+                <TextGradient style={styles.stardustAmount}>{user.data.user.stardusts}</TextGradient>
             </View>
 
             <Text style={styles.separator} />

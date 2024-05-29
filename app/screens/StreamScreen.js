@@ -1,16 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
+import { View, StyleSheet, Dimensions, KeyboardAvoidingView, Platform } from 'react-native';
 import { Video, ResizeMode } from 'expo-av';
 import AppText from '../components/AppText';
-import AppButton from '../components/AppButton';
-import RandomList from './RandomList';
-import colors from '../config/colors';
-import routes from '../components/navigation/routes';
-import useShareVideo from '../hooks/useShareVideo';
-import useApi from '../hooks/useApi';
-import videosApi from '../api/videos';
-import LiveChat from '../components/LiveChat'; 
 import GradientBorderButton from '../components/GradientBorderButton';
+import colors from '../config/colors';
+import LiveChat from '../components/LiveChat'; 
 import ActivityIndicator from '../components/ActivityIndicator';
 
 function StreamScreen({ route, navigation }) {
@@ -44,14 +38,16 @@ function StreamScreen({ route, navigation }) {
     return () => clearInterval(interval);
   }, []);
 
-  const handleShare = useShareVideo(video);
-
   const windowWidth = Dimensions.get('window').width;
   const aspectRatio = 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <View style={styles.container}>
         <View style={[styles.videoContainer, { height: videoHeight }]}>
           <Video
             ref={videoRef}
@@ -72,22 +68,19 @@ function StreamScreen({ route, navigation }) {
             }}
           />
         <ActivityIndicator visible={videoLoad} />
-
         </View>
-      <View style={styles.detailsContainer}>
-        <View style={styles.interactions}>
-          <GradientBorderButton title="Seguir" style={styles.followButton} />
+        <View style={styles.detailsContainer}>
+          <AppText style={styles.title}>{video.title}</AppText>
+          <AppText style={styles.streamAnnouncement}>{video.description}</AppText>
         </View>
-        <AppText style={styles.title}>{video.title}</AppText>
-        <AppText style={styles.streamAnnouncement}>{video.description}</AppText>
+        {streamEnded && (
+          <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18}}>
+            Este directo ha terminado.
+          </AppText>
+        )}
       </View>
-      {streamEnded && (
-        <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18}}>
-          Este directo ha terminado.
-        </AppText>
-      )}
-      <LiveChat stream={video}/>
-    </View>
+        <LiveChat stream={video}/>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -101,20 +94,13 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 10,
+    marginTop: 15,
   },
   title: {
     color: colors.white,
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
-  },
-  interactions: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  followButton: {
-    width: "100%",
-    marginBottom: 15,
   },
   streamAnnouncement: {
     color: colors.white,

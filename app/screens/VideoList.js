@@ -46,7 +46,7 @@ function VideoList({ navigation, route}) {
   // Function to force refresh
   const handleRefresh = () => {
     setPage(1); // Reset page to 1
-    setAllVideos([]); // Clear the list
+    setAllVideos([]); // Clear the lt
     setRefresh(!refresh);
   };
 

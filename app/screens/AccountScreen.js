@@ -7,6 +7,8 @@ import AppText from '../components/AppText';
 import GradientBorderButton from '../components/GradientBorderButton';
 import BannerAdComponent from '../components/BannerAd';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AppButton from '../components/AppButton';
+import authStorage from '../auth/storage'
 import colors from '../config/colors';
 
 function AccountScreen({ navigation }) {
@@ -33,10 +35,7 @@ function AccountScreen({ navigation }) {
                         <Image source={require('../assets/stardust-icon.png')} style={styles.stardusticon} />
                         <AppText style={styles.stardustcount}>{user.data.user.stardusts}</AppText>
                     </View>
-                    <GradientBorderButton title="Comprar Stardust" style ={{width: 300}} onPress={() => {}} />
-                    <TouchableOpacity style={styles.section}>
-                        <AppText style={styles.sectionText}>Starstudio</AppText>
-                    </TouchableOpacity>
+                    <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => {}} />
                     <TouchableOpacity style={styles.section}>
                         <AppText style={styles.sectionText}>Ajustes de usuario</AppText>
                     </TouchableOpacity>
@@ -55,9 +54,7 @@ function AccountScreen({ navigation }) {
                     <TouchableOpacity style={styles.section}>
                         <AppText style={styles.sectionText}>Elimina tu cuenta</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.helpButton}>
-                        <AppText style={styles.helpText}>¿Necesitas ayuda?</AppText>
-                    </TouchableOpacity>
+                    <AppButton title= "¿Necesitas ayuda?" style = {styles.closebutton}/>
                     <BannerAdComponent style={styles.adCard} />
                     <GradientBorderButton title="Cerrar Sesión" onPress={handleLogOut} style={styles.logoutButton} />
                 </View>
@@ -84,21 +81,24 @@ const styles = StyleSheet.create({
         color: colors.white,
     },
     scrollView: {
-        alignItems: 'center',
-        padding: 20,
+  
     },
     centeredView: {
         alignItems: 'center',
         padding: 20,
     },
+    closebutton:{
+        marginTop: 30,
+        backgroundColor: colors.headerblue,
+    },
     avatar: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         marginTop: 20,
     },
     username: {
-        fontSize: 24,
+        fontSize: 18,
         color: colors.white,
         marginTop: 10,
         fontWeight: 'bold',
@@ -118,25 +118,21 @@ const styles = StyleSheet.create({
         color: colors.white,
         fontWeight: 'bold',
     },
+    button: {
+        width: 300,
+        marginBottom: 20,
+    },
     section: {
         width: '100%',
         padding: 15,
-        borderBottomWidth: 1,
         borderBottomColor: colors.lightgray,
+        flexDirection: 'row',
     },
     sectionText: {
         color: colors.white,
         fontSize: 16,
     },
-    helpButton: {
-        width: '100%',
-        padding: 15,
-        alignItems: 'center',
-        backgroundColor: colors.darkgray,
-        borderRadius: 10,
-        marginTop: 20,
-        marginBottom: 20,
-    },
+
     helpText: {
         color: colors.white,
         fontSize: 16,

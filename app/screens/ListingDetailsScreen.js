@@ -20,6 +20,7 @@ import RandomList from './RandomList';
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo Icons library
 import { setIsEnabledAsync } from 'expo-av/build/Audio';
 import GradientBorderButton from '../components/GradientBorderButton';
+import FollowButton from '../components/FollowButton';
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
@@ -151,7 +152,7 @@ function ListingDetailsScreen({ route, navigation }) {
               />
             </View>
             <View style={styles.followButtonContainer}>
-              <GradientBorderButton title="Seguir" style={styles.followButton} />
+              <FollowButton styles = {styles.followButton} channelId={video.channelId.id}/>
             </View>
           </View>
           <Text style={styles.separator} />
@@ -230,10 +231,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   followButtonContainer: {
-    marginLeft: 'auto',
+    alignItems:'flex-end',
+    flex: 1,
   },
   followButton: {
-    width: 120,
+    width: "80%",
   },
   commentContainer: {
     marginTop: 20,

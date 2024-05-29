@@ -135,9 +135,9 @@ export const LiveChat = ({ stream, expand }) => {
   };
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={[styles.container, isExpanded && styles.expandedContainer]}
-    >
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={[styles.container, isExpanded && styles.expandedContainer]}
+  >
       <View style={styles.header}>
         <Image source={require("../assets/chat-alt-2.png")} />
         <Text style={styles.chatTitle}>CHAT</Text>
@@ -153,7 +153,7 @@ export const LiveChat = ({ stream, expand }) => {
       </View>
       <Text style={styles.separator} />
       <FlatList
-        style={{ padding: 10 }}
+        style={{ padding: 8}}
         ref={flatListRef}
         data={messages}
         keyExtractor={(item, key) => key.toString()}
@@ -198,10 +198,9 @@ export const LiveChat = ({ stream, expand }) => {
             stardustamount={stardust}
             onEndEditing={sendMessage}
           />
-        </View>
-       
+        </View>  
       </View>
-      <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} handleStardustUpdate={updateStardust} stardust={stardust} />
+      <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} handleStardustUpdate={updateStardust} stardustaccount={user.data.user.stardusts} />
 
     </KeyboardAvoidingView>
   );
@@ -212,10 +211,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.headerblue,
     borderRadius: 10,
-    marginTop: 10,
-  },
-  expandedContainer: {
-    flex: 4, // Adjust this value based on the desired expanded height
   },
   header: {
     flexDirection: 'row',
@@ -289,7 +284,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 12,
+    marginVertical: 16,
     marginHorizontal: 10,
   },
   commentInput: {

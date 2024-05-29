@@ -6,13 +6,13 @@ function BannerAdComponent({style }) {
   let bannerId;
 
   // Check the platform and set the test ad unit ID accordingly
-  if (__DEV__) {
+
     if (Platform.OS === 'android') {
       bannerId = '23'; // ID for Android
     } else {
       bannerId ='ca-app-pub-2801407808045625/1919863314'; //ID for iOS
     }
-  }
+  
 
   return (
     <View style={style}>

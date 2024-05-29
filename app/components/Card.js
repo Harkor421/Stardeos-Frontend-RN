@@ -6,14 +6,18 @@ import ListItem from './ListItem';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFormatDuration from '../hooks/useFormatDuration';
 
-function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly, creator }) {
+function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly, creator, item }) {
     const formattedDuration = isNaN(duration) ? "En Directo" : useFormatDuration(duration);
 
     if (subsOnly) {
         return (
             <View style={styles.card}>
                 <View style={styles.imageContainer}>
-                    <Image style={styles.image} source={{ uri: thumbnail }} />
+                    {item.isLiveStream && item.isLiveStream === true ? (
+                        <Image style={styles.image} source={require('../assets/Directo.png')} />
+                    ) : (
+                        <Image style={styles.image} source={{ uri: thumbnail }} />
+                    )}
                     <View style={styles.bannerContainer}>
                         <AppText style={styles.bannerText}>Subscríbete para ver</AppText>
                     </View>
@@ -38,7 +42,11 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
             <TouchableOpacity onPress={onPress}>
                 <View style={styles.card}>
                     <View style={styles.imageContainer}>
-                        <Image style={styles.image} source={{ uri: thumbnail }} />
+                        {item.isLiveStream && item.isLiveStream === true ? (
+                            <Image style={styles.image} source={require('../assets/Directo.png')} />
+                        ) : (
+                            <Image style={styles.image} source={{ uri: thumbnail }} />
+                        )}
                         {/* Container for duration text */}
                         <View style={styles.durationContainer}>
                             <AppText style={styles.durationText}>{formattedDuration}</AppText>
@@ -50,7 +58,7 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                             subTitle={subTitle}
                             avatar={avatar}
                             showVerified={true}
-                            creator = {creator}
+                            creator={creator}
                         />
                     </View>
                     <AppText style={styles.views}>{views}</AppText>

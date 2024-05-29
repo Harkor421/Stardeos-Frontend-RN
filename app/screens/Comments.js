@@ -15,6 +15,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import AppButton from '../components/AppButton';
 import GradientBorderButton from '../components/GradientBorderButton';
 import DonateModal from '../components/DonateModal';
+import { Image } from 'react-native';
 
 const createCommentSchema = Yup.object().shape({
   body: Yup.string().required('Comment is required'),
@@ -99,9 +100,10 @@ function Comments({ route, navigation }) {
     return (
         <Screen style={styles.container}>
             <View style={styles.header}>
+                <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
                 <AppText style={styles.headerText}>Comentarios</AppText>
                 <TouchableOpacity onPress={handleCloseModal}>
-                    <MaterialCommunityIcons name="close" size={30} color="white" />
+                    <MaterialCommunityIcons name="close" size={26} color="white" />
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>
@@ -158,11 +160,16 @@ const styles = StyleSheet.create({
         backgroundColor: '#1f233e',
         padding: 15,
     },
+    commentsIcon:{
+        width: 15,
+        height: 15,
+    },
     headerText: {
         fontSize: 16,
         fontWeight: '600',
         color: colors.white,
         marginLeft: 20,
+        marginRight: "60%"
     },
     body: {
         flex: 1,
@@ -184,7 +191,6 @@ const styles = StyleSheet.create({
     },
     customTextInput: {
         flex: 1,
-        marginRight: 10,
     },
     stardustInput: {
         width: '20%',

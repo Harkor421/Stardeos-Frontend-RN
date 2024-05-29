@@ -11,15 +11,8 @@ const follow = async (body) => {
   }
 };
 
-const findAllSubscriptions = async () => {
-  try {
-    const response = await client.get(`/v2/subscriptions/?v=${new Date().getTime()}`);
-    console.log(response);
-    return response;
-  } catch (error) {
-    console.error("Error in findAllSubscriptions:", error);
-    throw error;
-  }
+const findAllSubscriptions = () => {
+  return client.get(`/subscriptions/?v=${new Date().getTime()}`);
 };
 
 const unfollow = async (channelId) => {
