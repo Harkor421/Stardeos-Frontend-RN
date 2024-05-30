@@ -55,7 +55,7 @@ const DonateModal = ({ modalVisible, onRequestClose, handleStardustUpdate, stard
          
           {/* Close Button */}
 
-          <AppButton title= "Close" onPress={onRequestClose} style = {styles.closebutton}/>
+          <AppButton title= "Cerrar" onPress={onRequestClose} style = {styles.closebutton}/>
         </View>
       </View>
     </Modal>

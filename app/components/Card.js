@@ -6,13 +6,14 @@ import ListItem from './ListItem';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFormatDuration from '../hooks/useFormatDuration';
 import routes from './navigation/routes';
+
 function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly, creator, item, navigation}) {
     const formattedDuration = isNaN(duration) ? "En Directo" : useFormatDuration(duration);
 
     if (subsOnly) {
         return (
             <View style={styles.card}>
-                <View style={styles.imageContainer}>
+                <TouchableOpacity style={styles.imageContainer} onPress={onPress}>
                     {item.isLiveStream && item.isLiveStream === true ? (
                         <Image style={styles.image} source={require('../assets/Directo.png')} />
                     ) : (
@@ -25,7 +26,7 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                     <View style={styles.durationContainer}>
                         <AppText style={styles.durationText}>{formattedDuration}</AppText>
                     </View>
-                </View>
+                </TouchableOpacity>
                 <View style={styles.detailsContainer}>
                     <ListItem
                         title={title}

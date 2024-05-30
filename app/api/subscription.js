@@ -17,7 +17,7 @@ const findAllSubscriptions = () => {
 
 const unfollow = async (channelId) => {
   try {
-    const response = await client.delete(`/subscriptions/${channelId}`);
+    const response = await client.delete(`/subscriptions/${channelId}` );
     console.log(response);
     return response;
   } catch (error) {

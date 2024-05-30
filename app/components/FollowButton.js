@@ -16,7 +16,6 @@ function FollowButton({ styles, channelId }) {
         if (!followload) {
             const isSubscribedToChannel = follows.some(sub => sub.subscribedTo === channelId);
             setIsSubscribed(isSubscribedToChannel);
-            console.log(isSubscribedToChannel);
         }
     }, [follows, followload]);
 

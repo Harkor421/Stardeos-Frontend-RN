@@ -5,7 +5,7 @@ const useShareVideo = (video) => {
   const handleShare = useCallback(async () => {
     try {
       const result = await Share.share({
-        message: `Mira este video de: ${video.channelId.displayName} https://stardeos.com/video/${video.id}`,
+        message: `Mira este video de ${video.channelId.displayName} en Stardeos! https://stardeos.com/video/${video.id}`,
       });
       if (result.action === Share.sharedAction) {
         if (result.activityType) {

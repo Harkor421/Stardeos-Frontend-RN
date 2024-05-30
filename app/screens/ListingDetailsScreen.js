@@ -21,7 +21,8 @@ import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from
 import { setIsEnabledAsync } from 'expo-av/build/Audio';
 import GradientBorderButton from '../components/GradientBorderButton';
 import FollowButton from '../components/FollowButton';
-
+import subsApi from '../api/paidSubscription';
+import { Linking } from 'react-native';
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
   
@@ -29,18 +30,19 @@ function ListingDetailsScreen({ route, navigation }) {
   const [videoLoad, setVideoLoad] = useState(true);
   const [likeCount, setLikeCount] = useState(video.likeCount || 0);
   const [dislikeCount, setDisLikeCount] = useState(video.dislikeCount || 0);
-
   const [liked, setLiked] = useState(undefined);
   const [loader, setLoader] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   const [showDescription, setShowDescription] = useState(false); // Step 1
   const videoRef = React.useRef(null);
-
   const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
+  const { data: activesubs, loading: subsloading, request: getPaidSubs } = useApi(() => subsApi.getSubscriptions());
 
   useEffect(() => {
     loadVideo();
     loadComments();
+    getPaidSubs();
     const unsubscribe = navigation.addListener('blur', () => {
       if (videoRef.current) {
         videoRef.current.pauseAsync();
@@ -48,6 +50,15 @@ function ListingDetailsScreen({ route, navigation }) {
     });
     return unsubscribe;
   }, [navigation, reloadKey]);
+  
+  useEffect(() => {
+    if (!subsloading && Array.isArray(activesubs)) {
+        const isSubscribedToChannel = activesubs.some((sub) => sub.channel === video.channelId.id);
+        setIsSubscribed(isSubscribedToChannel);
+    }
+}, [subsloading, activesubs]);
+
+ 
 
   const handleLikeDislike = async (type) => {
     setLoader(true);
@@ -68,6 +79,7 @@ function ListingDetailsScreen({ route, navigation }) {
     setLoader(false);
   };
 
+
   const toggleDescription = () => {
     navigation.navigate(routes.VIDEO_DESCRIPTION,  video.description);
   };
@@ -87,7 +99,15 @@ function ListingDetailsScreen({ route, navigation }) {
 
   return (
     <Screen style={styles.page}>
-      <ScrollView>
+    <ScrollView >
+      {video.subscribersOnly && !isSubscribed ? (
+        <View style={styles.backdrop}>
+          <Text style={styles.subscriptionMessage}>
+            Tienes que estar suscrito para ver este contenido.
+          </Text>
+          <GradientBorderButton title="Suscríbete Aquí" style={{ width: "90%", marginBottom: 20,marginTop: 30, }} onPress={() => Linking.openURL(`https://stardeos.com/${video.channelId.id}` )} />
+        </View>
+      ) : (
         <View>
           <Video
             ref={videoRef}
@@ -104,15 +124,18 @@ function ListingDetailsScreen({ route, navigation }) {
           />
           <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad} />
         </View>
+      )}
         <View style={styles.detailsContainer}>
         <TouchableOpacity onPress={toggleDescription} style={styles.titleContainer}>
-            <AppText style={styles.title}>{video.title}</AppText>
+        <AppText style={styles.title}>{video.title}</AppText>
+          <View style={styles.iconContainer}>
             {showDescription ? (
               <MaterialIcons name="keyboard-arrow-up" size={24} color={colors.white} />
             ) : (
               <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.white} />
             )}
-          </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
           <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>
           <View style={styles.interactions}>
             <Interaction
@@ -190,6 +213,16 @@ const styles = StyleSheet.create({
   page: {
     backgroundColor: colors.primary,
   },
+  backdrop: {
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)', // Adjust opacity as needed
+    zIndex: 999, // Make sure it's above other components
+  },
   detailsContainer: {
     padding: 8,
   },
@@ -197,6 +230,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 4, // Adjust as needed
+  },
+  iconContainer: {
+    width: 30, // Adjust as needed
+    height: 30, // Adjust as needed
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     color: colors.white,
@@ -313,6 +353,11 @@ const styles = StyleSheet.create({
   listItemContainer: {
     flex: 1,
     alignItems: 'center',
+  },
+  subscriptionMessage:{
+    color: colors.white,
+    textAlign: 'center',
+    
   },
 
 });

@@ -22,7 +22,7 @@ const ErrorModal = ({ modalVisible, errorMessage, onRequestClose }) => {
           <Text style={styles.errorMessage}>{errorMessage}</Text>
          
           {/* Close Button */}
-          <AppButton title="Close" onPress={onRequestClose} style={styles.closeButton} />
+          <AppButton title="Cerrar" onPress={onRequestClose} style={styles.closeButton} />
         </View>
       </View>
     </Modal>

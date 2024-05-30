@@ -17,13 +17,17 @@ import GradientBorderButton from '../components/GradientBorderButton';
 import DonateModal from '../components/DonateModal';
 import { Image } from 'react-native';
 import authApi from '../api/auth'
+import ErrorModal from '../components/ErrorModal';
+
 
 const createCommentSchema = Yup.object().shape({
-  body: Yup.string().required('Comment is required'),
-  amount: Yup.number().min(0, 'Amount cannot be negative'),
+  body: Yup.string().required('Tienes que escribir un comentario'),
+  amount: Yup.number().min(0, 'La cantidad no puede ser negativa'),
 });
 
 function Comments({ route, navigation }) {
+    const [errorVisible, setErrorVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
     const { user } = useContext(AuthContext);
     const { videoId} = route.params;
     const [refresh, setRefresh] = useState(false);
@@ -75,15 +79,18 @@ function Comments({ route, navigation }) {
                     type: 1,
                     content: body,
                     parent: videoId,
-                    stardusts: parseInt(amount) ?? null,
+                    stardusts: parseInt(stardust) ?? null,
                 };
         
                 const response = await videosApi.createComment(parsedBody);
                 console.log("Comment submit response:", response);
                 setStardust(0);
+
                 if (!response.error) {
                     await loadComments();            
                 } else {
+                    setErrorMessage("Para mandar otro mensaje deberás donar stardust!");
+                    setErrorVisible(true);
                     console.error(response.message);
                 }
             } catch (error) {
@@ -147,7 +154,11 @@ function Comments({ route, navigation }) {
                         />
                     )}
                    <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} stardustaccount={user.data.user.stardusts} handleStardustUpdate={updateStardust} />
-
+                   <ErrorModal
+                    modalVisible={errorVisible}
+                    errorMessage={errorMessage}
+                    onRequestClose={() => setErrorVisible(false)}
+                    />
                 </ScrollView>
             </View>
         </Screen>
