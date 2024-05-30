@@ -22,7 +22,7 @@ function FollowButton({ styles, channelId }) {
 
     const handleFollow = async () => {
         try {
-            const response = await subscriptionApi.follow({ channelId });
+            const response = await subscriptionApi.follow({channel: channelId});
             console.log(response);
             setIsSubscribed(true);
         } catch (error) {
@@ -32,7 +32,7 @@ function FollowButton({ styles, channelId }) {
 
     const handleUnfollow = async () => {
         try {
-            const response = await subscriptionApi.unfollow(channelId);
+            const response = await subscriptionApi.unfollow({channelId});
             console.log(response);
             setIsSubscribed(false);
         } catch (error) {

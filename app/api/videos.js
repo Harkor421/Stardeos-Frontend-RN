@@ -27,7 +27,7 @@ const getVideosWithStreams = (page) => {
 const markLikeOrDislike = async (data, action) => {
   try {
     const response = await client.post(`/videos/${action}`, data);
-    console.log(response);
+    console.log(response.data);
     return response;
   } catch (error) {
     console.error("Error in markLikeOrDislike:", error);

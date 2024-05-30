@@ -2,7 +2,7 @@ import client from './client';
 
 const follow = async (body) => {
   try {
-    const response = await client.post(`/v2/subscriptions`, body);
+    const response = await client.post(`/subscriptions`, body);
     console.log(response);
     return response;
   } catch (error) {
@@ -17,7 +17,7 @@ const findAllSubscriptions = () => {
 
 const unfollow = async (channelId) => {
   try {
-    const response = await client.delete(`/v2/subscriptions/${channelId}`);
+    const response = await client.delete(`/subscriptions/${channelId}`);
     console.log(response);
     return response;
   } catch (error) {

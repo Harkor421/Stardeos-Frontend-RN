@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
   randomComment: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
+    padding: 8,
   },
   commentAvatar: {
     width: 20,
@@ -294,7 +294,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 5,
     paddingVertical: 5,
-    marginBottom: 20,
   },
   leaveCommentText: {
     color: colors.grayline,
