@@ -11,15 +11,22 @@ import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 import BannerAdComponent from '../components/BannerAd';
 import streamsApi from '../api/streams';
+import { useRef } from 'react';
+
 
 function VideoList({ navigation, route}) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const [refresh, setRefresh] = useState(false); // State variable to force refresh
+  const flatListRef = useRef(null);
+
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getVideosWithStreams(page));
 
   
-  
+  const scrollToTop = () => {
+    flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
+  };
+
 
   const renderItem = useCallback(({ item, index }) => {
     if ((index + 1) % 5 === 0) {
@@ -60,6 +67,7 @@ function VideoList({ navigation, route}) {
         </>
       )}
       <FlatList
+        ref={flatListRef}
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}

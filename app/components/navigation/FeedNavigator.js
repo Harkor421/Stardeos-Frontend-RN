@@ -8,6 +8,7 @@ import StreamScreen from "../../screens/StreamScreen";
 import SearchedVideoList from "../../screens/SearchedVideoList";
 import Description from "../../screens/Description";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import RecentVideoList from "../../screens/RecentVideoList";
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,8 @@ const FeedNavigator = ({ navigation, route }) => {
     >
       <Stack.Screen name="Videos" component={VideoList} />
       <Stack.Screen name="SearchedVideos" component={SearchedVideoList} />
+      <Stack.Screen name="RecentVideos" component={RecentVideoList} />
+
       <Stack.Screen
         name="VideoDetails"
         component={ListingDetailsScreen}

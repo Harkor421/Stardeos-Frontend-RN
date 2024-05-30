@@ -7,10 +7,10 @@ import { useEffect } from 'react';
 function ListItem({ title, subTitle, avatar, showVerified, navigate }) {
 
   return (
-    <TouchableOpacity style={styles.container} onPress={navigate}>
-      <View style={styles.avatarContainer}>
-        <Image style={styles.image} source={{ uri: avatar }} />
-      </View>
+    <View style={styles.container} >
+      <TouchableOpacity style={styles.avatarContainer} onPress={navigate}>
+        <Image style={styles.image} source={{ uri: avatar }}  />
+      </TouchableOpacity>
       <View style={styles.userInfo}>
         <AppText style={styles.user} numberOfLines={1} ellipsizeMode="tail">
           {title}
@@ -22,7 +22,7 @@ function ListItem({ title, subTitle, avatar, showVerified, navigate }) {
           </AppText>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 }
 

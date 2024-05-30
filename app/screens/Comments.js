@@ -16,6 +16,7 @@ import AppButton from '../components/AppButton';
 import GradientBorderButton from '../components/GradientBorderButton';
 import DonateModal from '../components/DonateModal';
 import { Image } from 'react-native';
+import authApi from '../api/auth'
 
 const createCommentSchema = Yup.object().shape({
   body: Yup.string().required('Comment is required'),
@@ -24,17 +25,22 @@ const createCommentSchema = Yup.object().shape({
 
 function Comments({ route, navigation }) {
     const { user } = useContext(AuthContext);
-    console.log(user);
     const { videoId} = route.params;
     const [refresh, setRefresh] = useState(false);
     const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
     const [stardust, setStardust] = useState(0);
 
     const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId), [videoId]);
+    const { data: updatedstardust, request: updatedStardust } = useApi(() => authApi.getCurrentStardust());
 
     useEffect(() => {
         loadComments();
     }, [videoId, refresh]);
+
+    useEffect(() => {
+        updatedStardust();
+        console.log(updatedstardust);
+    }, [refresh]);
 
     const handleCloseModal = () => {
         navigation.goBack();
@@ -50,6 +56,7 @@ function Comments({ route, navigation }) {
 
       const updateStardust = (newStardust) => {
         setStardust(newStardust);
+        
       };
 
     const formik = useFormik({
@@ -73,9 +80,9 @@ function Comments({ route, navigation }) {
         
                 const response = await videosApi.createComment(parsedBody);
                 console.log("Comment submit response:", response);
-        
+                setStardust(0);
                 if (!response.error) {
-                    await loadComments();
+                    await loadComments();            
                 } else {
                     console.error(response.message);
                 }
@@ -103,7 +110,7 @@ function Comments({ route, navigation }) {
                 <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
                 <AppText style={styles.headerText}>Comentarios</AppText>
                 <TouchableOpacity onPress={handleCloseModal}>
-                    <MaterialCommunityIcons name="close" size={26} color="white" />
+                    <MaterialCommunityIcons name="close" size={24} color="white" />
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>

@@ -9,10 +9,13 @@ import authStorage from './app/auth/storage';
 import colors from './app/config/colors';
 import ActivityIndicator from './app/components/ActivityIndicator'; // Update the import path
 import * as Notifications from 'expo-notifications';
-
+import authApi from './app/api/auth'
+import useApi from './app/hooks/useApi';
 
 
 export default function App() {
+  
+  const { data: updateduser, request: userUpdate } = useApi(() => authApi.getCurrentUser());
 
   const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
@@ -39,6 +42,12 @@ export default function App() {
     restoreToken();
   }, []);
 
+  const updateUser = () => {
+    userUpdate();
+    setUser(updateduser);
+    console.log("holàaaaa", updateduser);
+  };
+
   if (!isReady) {
     return <ActivityIndicator visible={true} />;
   }
@@ -53,7 +62,7 @@ export default function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, updateUser }}>
       <NavigationContainer theme={navigationTheme}>
         <SafeAreaView style={styles.container}>
           {user ? <AppNavigator /> : <AuthNavigator />}

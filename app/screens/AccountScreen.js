@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Image, StyleSheet, View, TouchableOpacity, ScrollView } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, ScrollView, Linking } from 'react-native';
 
 import Screen from '../components/Screen';
 import AuthContext from '../auth/context';
@@ -35,27 +35,33 @@ function AccountScreen({ navigation }) {
                         <Image source={require('../assets/stardust-icon.png')} style={styles.stardusticon} />
                         <AppText style={styles.stardustcount}>{user.data.user.stardusts}</AppText>
                     </View>
-                    <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => {}} />
+                    <BannerAdComponent style={styles.adCard} />
+                    <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => Linking.openURL('https://stardeos.com/buy/buy-stardust')} />
                     <TouchableOpacity style={styles.section}>
+                        <MaterialCommunityIcons name="account" size={24} color="white" style={styles.icon} onPress={() => Linking.openURL('https://stardeos.com/settings')} />
                         <AppText style={styles.sectionText}>Ajustes de usuario</AppText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.section}>
+                        <MaterialCommunityIcons name="card-account-details-star" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Suscripciones</AppText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.section}>
+                        <MaterialCommunityIcons name="credit-card" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Método de pago</AppText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.section}>
+                        <MaterialCommunityIcons name="translate" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Idioma</AppText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.section}>
+                        <MaterialCommunityIcons name="download" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Descarga tus datos</AppText>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.section}>
+                        <MaterialCommunityIcons name="delete" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Elimina tu cuenta</AppText>
                     </TouchableOpacity>
-                    <AppButton title= "¿Necesitas ayuda?" style = {styles.closebutton}/>
-                    <BannerAdComponent style={styles.adCard} />
+                    <AppButton title="¿Necesitas ayuda?" style={styles.helpButton} onPress={() => Linking.openURL('https://discord.com/invite/JXYpqU5qgw')} />
                     <GradientBorderButton title="Cerrar Sesión" onPress={handleLogOut} style={styles.logoutButton} />
                 </View>
             </ScrollView>
@@ -81,15 +87,10 @@ const styles = StyleSheet.create({
         color: colors.white,
     },
     scrollView: {
-  
     },
     centeredView: {
         alignItems: 'center',
         padding: 20,
-    },
-    closebutton:{
-        marginTop: 30,
-        backgroundColor: colors.headerblue,
     },
     avatar: {
         width: 80,
@@ -125,14 +126,27 @@ const styles = StyleSheet.create({
     section: {
         width: '100%',
         padding: 15,
+        borderBottomWidth: 1,
         borderBottomColor: colors.lightgray,
         flexDirection: 'row',
+        alignItems: 'center',
+    },
+    icon: {
+        marginRight: 10,
     },
     sectionText: {
         color: colors.white,
         fontSize: 16,
     },
-
+    helpButton: {
+        width: '100%',
+        padding: 15,
+        alignItems: 'center',
+        backgroundColor: colors.darkgray,
+        borderRadius: 10,
+        marginTop: 40,
+        marginBottom: 20,
+    },
     helpText: {
         color: colors.white,
         fontSize: 16,

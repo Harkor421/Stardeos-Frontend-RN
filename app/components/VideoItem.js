@@ -47,6 +47,7 @@ function VideoItem({ item, index, navigation, replace }) {
       subsOnly={item.subscribersOnly}
       creator={item.creator}
       item = {item}
+      navigation={navigation}
     />
   );
 }

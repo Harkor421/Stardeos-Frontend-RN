@@ -10,6 +10,7 @@ import authApi from '../api/auth'
 import AuthContext from '../auth/context';
 import authStorage from '../auth/storage';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { View } from 'react-native';
 
 const validationSchema = Yup.object().shape({
     username: Yup.string().required().label('Username'),
@@ -77,12 +78,14 @@ function LoginScreen(props) {
                         placeholderTextColor = {colors.lightgray}
                         />
                         <ErrorMessage error = "Usuario o contraseña no es valido" visible={loginFailed}/>
+                        <View style = {{alignItems: 'flex-end'}}>
                         <TouchableOpacity onPress={() =>Linking.openURL('https://stardeos.com/forget-password')}>
-                        <AppText style = {styles.forgotpassword}>¿Olvidaste tu contraseña?</AppText>
+                            <AppText style = {styles.forgotpassword}>¿Olvidaste tu contraseña?</AppText>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() =>Linking.openURL('https://stardeos.com/forget-username')}>
-                        <AppText style = {styles.forgotusername}>¿Olvidaste tu usuario?</AppText>
+                            <AppText style = {styles.forgotusername}>¿Olvidaste tu usuario?</AppText>
                         </TouchableOpacity>
+                        </View>
                         <SubmitButton title="Iniciar Sesión" />
                         <TouchableOpacity style = {styles.cuentacontainer} onPress={() => Linking.openURL('https://stardeos.com/signup')}>
                         <AppText style = {styles.crearcuenta}>¿No tienes una cuenta?</AppText>
@@ -112,7 +115,6 @@ const styles = StyleSheet.create({
     },
     forgotpassword:{
         color: colors.bluelink,
-        textAlign: 'right',
         marginRight: 20,
         fontWeight: 500,
         textDecorationLine: 'underline',
@@ -121,7 +123,6 @@ const styles = StyleSheet.create({
     },
     forgotusername:{
         color: colors.bluelink,
-        textAlign: 'right',
         marginRight: 20,
         fontWeight: 500,
         textDecorationLine: 'underline',

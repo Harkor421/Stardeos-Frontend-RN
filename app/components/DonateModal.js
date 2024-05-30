@@ -51,7 +51,7 @@ const DonateModal = ({ modalVisible, onRequestClose, handleStardustUpdate, stard
           )}
 
           {/* Donation Button */}
-          <GradientBorderButton title="Añadir Stardust" style={{ width: "90%", marginBottom: 20, }} onPress={handleDonate} />
+          <GradientBorderButton title="Añadir Stardust" style={{ width: "90%", marginBottom: 20,marginTop: 30, }} onPress={handleDonate} />
          
           {/* Close Button */}
 
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'bold',
   },
- 
+
 });
 
 export default DonateModal;
