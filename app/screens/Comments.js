@@ -28,23 +28,23 @@ const createCommentSchema = Yup.object().shape({
 function Comments({ route, navigation }) {
     const [errorVisible, setErrorVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { user } = useContext(AuthContext);
+    const { user, updateUser } = useContext(AuthContext);
     const { videoId} = route.params;
     const [refresh, setRefresh] = useState(false);
     const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
     const [stardust, setStardust] = useState(0);
 
     const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId), [videoId]);
-    const { data: updatedstardust, request: updatedStardust } = useApi(() => authApi.getCurrentStardust());
 
     useEffect(() => {
         loadComments();
     }, [videoId, refresh]);
 
-    useEffect(() => {
-        updatedStardust();
-        console.log(updatedstardust);
-    }, [refresh]);
+    const handleUpdateUser = () => {
+       updateUser();
+       console.log("UPDATED USER SENT TO APP.JS ", user);
+      };
+    
 
     const handleCloseModal = () => {
         navigation.goBack();
@@ -85,6 +85,7 @@ function Comments({ route, navigation }) {
                 const response = await videosApi.createComment(parsedBody);
                 console.log("Comment submit response:", response);
                 setStardust(0);
+                handleUpdateUser();
 
                 if (!response.error) {
                     await loadComments();            
@@ -125,8 +126,8 @@ function Comments({ route, navigation }) {
                     <View style={styles.inputContainer}>
                         <View style={styles.textInputContainer}>
                             <CustomTextInput
-                                icon={{ uri: user.data.user.avatar }}
-                                placeholder="Add a comment"
+                                icon={user.data.user.avatar ? { uri: user.data.user.avatar } : require('../assets/default-avatar-icon.jpeg')}
+                                placeholder="Comenta algo..."
                                 value={formik.values.body}
                                 onChangeText={formik.handleChange('body')}
                                 onBlur={formik.handleBlur('body')}
@@ -153,7 +154,7 @@ function Comments({ route, navigation }) {
                             contentContainerStyle={styles.commentsContainer}
                         />
                     )}
-                   <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} stardustaccount={user.data.user.stardusts} handleStardustUpdate={updateStardust} />
+                   <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} stardustaccount= {user.data.user.stardusts ? user.data.user.stardusts : 0} handleStardustUpdate={updateStardust} />
                    <ErrorModal
                     modalVisible={errorVisible}
                     errorMessage={errorMessage}

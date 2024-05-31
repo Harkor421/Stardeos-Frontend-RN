@@ -4,11 +4,11 @@ const login = ({username, password}) => {
   return apiClient.post('/auth/login', { username, password });
 };
 
-const getCurrentStardust = () => {
-  return apiClient.get(`/auth/me`);
+const getCurrentUser = () => {
+  return apiClient.get(`/auth/me?v=0`);
 };
 
 export default {
   login,
-  getCurrentStardust,
+  getCurrentUser,
 };

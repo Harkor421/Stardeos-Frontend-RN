@@ -52,7 +52,7 @@ const Header = ({ navigation }) => {
 
       {/* Stardusts */}
       <TouchableOpacity style={styles.stardusts} onPress={() => navigation.navigate('Stardust', user.data.user.stardusts)}>
-        <AppText style={styles.stardustcount}>{user.data.user.stardusts}</AppText>
+        <AppText style={styles.stardustcount}>{user.data.user.stardusts ? user.data.user.stardusts : 0}</AppText>
         <Image source={require('../../assets/stardust-icon.png')} style={styles.stardusticon} />
       </TouchableOpacity>
 
@@ -76,7 +76,7 @@ const Header = ({ navigation }) => {
           <AppTextInput
             style={styles.searchInput}
             placeholder="Search..."
-            placeholderTextColor={colors.gray}
+            placeholderTextColor={colors.grayline}
             autoFocus
             value={searchText}
             onChangeText={setSearchText}
@@ -90,7 +90,7 @@ const Header = ({ navigation }) => {
 
       {/* Avatar */}
       <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-        <Image style={styles.avatar} source={{ uri: user.data.user.avatar }} />
+        <Image style={styles.avatar} source={user.data.user.avatar ? { uri: user.data.user.avatar } : require('../../assets/default-avatar-icon.jpeg')}/>
       </TouchableOpacity>
     </SafeAreaView>
   );
@@ -154,11 +154,11 @@ const styles = StyleSheet.create({
     top: 60,
     left: 0,
     right: 0,
-    paddingHorizontal: 11,
+    paddingHorizontal: 8,
     backgroundColor: colors.headerblue,
   },
   searchInput: {
-    height: 10, // Increased height
+    height: 15, // Increased height
     borderWidth: 1,
     borderColor: colors.gray,
     color: colors.white,

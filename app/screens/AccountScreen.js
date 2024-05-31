@@ -10,6 +10,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import AppButton from '../components/AppButton';
 import authStorage from '../auth/storage'
 import colors from '../config/colors';
+import auth from '../api/auth';
+import useApi from '../hooks/useApi';
+import { useEffect } from 'react';
 
 function AccountScreen({ navigation }) {
     const { user, setUser } = useContext(AuthContext);
@@ -18,6 +21,14 @@ function AccountScreen({ navigation }) {
         setUser(null);
         authStorage.removeToken();
     };
+
+    const { data: userdata, loading: userloading, request: loadUser } = useApi(() => auth.getCurrentUser());
+   
+    useEffect(() => {
+        loadUser();
+        console.log(userdata);
+    }, []);
+
 
     return (
         <Screen style={styles.container}>
@@ -29,11 +40,11 @@ function AccountScreen({ navigation }) {
             </View>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.centeredView}>
-                    <Image source={{ uri: user.data.user.avatar }} style={styles.avatar} />
+                    <Image source={user.data.user.avatar ? { uri: user.data.user.avatar } : require('../assets/default-avatar-icon.jpeg')} style={styles.avatar} />
                     <AppText style={styles.username}>{user.data.user.username}</AppText>
                     <View style={styles.stardusts}>
                         <Image source={require('../assets/stardust-icon.png')} style={styles.stardusticon} />
-                        <AppText style={styles.stardustcount}>{user.data.user.stardusts}</AppText>
+                        <AppText style={styles.stardustcount}>{user.data.user.stardusts ? user.data.user.stardusts : 0}</AppText>
                     </View>
                     <BannerAdComponent style={styles.adCard} />
                     <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => Linking.openURL('https://stardeos.com/buy/buy-stardust')} />

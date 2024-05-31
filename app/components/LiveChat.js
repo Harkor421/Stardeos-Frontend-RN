@@ -188,7 +188,7 @@ export const LiveChat = ({ stream, expand }) => {
       <View style={styles.inputContainer}>
         <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
           <CustomTextInput
-            icon={{ uri: user.data.user.avatar }}
+            icon={user.data.user.avatar ? { uri: user.data.user.avatar } : require('../assets/default-avatar-icon.jpeg')}
             style={styles.commentInput}
             placeholder="Escribe un comentario..."
             value={inputText} // Set the value of TextInput to inputText state
