@@ -5,14 +5,14 @@
       "expo-secure-store"
     ],
     "slug": "Stardeos",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./app/assets/app-icon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./app/assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "resizeMode": "cover",
+      "backgroundColor": "#0e1121"
     },
     "assetBundlePatterns": [
       "**/*"

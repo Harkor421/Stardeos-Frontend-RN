@@ -10,16 +10,21 @@ const DonateModal = ({ modalVisible, onRequestClose, handleStardustUpdate, stard
 
   const handleDonate = () => {
     // Convert the stardust value to an integer, default to 0 if not a valid number
-    const newStardust = parseInt(stardustValue) || 0;
+    let newStardust = parseInt(stardustValue) || 0;
+    
+    // If the new stardust value is less than 0, set it to 0
+    if (newStardust < 0) {
+        newStardust = 0;
+    }
     
     // Handle donation logic here
     // For demonstration, let's assume the stardust is successfully added
     if (!isNaN(newStardust)) {
-      handleStardustUpdate(newStardust); // Call the function to update stardust in LiveChat
+        handleStardustUpdate(newStardust); // Call the function to update stardust in LiveChat
     }
     // Close the modal
     onRequestClose();
-  };
+};
 
   return (
     <Modal
@@ -51,8 +56,9 @@ const DonateModal = ({ modalVisible, onRequestClose, handleStardustUpdate, stard
           )}
 
           {/* Donation Button */}
+          {!(stardustaccount - (parseInt(stardustValue) || 0) < 0) && (
           <GradientBorderButton title="Añadir Stardust" style={{ width: "90%", marginBottom: 20,marginTop: 30, }} onPress={handleDonate} />
-         
+          )}
           {/* Close Button */}
 
           <AppButton title= "Cerrar" onPress={onRequestClose} style = {styles.closebutton}/>

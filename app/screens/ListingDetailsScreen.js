@@ -23,9 +23,12 @@ import GradientBorderButton from '../components/GradientBorderButton';
 import FollowButton from '../components/FollowButton';
 import subsApi from '../api/paidSubscription';
 import { Linking } from 'react-native';
+import { useContext } from 'react';
+import AuthContext from '../auth/context';
+
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
-  
+  const { user, updateUser } = useContext(AuthContext);
   const [reloadKey, setReloadKey] = useState(Date.now());
   const [videoLoad, setVideoLoad] = useState(true);
   const [likeCount, setLikeCount] = useState(video.likeCount || 0);
@@ -230,19 +233,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 4, // Adjust as needed
   },
   iconContainer: {
-    width: 30, // Adjust as needed
-    height: 30, // Adjust as needed
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginLeft: 10,
   },
   title: {
     color: colors.white,
     fontSize: 18,
     fontWeight: '900',
+    flex: 1,
+    flexWrap: 'wrap',
   },
+  
   transparentBackground: {
     backgroundColor: colors.primary, // Adjust the alpha channel for transparency
   },

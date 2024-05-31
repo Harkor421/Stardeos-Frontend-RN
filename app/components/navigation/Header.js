@@ -13,7 +13,7 @@ import notificationsApi from '../../api/notifications';
 import useApi from '../../hooks/useApi';
 
 const Header = ({ navigation }) => {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser } = useContext(AuthContext);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [hasNotifications, setHasNotifications] = useState(false);
@@ -31,6 +31,7 @@ const Header = ({ navigation }) => {
 
   useEffect(() => {
       loadNotifications();
+      updateUser();
       console.log(notifications);
   }, []);
   

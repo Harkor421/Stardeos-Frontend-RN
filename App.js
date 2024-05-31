@@ -29,9 +29,10 @@ export default function App() {
       try {
         const userData = await authStorage.getToken();
         console.log('Retrieved user data:', userData);
-
+  
         if (userData) {
           setUser(userData);
+          await updateUser(); // Wait for updateUser to complete
           console.log('User state set:', userData);
         }
       } catch (error) {
@@ -41,36 +42,60 @@ export default function App() {
         setIsReady(true);
       }
     };
-
+  
     restoreToken();
   }, []);
+  
 
-  const updateUser = async () => {
+  const tempUpdateUserStardust = async (tempStardusts) => {
     try {
-      console.log("EXECUTED========")
-      await loadUser();
-  
-      // Extract updated user data from userdata
-  
-      // Update user state with updated user information
-      if (userdata) {
+      if (tempStardusts) {
         setUser(prevUser => ({
           ...prevUser,
           data: {
             ...prevUser.data,
             user: {
-              ...prevUser.data.user,
-              ...userdata
+              ...prevUser.data.user, // Keep other user data intact
+              stardusts: tempStardusts // Update stardusts directly
             }
           }
         }));
-        console.log("NEW USER: ", user);
       }
     } catch (error) {
       console.error("Error updating user:", error);
     }
   };
   
+
+  const updateUser = async () => {
+    try {
+      if (!userloading) { // Check if userloading is false
+        await loadUser();
+        // Extract updated user data from userdata
+  
+        // Update user state with updated user information
+        console.log("LOAD USER STATE", userdata)
+        if (userdata) {
+          setUser(prevUser => ({
+            ...prevUser,
+            data: {
+              ...prevUser.data,
+              user: {
+                ...prevUser.data.user,
+                ...userdata
+              }
+            }
+          }));
+          authStorage.updateToken(user);
+          console.log("NEW USER: ", user);
+        }
+      } else {
+        console.log("User data is still loading, skipping updateUser");
+      }
+    } catch (error) {
+      console.error("Error updating user:", error);
+    }
+  };
   
   
   
@@ -90,7 +115,7 @@ export default function App() {
   }
 
   return (
-    <AuthContext.Provider value={{ user, setUser, updateUser }}>
+    <AuthContext.Provider value={{ user, setUser, updateUser, tempUpdateUserStardust }}>
       <NavigationContainer theme={navigationTheme}>
         <SafeAreaView style={styles.container}>
           {user ? <AppNavigator /> : <AuthNavigator />}

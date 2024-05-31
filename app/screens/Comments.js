@@ -28,21 +28,22 @@ const createCommentSchema = Yup.object().shape({
 function Comments({ route, navigation }) {
     const [errorVisible, setErrorVisible] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const { user, updateUser } = useContext(AuthContext);
+    const { user, updateUser, tempUpdateUserStardust} = useContext(AuthContext);
     const { videoId} = route.params;
     const [refresh, setRefresh] = useState(false);
     const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
     const [stardust, setStardust] = useState(0);
 
-    const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId), [videoId]);
+    const { data: videoComments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(videoId,), [videoId]);
 
     useEffect(() => {
         loadComments();
     }, [videoId, refresh]);
 
     const handleUpdateUser = () => {
-       updateUser();
-       console.log("UPDATED USER SENT TO APP.JS ", user);
+        tempUpdateUserStardust(user.data.user.stardusts - stardust);
+        setTimeout(updateUser, 20000);
+
       };
     
 
@@ -84,8 +85,9 @@ function Comments({ route, navigation }) {
         
                 const response = await videosApi.createComment(parsedBody);
                 console.log("Comment submit response:", response);
-                setStardust(0);
                 handleUpdateUser();
+                setStardust(0);
+    
 
                 if (!response.error) {
                     await loadComments();            

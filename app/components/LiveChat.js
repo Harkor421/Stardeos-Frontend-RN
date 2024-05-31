@@ -10,7 +10,7 @@ import DonateModal from './DonateModal';
 const SOCKET_SERVER_URL = "ws://13.36.152.191:8881";
 
 export const LiveChat = ({ stream, expand }) => {
-  const { user } = useContext(AuthContext);
+  const { user, updateUser, tempUpdateUserStardust } = useContext(AuthContext);
   const streamId = stream.id;
   const [time, setTime] = useState(0);
   const [stardust, setStardust] = useState(0);
@@ -114,8 +114,10 @@ export const LiveChat = ({ stream, expand }) => {
     };
   
     ws.current.emit(NEW_CHAT_MESSAGE_EVENT, message);
-    setInputText(''); // Clear the input text after sending the message
+    tempUpdateUserStardust(user.data.user.stardusts - stardust);
+    setInputText('');
     setStardust(0);
+    setTimeout(updateUser, 20000);
   };
   
 
