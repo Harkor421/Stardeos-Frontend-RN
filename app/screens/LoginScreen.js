@@ -36,7 +36,6 @@ function LoginScreen(props) {
         console.log('Login success:', result);
     
         authStorage.storeToken(result.data); // Pass the entire result.data to storeToken
-    
         authContext.setUser(result.data);
     }
     

@@ -31,8 +31,7 @@ export default function App() {
         console.log('Retrieved user data:', userData);
   
         if (userData) {
-          setUser(userData);
-          await updateUser(); // Wait for updateUser to complete
+          setUser(userData); 
           console.log('User state set:', userData);
         }
       } catch (error) {

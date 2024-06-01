@@ -22,13 +22,6 @@ function AccountScreen({ navigation }) {
         authStorage.removeToken();
     };
 
-    const { data: userdata, loading: userloading, request: loadUser } = useApi(() => auth.getCurrentUser());
-   
-    useEffect(() => {
-        loadUser();
-        console.log(userdata);
-    }, []);
-
 
     return (
         <Screen style={styles.container}>
