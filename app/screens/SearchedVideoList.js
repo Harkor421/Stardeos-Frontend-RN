@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   adCard: {
     // Styles for the ad card container
-    backgroundColor: colors.lightGray,
+    backgroundColor: colors.lightgray,
     padding: 20,
     marginVertical: 10,
     borderRadius: 10,

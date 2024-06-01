@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: colors.white,
         marginTop: 2,
-        fontWeight: 800,
+        fontWeight: '800',
     }
 })
 export default Interaction;

@@ -8,8 +8,6 @@ import AccountScreen from "../../screens/AccountScreen";
 import Header from './Header'; // Import the Header component
 import ComingSoon from '../../screens/ComingSoon';
 import NotificationScreen from '../../screens/NotificationScreen';
-import * as Notifications from "expo-notifications";
-import * as Permissions from 'expo-permissions';
 import StardustScreen from '../../screens/StardustScreen';
 
 

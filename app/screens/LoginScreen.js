@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     forgotpassword:{
         color: colors.bluelink,
         marginRight: 20,
-        fontWeight: 500,
+        fontWeight: "500",
         textDecorationLine: 'underline',
         fontSize: 16,
         marginTop: 12,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     forgotusername:{
         color: colors.bluelink,
         marginRight: 20,
-        fontWeight: 500,
+        fontWeight: "500",
         textDecorationLine: 'underline',
         fontSize: 16,
         marginTop: 12,
@@ -132,12 +132,12 @@ const styles = StyleSheet.create({
     crearcuenta:{
         color: colors.white,
         marginRight: 10,
-        fontWeight: 500,
+        fontWeight: "500",
         fontSize: 16,
     },
     crearcuentaurl:{
         color: colors.bluelink,
-        fontWeight: 500,
+        fontWeight: "500",
         textDecorationLine: 'underline',
         fontSize: 16,
     },

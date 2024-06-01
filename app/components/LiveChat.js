@@ -198,12 +198,11 @@ export const LiveChat = ({ stream, expand }) => {
             placeholderTextColor={colors.light}
             onPress={handleModalOpen}
             stardustamount={stardust}
-            onEndEditing={sendMessage}
+            onSubmitEditing={sendMessage}
           />
         </View>  
       </View>
       <DonateModal modalVisible={modalVisible} onRequestClose={handleModalClose} handleStardustUpdate={updateStardust} stardustaccount={user.data.user.stardusts} />
-
     </KeyboardAvoidingView>
   );
 };

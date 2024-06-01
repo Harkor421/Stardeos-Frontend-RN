@@ -8,14 +8,12 @@ import AuthContext from './app/auth/context';
 import authStorage from './app/auth/storage';
 import colors from './app/config/colors';
 import ActivityIndicator from './app/components/ActivityIndicator'; // Update the import path
-import * as Notifications from 'expo-notifications';
 import authApi from './app/api/auth';
 import useApi from './app/hooks/useApi';
 import { Audio } from 'expo-av';
 
 export default function App() {
-  if (Platform.OS === "ios")
-    Audio.setAudioModeAsync({ playsInSilentModeIOS: true });
+
 
   const [user, setUser] = useState(null);
   const [isReady, setIsReady] = useState(false);
@@ -23,7 +21,10 @@ export default function App() {
 
   const { data: userdata, loading: userloading, request: loadUser } = useApi(() => authApi.getCurrentUser());
 
-
+  if (Platform.OS === "ios"){
+    Audio.setAudioModeAsync({ playsInSilentModeIOS: true }); 
+  }
+  
   useEffect(() => {
     const restoreToken = async () => {
       try {

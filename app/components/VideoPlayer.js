@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, ActivityIndicator } from 'react-native';
-import { Video, AVPlaybackStatus } from 'expo-av';
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Video } from 'expo-av';
 import { MaterialIcons } from '@expo/vector-icons';
 
-const VideoPlayer = ({ videoSource }) => {
+const CustomVideoPlayer = ({ videoSource }) => {
   const videoRef = useRef(null);
   const [status, setStatus] = useState({});
   const [isPlaying, setIsPlaying] = useState(false);
@@ -48,9 +48,9 @@ const VideoPlayer = ({ videoSource }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#000',
   },
   video: {
     width: '100%',
@@ -68,4 +68,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default VideoPlayer;
+export default CustomVideoPlayer;
