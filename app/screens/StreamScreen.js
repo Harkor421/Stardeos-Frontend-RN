@@ -6,6 +6,7 @@ import GradientBorderButton from '../components/GradientBorderButton';
 import colors from '../config/colors';
 import LiveChat from '../components/LiveChat'; 
 import ActivityIndicator from '../components/ActivityIndicator';
+import BannerAdComponent from '../components/BannerAd';
 
 function StreamScreen({ route, navigation }) {
   const video = route.params;
@@ -44,7 +45,7 @@ function StreamScreen({ route, navigation }) {
 
   return (
     <KeyboardAvoidingView
-    behavior={Platform.OS === "ios" ? "padding" : undefined}
+      behavior={Platform.OS === "ios" ? "padding" : undefined}
       style={styles.container}
     >
       <View style={styles.container}>
@@ -73,6 +74,8 @@ function StreamScreen({ route, navigation }) {
           <AppText style={styles.title}>{video.title}</AppText>
           <AppText style={styles.streamAnnouncement}>{video.description}</AppText>
         </View>
+        <BannerAdComponent style={styles.adCard} />
+
         {streamEnded && (
           <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18}}>
             Este directo ha terminado.
@@ -107,6 +110,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 700,
   },
+  adCard: {
+    marginBottom: 10,
+},  
 });
 
 export default StreamScreen;

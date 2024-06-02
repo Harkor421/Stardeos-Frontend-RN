@@ -9,6 +9,7 @@ import Header from './Header'; // Import the Header component
 import ComingSoon from '../../screens/ComingSoon';
 import NotificationScreen from '../../screens/NotificationScreen';
 import StardustScreen from '../../screens/StardustScreen';
+import RecentNavigator from './RecentNavigator';
 
 
 const Tab = createBottomTabNavigator();
@@ -55,13 +56,15 @@ const AppNavigator = () => {
       />
       <Tab.Screen
         name="Recientes"
-        component={ComingSoon}
-        options={{
-          headerShown: false,
+        component={RecentNavigator}
+        initialParams={{ search: '', }}
+        options={({ navigation }) => ({
+          headerShown: true,
+          header: () => <Header navigation={navigation} />, // Use the Header component
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="clock" color={color} size={size} />
           ),
-        }}
+        })}
       />
       <Tab.Screen name="Account" component={AccountScreen} 
         options={{

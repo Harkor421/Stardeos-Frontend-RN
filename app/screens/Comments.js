@@ -119,8 +119,8 @@ function Comments({ route, navigation }) {
             <View style={styles.header}>
                 <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
                 <AppText style={styles.headerText}>Comentarios</AppText>
-                <TouchableOpacity onPress={handleCloseModal}>
-                    <MaterialCommunityIcons name="close" size={24} color="white" />
+                <TouchableOpacity style = {styles.close} onPress={handleCloseModal}>
+                    <MaterialCommunityIcons name="close" size={24} color="white"/>
                 </TouchableOpacity>
             </View>
             <View style={styles.body}>
@@ -185,12 +185,13 @@ const styles = StyleSheet.create({
         width: 15,
         height: 15,
     },
+    close:{
+        
+    },
     headerText: {
         fontSize: 16,
         fontWeight: '600',
         color: colors.white,
-        marginLeft: 20,
-        marginRight: "60%"
     },
     body: {
         flex: 1,

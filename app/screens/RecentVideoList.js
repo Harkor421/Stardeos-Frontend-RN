@@ -9,27 +9,22 @@ import videosApi from '../api/videos';
 import colors from '../config/colors';
 import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
-
-import notificationsApi from '../api/notifications'
+import BannerAdComponent from '../components/BannerAd';
 
 function RecentVideoList({ navigation, route}) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const [refresh, setRefresh] = useState(false); // State variable to force refresh
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getRecommendedVideos(page));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getLatestVideos(page));
 
 
   const renderItem = useCallback(({ item, index }) => {
     if ((index + 1) % 5 === 0) {
       // Render ad card every 5th item
-      return (
-        <View style={styles.adCard}>
-          <AppText style = {{color: colors.white}}>{"Ad Card"}</AppText> 
-        </View>
-      );
+      return <BannerAdComponent style={styles.adCard} />;
     } else {
       // Render video item
-      return <VideoItem item={item} navigation={navigation} replace={true} />;
+      return <VideoItem item={item} navigation={navigation} replace={0} />;
     }
   }, [navigation]);
   
@@ -83,13 +78,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   adCard: {
-    // Styles for the ad card container
-    padding: 20,
-    marginVertical: 10,
-    borderRadius: 10,
+    marginVertical: 20,
     alignItems: 'center',
-    justifyContent: 'center',
   },
+
 });
 
 export default RecentVideoList;

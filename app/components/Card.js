@@ -7,14 +7,14 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import useFormatDuration from '../hooks/useFormatDuration';
 import routes from './navigation/routes';
 
-function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly, creator, item, navigation}) {
+function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, subsOnly, creator, item, navigation }) {
     const formattedDuration = isNaN(duration) ? "En Directo" : useFormatDuration(duration);
 
     if (subsOnly) {
         return (
             <View style={styles.card}>
                 <TouchableOpacity style={styles.imageContainer} onPress={onPress}>
-                    {item.isLiveStream && item.isLiveStream === true ? (
+                    {item.isLiveStream ? (
                         <Image style={styles.image} source={require('../assets/Directo.png')} />
                     ) : (
                         <Image style={styles.image} source={{ uri: thumbnail }} />
@@ -22,7 +22,6 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                     <View style={styles.bannerContainer}>
                         <AppText style={styles.bannerText}>Subscríbete para ver</AppText>
                     </View>
-                    {/* Container for duration text */}
                     <View style={styles.durationContainer}>
                         <AppText style={styles.durationText}>{formattedDuration}</AppText>
                     </View>
@@ -44,12 +43,11 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
             <View>
                 <View style={styles.card}>
                     <TouchableOpacity style={styles.imageContainer} onPress={onPress}>
-                        {item.isLiveStream && item.isLiveStream === true ? (
+                        {item.isLiveStream ? (
                             <Image style={styles.image} source={require('../assets/Directo.png')} />
                         ) : (
                             <Image style={styles.image} source={{ uri: thumbnail }} />
                         )}
-                        {/* Container for duration text */}
                         <View style={styles.durationContainer}>
                             <AppText style={styles.durationText}>{formattedDuration}</AppText>
                         </View>
@@ -61,7 +59,13 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                             avatar={avatar}
                             showVerified={true}
                             creator={creator}
-                            navigate={() => navigation.navigate(routes.CREATOR_DETAILS, item)}
+                            navigate={() => {
+                                if (item.isLiveStream) {
+                                    //do nothing
+                                } else {
+                                    navigation.navigate(routes.CREATOR_DETAILS, item);
+                                }
+                            }}
                         />
                     </View>
                     <AppText style={styles.views}>{views}</AppText>
@@ -122,7 +126,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginRight: 15,
         bottom: 15,
-        fontWeight: 700,
+        fontWeight: '700',
         textAlign: 'right',
     },
 });

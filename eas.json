@@ -18,13 +18,24 @@
         }
     },
     "preview": {
-      "distribution": "internal"
+      "android": {
+        "env": {
+          "ANDROID_SDK_ROOT": "/Users/samirgonzalez/Library/Android/sdk"
+          },
+        "buildType": "apk"
+      }
     },
     "production": {
       "distribution": "store",
       "ios": {
         "autoIncrement": "version"
+      },
+      "android": {
+        "env": {
+          "ANDROID_SDK_ROOT": "/Users/samirgonzalez/Library/Android/sdk"
+          }
       }
+   
     }
   },
   "submit": {

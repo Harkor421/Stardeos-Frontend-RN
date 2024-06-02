@@ -10,9 +10,10 @@ import Description from "../../screens/Description";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import RecentVideoList from "../../screens/RecentVideoList";
 import { Platform } from "react-native";
+
 const Stack = createStackNavigator();
 
-const FeedNavigator = ({ navigation, route }) => {
+const RecentNavigator = ({ navigation, route }) => {
   React.useLayoutEffect(() => {
     const tabHiddenScreens = ['StreamScreen'];
     const routeName = getFocusedRouteNameFromRoute(route) ?? 'Videos';
@@ -27,8 +28,7 @@ const FeedNavigator = ({ navigation, route }) => {
     <Stack.Navigator
       screenOptions={{ headerShown: false, gestureEnabled: true, freezeOnBlur: true }}
     >
-      <Stack.Screen name="Videos" component={VideoList} />
-      <Stack.Screen name="SearchedVideos" component={SearchedVideoList} />
+
       <Stack.Screen name="RecentVideos" component={RecentVideoList} />
 
       <Stack.Screen
@@ -70,4 +70,4 @@ const FeedNavigator = ({ navigation, route }) => {
   );
 };
 
-export default FeedNavigator;
+export default RecentNavigator;

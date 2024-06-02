@@ -129,16 +129,18 @@ function ListingDetailsScreen({ route, navigation }) {
         </View>
       )}
         <View style={styles.detailsContainer}>
-        <TouchableOpacity onPress={toggleDescription} style={styles.titleContainer}>
-        <AppText style={styles.title}>{video.title}</AppText>
-          <View style={styles.iconContainer}>
-            {showDescription ? (
-              <MaterialIcons name="keyboard-arrow-up" size={24} color={colors.white} />
-            ) : (
-              <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.white} />
-            )}
+        <View style={styles.titleContainer}>
+            <View style={styles.titleWrapper}>
+              <AppText style={styles.title}>{video.title}</AppText>
+            </View>
+            <TouchableOpacity onPress={toggleDescription} style={styles.iconContainer}>
+              {showDescription ? (
+                <MaterialIcons name="keyboard-arrow-up" size={24} color={colors.white} />
+              ) : (
+                <MaterialIcons name="keyboard-arrow-down" size={24} color={colors.white} />
+              )}
+            </TouchableOpacity>
           </View>
-        </TouchableOpacity>
           <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>
           <View style={styles.interactions}>
             <Interaction
@@ -229,19 +231,27 @@ const styles = StyleSheet.create({
   detailsContainer: {
     padding: 8,
   },
+  titleWrapper: {
+    flex: 1,
+    maxWidth: Dimensions.get('window').width - 50, // Adjust the value as needed
+  },
   titleContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
   iconContainer: {
-    marginLeft: 10,
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    marginRight: 10,
   },
+  
   title: {
     color: colors.white,
     fontSize: 18,
     fontWeight: '900',
-    flex: 1,
     flexWrap: 'wrap',
   },
   
