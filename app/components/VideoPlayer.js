@@ -1,70 +1,184 @@
-import React, { useRef, useState } from 'react';
-import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { Video } from 'expo-av';
+import React, { useState, useRef } from 'react';
+import { View, StyleSheet, Dimensions, Animated, TouchableWithoutFeedback } from 'react-native';
+import { Video, ResizeMode } from 'expo-av';
 import { MaterialIcons } from '@expo/vector-icons';
+import Slider from '@react-native-community/slider';
 
-const CustomVideoPlayer = ({ videoSource }) => {
-  const videoRef = useRef(null);
-  const [status, setStatus] = useState({});
+const CustomVideoPlayer = ({ sourceUri }) => {
+  const video = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
+  const [position, setPosition] = useState(0);
+  const [isFullScreen, setIsFullScreen] = useState(false);
+  const controlsOpacity = useRef(new Animated.Value(1)).current;
+  const controlsVisible = useRef(true);
 
-  const handlePlayPause = () => {
-    if (status.isPlaying) {
-      videoRef.current.pauseAsync();
-      setIsPlaying(false);
+  const handlePlayPause = async () => {
+    if (isPlaying) {
+      await video.current.pauseAsync();
     } else {
-      videoRef.current.playAsync();
-      setIsPlaying(true);
+      await video.current.playAsync();
+    }
+    setIsPlaying(!isPlaying);
+    showControls();
+  };
+
+  const handleStop = async () => {
+    await video.current.stopAsync();
+    setIsPlaying(false);
+    setPosition(0);
+  };
+
+  const handleSliderChange = (value) => {
+    setPosition(value);
+    video.current.setPositionAsync(value);
+  };
+
+  const handleFullscreen = () => {
+    setIsFullScreen(!isFullScreen);
+  };
+
+  const handleLoaded = (status) => {
+    setDuration(status.durationMillis);
+  };
+
+  const toggleControls = () => {
+    if (controlsVisible.current) {
+      hideControls();
+    } else {
+      showControls();
     }
   };
 
-  const onLoad = (newStatus) => {
-    setStatus(newStatus);
+  const showControls = () => {
+    controlsVisible.current = true;
+    Animated.timing(controlsOpacity, {
+      toValue: 1,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const hideControls = () => {
+    controlsVisible.current = false;
+    Animated.timing(controlsOpacity, {
+      toValue: 0,
+      duration: 50,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleVideoPress = () => {
+    if (isPlaying) {
+      handlePlayPause();
+    } else {
+      showControls();
+    }
+  };
+
+  const handleScreenPress = () => {
+    toggleControls();
+    setIsFullScreen(!isFullScreen);
   };
 
   return (
-    <View style={styles.container}>
-      <Video
-        ref={videoRef}
-        source={{ uri: videoSource }}
-        style={styles.video}
-        resizeMode="contain"
-        isLooping
-        onPlaybackStatusUpdate={onLoad}
-      />
-      <TouchableOpacity style={styles.playButton} onPress={handlePlayPause}>
-        {isPlaying ? (
-          <MaterialIcons name="pause" size={24} color="white" />
-        ) : (
-          <MaterialIcons name="play-arrow" size={24} color="white" />
+    <TouchableWithoutFeedback onPress={toggleControls}>
+      <View style={styles.container}>
+        <TouchableWithoutFeedback onPress={handleVideoPress}>
+          <View style={styles.videoContainer}>
+            <Video
+              ref={video}
+              source={{ uri: sourceUri }}
+              style={isFullScreen ? styles.fullScreenVideo : styles.video}
+              useNativeControls={false}
+              onPlaybackStatusUpdate={(status) => handleLoaded(status)}
+              resizeMode={ResizeMode.CONTAIN}
+            />
+            {!isPlaying && (
+              <TouchableWithoutFeedback onPress={handlePlayPause}>
+                <View style={styles.playPrompt}>
+                  <MaterialIcons name="play-arrow" size={64} color="white" />
+                </View>
+              </TouchableWithoutFeedback>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+        <Animated.View style={[styles.controls, { opacity: controlsOpacity }]}>
+          <MaterialIcons
+            name={isPlaying ? 'pause' : 'play-arrow'}
+            size={24}
+            color="white"
+            onPress={handlePlayPause}
+          />
+          <Slider
+            style={styles.slider}
+            minimumValue={0}
+            maximumValue={duration}
+            value={position}
+            onValueChange={handleSliderChange}
+            minimumTrackTintColor="white"
+            maximumTrackTintColor="gray"
+            thumbTintColor="white"
+          />
+          <MaterialIcons
+            name={isFullScreen ? 'fullscreen-exit' : 'fullscreen'}
+            size={24}
+            color="white"
+            onPress={handleFullscreen}
+          />
+        </Animated.View>
+        {isFullScreen && (
+          <TouchableWithoutFeedback onPress={handleScreenPress}>
+            <View style={styles.exitFullScreenButton}>
+              <MaterialIcons name="fullscreen-exit" size={24} color="white" />
+            </View>
+          </TouchableWithoutFeedback>
         )}
-      </TouchableOpacity>
-      {status.isLoading && (
-        <ActivityIndicator size="large" color="#ffffff" style={styles.loader} />
-      )}
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    backgroundColor: 'black',
+  },
+  videoContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#000',
   },
   video: {
-    width: '100%',
+    width: Dimensions.get('window').width,
     height: 200,
   },
-  playButton: {
-    position: 'absolute',
-    alignSelf: 'center',
-    zIndex: 1,
+  fullScreenVideo: {
+    flex: 1,
   },
-  loader: {
+  controls: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
     position: 'absolute',
-    alignSelf: 'center',
-    top: '50%',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
+  slider: {
+    flex: 1,
+    marginHorizontal: 10,
+  },
+  playPrompt: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  exitFullScreenButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
 });
 

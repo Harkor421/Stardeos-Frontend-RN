@@ -51,6 +51,8 @@ function RandomList({ navigation }) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
+              style ={{marginHorizontal: 10}}
+
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}

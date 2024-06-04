@@ -141,7 +141,7 @@ export const LiveChat = ({ stream, expand }) => {
     style={[styles.container, isExpanded && styles.expandedContainer]}
   >
       <View style={styles.header}>
-        <Image source={require("../assets/chat-alt-2.png")} />
+        <Image source={require("../assets/chat-alt-2.png")} style = {{height: 22, width: 22,}} />
         <Text style={styles.chatTitle}>CHAT</Text>
         <View style={styles.chatCountContainer}>
           <MaterialIcons name="people" size={24} color={colors.white} />
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 16,
+    marginTop: 8,
     marginHorizontal: 10,
   },
   commentInput: {

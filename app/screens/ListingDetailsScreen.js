@@ -25,6 +25,9 @@ import subsApi from '../api/paidSubscription';
 import { Linking } from 'react-native';
 import { useContext } from 'react';
 import AuthContext from '../auth/context';
+import ReportModal from '../components/ReportModal';
+import CustomVideoPlayer from '../components/VideoPlayer';
+import { Platform } from 'react-native';
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
@@ -35,6 +38,7 @@ function ListingDetailsScreen({ route, navigation }) {
   const [dislikeCount, setDisLikeCount] = useState(video.dislikeCount || 0);
   const [liked, setLiked] = useState(undefined);
   const [loader, setLoader] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [showDescription, setShowDescription] = useState(false); // Step 1
   const videoRef = React.useRef(null);
@@ -62,6 +66,13 @@ function ListingDetailsScreen({ route, navigation }) {
 }, [subsloading, activesubs]);
 
  
+const handleModalOpen = () => {
+  setModalVisible(true);
+};
+
+const handleModalClose = () => {
+  setModalVisible(false);
+};
 
   const handleLikeDislike = async (type) => {
     setLoader(true);
@@ -112,20 +123,25 @@ function ListingDetailsScreen({ route, navigation }) {
         </View>
       ) : (
         <View>
-          <Video
-            ref={videoRef}
-            source={{ uri: fileUrls[0] }}
-            rate={1.0}
-            volume={1.0}
-            isMuted={false}
-            resizeMode={ResizeMode.COVER}
-            style={{ width: windowWidth, height: videoHeight }}
-            useNativeControls
-            shouldPlay
-            shouldRasterizeIOS
-            onReadyForDisplay={() => setVideoLoad(false)}
-          />
-          <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad} />
+      {Platform.OS === 'ios' ? (
+        <Video
+          ref={videoRef}
+          source={{ uri: fileUrls[0] }}
+          rate={1.0}
+          volume={1.0}
+          isMuted={false}
+          resizeMode={ResizeMode.COVER}
+          style={{ width: windowWidth, height: videoHeight }}
+          useNativeControls
+          shouldPlay
+          shouldRasterizeIOS
+          onReadyForDisplay={() => setVideoLoad(false)}
+        />
+      ) : (
+        <CustomVideoPlayer sourceUri={fileUrls[0]} />
+      )}
+
+          <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad } />
         </View>
       )}
         <View style={styles.detailsContainer}>
@@ -156,15 +172,21 @@ function ListingDetailsScreen({ route, navigation }) {
               onPress={() => handleLikeDislike("dislikes")}
             />
             <Interaction
+            image={require('../assets/stardust-icon.png')}
+            text={selectedvideo.stardusts !== null ? selectedvideo.stardusts : 0}
+            style={styles.dislike}
+            />
+              <Interaction
               image={require('../assets/share-icon.png')}
               text={'Compartir'}
               style={styles.dislike}
               onPress={handleShare}
             />
-            <Interaction
-            image={require('../assets/stardust-icon.png')}
-            text={selectedvideo.stardusts !== null ? selectedvideo.stardusts : 0}
-            style={styles.dislike}
+           <Interaction
+              image={require('../assets/flag.png')}
+              text={'Reportar'}
+              style={styles.dislike}
+              onPress={handleModalOpen}
             />
           </View>
           <Text style={styles.separator} />
@@ -210,6 +232,7 @@ function ListingDetailsScreen({ route, navigation }) {
         </View>
         <RandomList navigation={navigation} />
       </ScrollView>
+      <ReportModal modalVisible={modalVisible} onRequestClose={handleModalClose} video ={video} />
     </Screen>
   );
 }

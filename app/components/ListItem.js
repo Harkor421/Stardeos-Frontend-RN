@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   verifiedIcon: {
-    width: 12,
-    height: 12,
+    width: 15,
+    height: 15,
     marginRight: 8,
   },
 });

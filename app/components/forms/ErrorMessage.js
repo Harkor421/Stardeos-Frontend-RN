@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
     container:{
         flexDirection: 'row',
-        marginLeft: 18,
+        marginBottom: 20,
     },
     icon: {
         width: 17,

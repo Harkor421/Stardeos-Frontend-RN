@@ -57,6 +57,7 @@ function RecentVideoList({ navigation, route}) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
+        style = {{marginHorizontal: 10,}}
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}
@@ -72,6 +73,8 @@ function RecentVideoList({ navigation, route}) {
 const styles = StyleSheet.create({
   screen: {
     padding: 20,
+    backgroundColor: colors.primary,
+    
   },
   errortext: {
     color: colors.white,

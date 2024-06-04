@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { Image, StyleSheet, View, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import * as WebBrowser from 'expo-web-browser';
 
 import Screen from '../components/Screen';
 import AuthContext from '../auth/context';
@@ -22,6 +23,9 @@ function AccountScreen({ navigation }) {
         authStorage.removeToken();
     };
 
+    const openLink = async (url) => {
+        await WebBrowser.openBrowserAsync(url);
+    };
 
     return (
         <Screen style={styles.container}>
@@ -40,32 +44,32 @@ function AccountScreen({ navigation }) {
                         <AppText style={styles.stardustcount}>{user.data.user.stardusts ? user.data.user.stardusts : 0}</AppText>
                     </View>
                     <BannerAdComponent style={styles.adCard} />
-                    <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => Linking.openURL('https://stardeos.com/buy/buy-stardust')} />
-                    <TouchableOpacity style={styles.section} onPress={() => Linking.openURL('https://stardeos.com/settings')}>
+                    <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => openLink('https://stardeos.com/buy/buy-stardust')} />
+                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="account" size={24} color="white" style={styles.icon}  />
                         <AppText style={styles.sectionText}>Ajustes de usuario</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.section} onPress={() => Linking.openURL('https://stardeos.com/settings')}>
+                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="card-account-details-star" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Suscripciones</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.section} onPress={() => Linking.openURL('https://stardeos.com/settings')}>
+                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="credit-card" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Método de pago</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.section} onPress={() => Linking.openURL('https://stardeos.com/settings')}>
+                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="translate" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText}>Idioma</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.section} onPress={() => Linking.openURL('https://stardeos.com/settings')}>
+                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="download" size={24} color="white" style={styles.icon} />
-                        <AppText style={styles.sectionText} onPress={() => Linking.openURL('https://stardeos.com/settings')}>Descarga tus datos</AppText>
+                        <AppText style={styles.sectionText} onPress={() => openLink('https://stardeos.com/settings')}>Descarga tus datos</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.section} onPress={() => Linking.openURL('https://stardeos.com/settings')}>
+                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="delete" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText} >Elimina tu cuenta</AppText>
                     </TouchableOpacity>
-                    <AppButton title="¿Necesitas ayuda?" style={styles.helpButton} onPress={() => Linking.openURL('https://discord.com/invite/JXYpqU5qgw')} />
+                    <AppButton title="¿Necesitas ayuda?" style={styles.helpButton} onPress={() => openLink('https://discord.com/invite/JXYpqU5qgw')} />
                     <GradientBorderButton title="Cerrar Sesión" onPress={handleLogOut} style={styles.logoutButton} />
                 </View>
             </ScrollView>

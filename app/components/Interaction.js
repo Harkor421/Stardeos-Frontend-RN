@@ -15,11 +15,11 @@ function Interaction({image, text, style, onPress}) {
 }
 const styles = StyleSheet.create({
     icon:{
-        width: 32,
+        width: 30,
         height: 30,
     },
     interactiontext:{
-        fontSize: 12,
+        fontSize: 10,
         color: colors.white,
         marginTop: 2,
         fontWeight: '800',

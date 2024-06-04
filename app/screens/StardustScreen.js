@@ -37,9 +37,8 @@ function StardustScreen({navigation}) {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor: '#1f233e',
-        padding: 20,
+        padding: 10,
     },
     header: {
         alignItems: 'center',

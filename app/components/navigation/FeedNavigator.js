@@ -10,6 +10,7 @@ import Description from "../../screens/Description";
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 import RecentVideoList from "../../screens/RecentVideoList";
 import { Platform } from "react-native";
+
 const Stack = createStackNavigator();
 
 const FeedNavigator = ({ navigation, route }) => {

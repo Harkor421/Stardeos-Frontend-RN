@@ -61,6 +61,7 @@ function SearchedVideoList({ navigation, route}) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
+        style = {{marginHorizontal: 10,}}
         data={allVideos}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
@@ -76,7 +77,8 @@ function SearchedVideoList({ navigation, route}) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 19,
+    padding: 20,
+    backgroundColor: colors.primary,
   },
   adCard: {
     // Styles for the ad card container

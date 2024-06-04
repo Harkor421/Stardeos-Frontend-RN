@@ -75,7 +75,6 @@ function StreamScreen({ route, navigation }) {
           <AppText style={styles.streamAnnouncement}>{video.description}</AppText>
         </View>
         <BannerAdComponent style={styles.adCard} />
-
         {streamEnded && (
           <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18}}>
             Este directo ha terminado.

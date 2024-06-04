@@ -68,7 +68,7 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                             }}
                         />
                     </View>
-                    <AppText style={styles.views}>{views}</AppText>
+                    <AppText style={styles.views}>{views + " Vistas"}</AppText>
                 </View>
             </View>
         );
@@ -77,7 +77,7 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
 
 const styles = StyleSheet.create({
     card: {
-        borderRadius: 15,
+        borderRadius: 10,
         backgroundColor: colors.primary,
         marginBottom: 20,
         overflow: 'hidden',
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     image: {
         width: '100%',
         height: 220,
-        borderRadius: 15,
+        borderRadius: 10,
     },
     bannerContainer: {
         position: 'absolute',
@@ -124,8 +124,8 @@ const styles = StyleSheet.create({
     views: {
         color: colors.secondary,
         fontSize: 15,
-        marginRight: 15,
-        bottom: 15,
+        bottom: 18,
+        marginRight: 5,
         fontWeight: '700',
         textAlign: 'right',
     },

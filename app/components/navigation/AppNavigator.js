@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { Image, Text } from 'react-native';
 
 import colors from '../../config/colors';
 import FeedNavigator from "./FeedNavigator";
@@ -11,36 +12,44 @@ import NotificationScreen from '../../screens/NotificationScreen';
 import StardustScreen from '../../screens/StardustScreen';
 import RecentNavigator from './RecentNavigator';
 
-
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
-
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveBackgroundColor: colors.headerblue,
         tabBarInactiveBackgroundColor: colors.headerblue,
         tabBarActiveTintColor: colors.white,
+        tabBarInactiveTintColor: colors.white,
         tabBarStyle: {
           borderTopColor: colors.grayline,
           borderTopWidth: 0.8,
         },
         tabBarLabelStyle: {
           fontSize: 14,
-          fontWeight: 'bold',
         },
       }}
     >
       <Tab.Screen
         name="Inicio"
         component={FeedNavigator}
-        initialParams={{ search: '', }}
+        initialParams={{ search: '' }}
         options={({ navigation }) => ({
           headerShown: true,
           header: () => <Header navigation={navigation} />, // Use the Header component
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <MaterialCommunityIcons
+              name="home"
+              color={colors.white}
+              size={focused ? size * 1.2 : size}
+              style={{ fontWeight: focused ? 'bold' : 'normal' }}
+            />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{ fontSize: 14, fontWeight: focused ? 'bold' : 'normal', color: colors.white }}>
+              Inicio
+            </Text>
           ),
         })}
       />
@@ -49,47 +58,68 @@ const AppNavigator = () => {
         component={ComingSoon}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="plus-circle" color={color} size={size} />
+          tabBarIcon: ({ focused }) => (
+            <Image
+              source={require("../../assets/plus-circle.png")}
+              style={{
+                width: focused ? 36 : 30,
+                height: focused ? 36 : 30,
+              }}
+            />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{ fontSize: 14, fontWeight: focused ? 'bold' : 'normal', color: colors.white }}>
+              Crear
+            </Text>
           ),
         }}
       />
       <Tab.Screen
         name="Recientes"
         component={RecentNavigator}
-        initialParams={{ search: '', }}
+        initialParams={{ search: '' }}
         options={({ navigation }) => ({
           headerShown: true,
           header: () => <Header navigation={navigation} />, // Use the Header component
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="clock" color={color} size={size} />
+          tabBarIcon: ({ color, size, focused }) => (
+            <MaterialCommunityIcons
+              name="clock"
+              color={colors.white}
+              size={focused ? size * 1.2 : size}
+              style={{ fontWeight: focused ? 'bold' : 'normal' }}
+            />
+          ),
+          tabBarLabel: ({ focused }) => (
+            <Text style={{ fontSize: 14, fontWeight: focused ? 'bold' : 'normal', color: colors.white }}>
+              Recientes
+            </Text>
           ),
         })}
       />
-      <Tab.Screen name="Account" component={AccountScreen} 
+      <Tab.Screen name="Account" component={AccountScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,
           tabBarVisible: false // hide tab bar on this screen
         }}
       />
-      <Tab.Screen name="Notifications" component={NotificationScreen} 
+      <Tab.Screen name="Notifications" component={NotificationScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,
           tabBarVisible: false // hide tab bar on this screen
         }}
       />
-      <Tab.Screen name="Stardust" component={StardustScreen} 
+      <Tab.Screen name="Stardust" component={StardustScreen}
         options={{
           tabBarButton: () => null,
           headerShown: false,
           tabBarVisible: false // hide tab bar on this screen
         }}
       />
-      <Tab.Screen 
-        name="RecentVideoList" 
-        component={FeedNavigator} 
+      <Tab.Screen
+        name="RecentVideoList"
+        component={FeedNavigator}
         options={({ navigation }) => ({
           tabBarButton: () => null,
           headerShown: true,

@@ -67,6 +67,7 @@ function VideoList({ navigation, route}) {
         </>
       )}
       <FlatList
+        style ={{marginHorizontal: 10}}
         ref={flatListRef}
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
@@ -83,7 +84,7 @@ function VideoList({ navigation, route}) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 20,
+    backgroundColor: colors.primary,
   },
   errortext: {
     color: colors.white,
