@@ -185,14 +185,14 @@ const handleModalClose = () => {
           </View>
           <AppText style={styles.visitas}>{formattedViews} visitas • {formattedDate}</AppText>
           <View style={styles.interactions}>
-            <Interaction
-              image={require('../assets/like-icon.png')}
+          <Interaction
+              image={liked === 1 ? require('../assets/like-icon-selected.png') : require('../assets/like-icon.png')}
               text={likeCount}
               style={styles.like}
               onPress={() => handleLikeDislike("likes")}
             />
             <Interaction
-              image={require('../assets/dislike-icon.png')}
+              image={liked === -1 ? require('../assets/dislike-icon-selected.png') : require('../assets/dislike-icon.png')}
               text={dislikeCount}
               style={styles.dislike}
               onPress={() => handleLikeDislike("dislikes")}
