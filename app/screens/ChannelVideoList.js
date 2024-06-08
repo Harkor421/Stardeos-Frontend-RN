@@ -36,6 +36,7 @@ function ChannelVideoList({ navigation, channelid }) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
+        style ={{marginHorizontal: 10}}
         scrollEnabled={false} 
         data={allVideos}
         keyExtractor={(item) => item.id.toString()}
@@ -50,7 +51,7 @@ function ChannelVideoList({ navigation, channelid }) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 20,
+    backgroundColor: colors.primary,
   },
   errortext: {
     color: colors.white,

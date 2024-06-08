@@ -31,6 +31,7 @@
         "autoIncrement": "version"
       },
       "android": {
+        "autoIncrement": true,
         "env": {
           "ANDROID_SDK_ROOT": "/Users/samirgonzalez/Library/Android/sdk"
           }

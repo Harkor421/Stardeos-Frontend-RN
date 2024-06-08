@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Image, StyleSheet, View, TouchableOpacity, ScrollView, Linking } from 'react-native';
+import { Image, StyleSheet, View, TouchableOpacity, ScrollView, Linking, Text } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 
 import Screen from '../components/Screen';
@@ -13,11 +13,20 @@ import authStorage from '../auth/storage'
 import colors from '../config/colors';
 import auth from '../api/auth';
 import useApi from '../hooks/useApi';
-import { useEffect } from 'react';
-
+import { useEffect, useState } from 'react';
+import { Modal } from 'react-native';
 function AccountScreen({ navigation }) {
     const { user, setUser } = useContext(AuthContext);
+    const [modalVisible, setModalVisible] = useState(false);
 
+    const handleDeleteAccount = () => {
+        // Logic to delete the account
+        console.log('Account deleted');
+        setUser(null);
+        authStorage.removeToken();
+        setModalVisible(false);
+        // Redirect to settings or another appropriate action
+    };
     const handleLogOut = () => {
         setUser(null);
         authStorage.removeToken();
@@ -44,7 +53,7 @@ function AccountScreen({ navigation }) {
                         <AppText style={styles.stardustcount}>{user.data.user.stardusts ? user.data.user.stardusts : 0}</AppText>
                     </View>
                     <BannerAdComponent style={styles.adCard} />
-                    <GradientBorderButton title="Consigue Stardust" style={styles.button} onPress={() => openLink('https://stardeos.com/buy/buy-stardust')} />
+                    {/*
                     <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
                         <MaterialCommunityIcons name="account" size={24} color="white" style={styles.icon}  />
                         <AppText style={styles.sectionText}>Ajustes de usuario</AppText>
@@ -65,10 +74,38 @@ function AccountScreen({ navigation }) {
                         <MaterialCommunityIcons name="download" size={24} color="white" style={styles.icon} />
                         <AppText style={styles.sectionText} onPress={() => openLink('https://stardeos.com/settings')}>Descarga tus datos</AppText>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.section} onPress={() => openLink('https://stardeos.com/settings')}>
-                        <MaterialCommunityIcons name="delete" size={24} color="white" style={styles.icon} />
-                        <AppText style={styles.sectionText} >Elimina tu cuenta</AppText>
-                    </TouchableOpacity>
+                    */}
+                    <TouchableOpacity style={styles.section} onPress={() => setModalVisible(true)}>
+                <MaterialCommunityIcons name="delete" size={24} color="white" style={styles.icon} />
+                <AppText style={styles.sectionText}>Elimina tu cuenta</AppText>
+            </TouchableOpacity>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalView}>
+                        <Text style={styles.modalText}>¿Estás seguro de que quieres eliminar tu cuenta? Todos tus datos serán borrados permanentemente.</Text>
+                        <View style={styles.buttonContainer}>
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonClose]}
+                                onPress={() => setModalVisible(false)}
+                            >
+                                <Text style={styles.textStyle}>Cancelar</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                style={[styles.button, styles.buttonDelete]}
+                                onPress={handleDeleteAccount}
+                            >
+                                <Text style={styles.textStyle}>Eliminar</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
                     <AppButton title="¿Necesitas ayuda?" style={styles.helpButton} onPress={() => openLink('https://discord.com/invite/JXYpqU5qgw')} />
                     <GradientBorderButton title="Cerrar Sesión" onPress={handleLogOut} style={styles.logoutButton} />
                 </View>
@@ -165,6 +202,68 @@ const styles = StyleSheet.create({
     logoutButton: {
         marginTop: 20,
         width: 350,
+    },
+    section: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 10,
+        backgroundColor: 'red',
+        borderRadius: 5,
+        margin: 10,
+    },
+    icon: {
+        marginRight: 10,
+    },
+    sectionText: {
+        color: 'white',
+        fontSize: 16,
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 10,
+        padding: 35,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: 'center',
+        fontSize: 16,
+    },
+    buttonContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    button: {
+        borderRadius: 10,
+        padding: 10,
+        elevation: 2,
+        margin: 5,
+    },
+    buttonClose: {
+        backgroundColor: '#2196F3',
+    },
+    buttonDelete: {
+        backgroundColor: '#f44336',
+    },
+    textStyle: {
+        color: 'white',
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
 });
 

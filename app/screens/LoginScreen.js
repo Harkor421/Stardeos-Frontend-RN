@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     backgroundColor: colors.headerblue,
-    padding: 20,
+    paddingHorizontal: "1%",
   },
   logo: {
     width: 100,

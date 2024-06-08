@@ -20,6 +20,11 @@ const getComments = (id, page) => { //Video id
   return client.get(`/comments/${id}?page=${page}`);
 };
 
+const getVideoLikes = (id) => { //Video id
+  return client.get(`/videos/like/${id}`);
+};
+
+
 const getVideosWithStreams = (page) => {
   return client.get(`/videos/streams/?filter=&page=${page}`);
 };
@@ -64,5 +69,6 @@ export default {
   getChannelVideos,
   markLikeOrDislike,
   createComment,
-  getVideosWithStreams
+  getVideosWithStreams,
+  getVideoLikes,  
 };

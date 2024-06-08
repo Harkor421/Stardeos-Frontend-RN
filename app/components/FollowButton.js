@@ -31,7 +31,7 @@ function FollowButton({ styles, channelId }) {
 
     const handleUnfollow = async () => {
         try {
-            const response = await subscriptionApi.unfollow({channelId});
+            const response = await subscriptionApi.unfollow(channelId);
             console.log(response);
             setIsSubscribed(false);
         } catch (error) {

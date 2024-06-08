@@ -51,8 +51,7 @@ function RandomList({ navigation }) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
-              style ={{marginHorizontal: 10}}
-
+        style ={{marginHorizontal: 10}}
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}
@@ -65,7 +64,6 @@ function RandomList({ navigation }) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 20,
   },
   errortext: {
     color: colors.white,

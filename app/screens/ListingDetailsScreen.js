@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { View, Image, StyleSheet, Text, TouchableOpacity, Share, ScrollView, Dimensions } from 'react-native';
+import { Platform, ActivityIndicator as RNActivityIndicator } from 'react-native';
 import AppText from '../components/AppText';
 import ListItem from '../components/ListItem';
 import Screen from '../components/Screen';
@@ -8,7 +9,6 @@ import Interaction from '../components/Interaction';
 import { Video, ResizeMode } from 'expo-av';
 import useApi from '../hooks/useApi';
 import videosApi from '../api/videos';
-import AppButton from '../components/AppButton';
 import routes from '../components/navigation/routes';
 import useDateFormat from '../hooks/useDateFormat';
 import useFormatViews from '../hooks/useFormatViews';
@@ -18,7 +18,6 @@ import useRandomComment from '../hooks/useRandomComment';
 import useShareVideo from '../hooks/useShareVideo';
 import RandomList from './RandomList';
 import { MaterialIcons } from '@expo/vector-icons'; // Import MaterialIcons from Expo Icons library
-import { setIsEnabledAsync } from 'expo-av/build/Audio';
 import GradientBorderButton from '../components/GradientBorderButton';
 import FollowButton from '../components/FollowButton';
 import subsApi from '../api/paidSubscription';
@@ -26,8 +25,7 @@ import { Linking } from 'react-native';
 import { useContext } from 'react';
 import AuthContext from '../auth/context';
 import ReportModal from '../components/ReportModal';
-import CustomVideoPlayer from '../components/VideoPlayer';
-import { Platform } from 'react-native';
+import * as ScreenOrientation from 'expo-screen-orientation'
 
 function ListingDetailsScreen({ route, navigation }) {
   const video = route.params;
@@ -36,20 +34,25 @@ function ListingDetailsScreen({ route, navigation }) {
   const [videoLoad, setVideoLoad] = useState(true);
   const [likeCount, setLikeCount] = useState(video.likeCount || 0);
   const [dislikeCount, setDisLikeCount] = useState(video.dislikeCount || 0);
-  const [liked, setLiked] = useState(undefined);
+  const [liked, setLiked] = useState(0);
   const [loader, setLoader] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // State to control modal visibility
   const [isSubscribed, setIsSubscribed] = useState(false);
+  const [orientationIsLandscape, setOrientationIsLandscape] = useState(false);
   const [showDescription, setShowDescription] = useState(false); // Step 1
+  
   const videoRef = React.useRef(null);
   const { data: selectedvideo, error, loading: videoLoading, request: loadVideo } = useApi(() => videosApi.getVideo(video.id), [reloadKey]);
   const { data: comments, loading: commentsLoading, request: loadComments } = useApi(() => videosApi.getComments(video.id), [reloadKey]);
   const { data: activesubs, loading: subsloading, request: getPaidSubs } = useApi(() => subsApi.getSubscriptions());
+  const { data: likeData, loading: likesloading, request: getLikes } = useApi(() => videosApi.getVideoLikes(video.id));
+
 
   useEffect(() => {
     loadVideo();
     loadComments();
     getPaidSubs();
+    getLikes();
     const unsubscribe = navigation.addListener('blur', () => {
       if (videoRef.current) {
         videoRef.current.pauseAsync();
@@ -74,8 +77,17 @@ const handleModalClose = () => {
   setModalVisible(false);
 };
 
+  useEffect(() => {
+    if (!likesloading && likeData) {
+      setLiked(likeData.like === 1 ? 1 : (likeData.like === -1 ? -1 : 0));
+    } else {
+      setLiked(0); // Default state if likes are not loaded correctly
+    }
+  }, [likesloading, likeData]);
+
   const handleLikeDislike = async (type) => {
     setLoader(true);
+    console.log(video.id)
     const data = { video: video.id };
 
     if (type === "likes" && (typeof liked === "undefined" || liked === -1 || liked === 0)) {
@@ -99,6 +111,18 @@ const handleModalClose = () => {
   };
 
 
+
+  const handleFullscreenUpdate = async ({ fullscreenUpdate }) => {
+    console.log('Fullscreen update event:', fullscreenUpdate); // Debug log
+
+    if (fullscreenUpdate === 1) {
+      await ScreenOrientation.unlockAsync();
+    } else if (fullscreenUpdate === 2) {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    }
+  };
+
+
   const formattedDate = useDateFormat(video.createdAt);
   const formattedViews = useFormatViews(video.views);
   const formattedFollowers = useFormatViews(video.channelId.subscriberCount);
@@ -109,6 +133,7 @@ const handleModalClose = () => {
   const windowWidth = Dimensions.get('window').width;
   const aspectRatio = selectedvideo?.files?.[0]?.aspectRatio || 16 / 9;
   const videoHeight = windowWidth / aspectRatio;
+  const videoWidth = orientationIsLandscape ? videoHeight * aspectRatio : windowWidth;
 
 
   return (
@@ -123,7 +148,11 @@ const handleModalClose = () => {
         </View>
       ) : (
         <View>
-      {Platform.OS === 'ios' ? (
+           {Platform.OS === 'android' && videoLoad && (
+            <View style={styles.activityIndicatorContainer}>
+              <RNActivityIndicator color={colors.white} size="large" />
+            </View>
+          )}
         <Video
           ref={videoRef}
           source={{ uri: fileUrls[0] }}
@@ -131,17 +160,14 @@ const handleModalClose = () => {
           volume={1.0}
           isMuted={false}
           resizeMode={ResizeMode.COVER}
-          style={{ width: windowWidth, height: videoHeight }}
+          style={{ width: videoWidth, height: videoHeight }}
           useNativeControls
           shouldPlay
           shouldRasterizeIOS
           onReadyForDisplay={() => setVideoLoad(false)}
+          onFullscreenUpdate={handleFullscreenUpdate}
         />
-      ) : (
-        <CustomVideoPlayer sourceUri={fileUrls[0]} />
-      )}
-
-          <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad } />
+          <ActivityIndicator visible={videoLoading || commentsLoading || videoLoad} />
         </View>
       )}
         <View style={styles.detailsContainer}>
@@ -176,7 +202,7 @@ const handleModalClose = () => {
             text={selectedvideo.stardusts !== null ? selectedvideo.stardusts : 0}
             style={styles.dislike}
             />
-              <Interaction
+            <Interaction
               image={require('../assets/share-icon.png')}
               text={'Compartir'}
               style={styles.dislike}
@@ -206,28 +232,28 @@ const handleModalClose = () => {
             </View>
           </View>
           <Text style={styles.separator} />
-          <TouchableOpacity
-  style={styles.commentContainer}
-  onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, { comments: comments.comments, videoId: video.id, setStardust: video.stardusts })}>
-  <View style={styles.commentHeader}>
-    <View style={styles.commentTitleContainer}>
-      <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
-      <AppText style={styles.commentsTitle}>{"Comentarios"}</AppText>
-    </View>
-    <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
-  </View>
-  <View style={styles.randomComment}>
-    {randomComment?.author?.avatar ? (
-      <Image source={{ uri: randomComment.author.avatar }} style={styles.commentAvatar} />
-    ) : (
-      <Image source={require('../assets/default-avatar-icon.jpeg')} style={styles.commentAvatar} />
-    )}
-    <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
-  </View>
-  <View style={styles.leaveCommentButton}>
-    <AppText style={styles.leaveCommentText}>{"Dejar un comentario"}</AppText>
-  </View>
-</TouchableOpacity>
+            <TouchableOpacity
+            style={styles.commentContainer}
+            onPress={() => navigation.navigate(routes.VIDEO_COMMENTS, { comments: comments.comments, videoId: video.id, setStardust: video.stardusts })}>
+            <View style={styles.commentHeader}>
+              <View style={styles.commentTitleContainer}>
+                <Image source={require('../assets/comments-icon.png')} style={styles.commentsIcon} />
+                <AppText style={styles.commentsTitle}>{"Comentarios"}</AppText>
+              </View>
+              <AppText style={styles.commentAmount}>{comments?.comments?.length || 0}</AppText>
+            </View>
+            <View style={styles.randomComment}>
+              {randomComment?.author?.avatar ? (
+                <Image source={{ uri: randomComment.author.avatar }} style={styles.commentAvatar} />
+              ) : (
+                <Image source={require('../assets/default-avatar-icon.jpeg')} style={styles.commentAvatar} />
+              )}
+              <AppText numberOfLines={1} style={styles.randomCommentContent}>{randomComment?.content}</AppText>
+            </View>
+            <View style={styles.leaveCommentButton}>
+              <AppText style={styles.leaveCommentText}>{"Dejar un comentario"}</AppText>
+            </View>
+          </TouchableOpacity>
           <AppText style={styles.moreVideosTitle}>{"Más videos"}</AppText>
         </View>
         <RandomList navigation={navigation} />
@@ -239,7 +265,17 @@ const handleModalClose = () => {
 
 const styles = StyleSheet.create({
   page: {
+ 
     backgroundColor: colors.primary,
+  },
+  activityIndicatorContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backdrop: {
     alignItems: 'center',

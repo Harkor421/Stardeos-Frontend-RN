@@ -29,8 +29,6 @@ function StardustScreen({navigation}) {
             </View>
 
             <Text style={styles.separator} />
-
-            <GradientBorderButton title="Consigue Stardust" onPress={() =>Linking.openURL('https://stardeos.com/en/buy/buy-stardust')}/>
         </Screen>
     );
 }

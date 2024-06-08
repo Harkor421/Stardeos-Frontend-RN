@@ -72,9 +72,7 @@ function RecentVideoList({ navigation, route}) {
 
 const styles = StyleSheet.create({
   screen: {
-    padding: 20,
-    backgroundColor: colors.primary,
-    
+    backgroundColor: colors.primary,   
   },
   errortext: {
     color: colors.white,

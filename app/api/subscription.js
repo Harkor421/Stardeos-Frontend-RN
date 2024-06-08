@@ -15,10 +15,11 @@ const findAllSubscriptions = () => {
   return client.get(`/subscriptions/?v=${new Date().getTime()}`);
 };
 
-const unfollow = async (channelId) => {
+const unfollow = async (channelid) => {
   try {
-    const response = await client.delete(`/subscriptions/${channelId}` );
-    console.log(response);
+    console.log(channelid);
+    const response = await client.delete(`/subscriptions/${channelid}` );
+    console.log(response.data);
     return response;
   } catch (error) {
     console.error("Error in unfollow:", error);

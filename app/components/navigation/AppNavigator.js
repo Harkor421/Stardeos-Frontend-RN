@@ -42,7 +42,7 @@ const AppNavigator = () => {
             <MaterialCommunityIcons
               name="home"
               color={colors.white}
-              size={focused ? size * 1.2 : size}
+              size={focused ? size * 1.1 : size * 0.9} // Adjust the size based on focus
               style={{ fontWeight: focused ? 'bold' : 'normal' }}
             />
           ),
@@ -62,8 +62,8 @@ const AppNavigator = () => {
             <Image
               source={require("../../assets/plus-circle.png")}
               style={{
-                width: focused ? 36 : 30,
-                height: focused ? 36 : 30,
+                width: focused ? 30 : 24, // Adjust the width based on focus
+                height: focused ? 30 : 24, // Adjust the height based on focus
               }}
             />
           ),
@@ -85,7 +85,7 @@ const AppNavigator = () => {
             <MaterialCommunityIcons
               name="clock"
               color={colors.white}
-              size={focused ? size * 1.2 : size}
+              size={focused ? size * 1.1 : size * 0.9} // Adjust the size based on focus
               style={{ fontWeight: focused ? 'bold' : 'normal' }}
             />
           ),

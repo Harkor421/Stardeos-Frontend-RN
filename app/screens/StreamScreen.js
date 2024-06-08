@@ -12,6 +12,7 @@ function StreamScreen({ route, navigation }) {
   const video = route.params;
   const [videoLoad, setVideoLoad] = useState(true);
   const [streamEnded, setStreamEnded] = useState(false);
+  const [orientationIsLandscape, setOrientationIsLandscape] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
@@ -39,8 +40,22 @@ function StreamScreen({ route, navigation }) {
     return () => clearInterval(interval);
   }, []);
 
+
+  const handleFullscreenUpdate = async ({ fullscreenUpdate }) => {
+    console.log('Fullscreen update event:', fullscreenUpdate); // Debug log
+
+    if (fullscreenUpdate === 1) {
+      await ScreenOrientation.unlockAsync();
+      console.log("unlocked screen")
+    } else if (fullscreenUpdate === 2) {
+      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT_UP);
+    }
+  };
+
+
   const windowWidth = Dimensions.get('window').width;
   const aspectRatio = 16 / 9;
+  const videoWidth = orientationIsLandscape ? videoHeight * aspectRatio : windowWidth;
   const videoHeight = windowWidth / aspectRatio;
 
   return (
@@ -57,7 +72,7 @@ function StreamScreen({ route, navigation }) {
             volume={1.0}
             isMuted={false}
             resizeMode={ResizeMode.COVER}
-            style={{ width: windowWidth, height: videoHeight }}
+            style={{ width: videoWidth, height: videoHeight }}
             useNativeControls
             shouldPlay
             shouldRasterizeIOS
@@ -67,6 +82,7 @@ function StreamScreen({ route, navigation }) {
                 setStreamEnded(true);
               }
             }}
+            onFullscreenUpdate={handleFullscreenUpdate}
           />
         <ActivityIndicator visible={videoLoad} />
         </View>

@@ -17,6 +17,8 @@ const Header = ({ navigation }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [hasNotifications, setHasNotifications] = useState(false);
+  const [headerHeight, setHeaderHeight] = useState(0);
+
 
   const handleSearchIconPress = () => {
     setIsSearchOpen(!isSearchOpen);
@@ -42,7 +44,7 @@ const Header = ({ navigation }) => {
   }, [notifications]);
 
   return (
-    <SafeAreaView style={styles.headerContainer}>
+    <SafeAreaView style={styles.headerContainer} onLayout={(event) => setHeaderHeight(event.nativeEvent.layout.height)}>
       {/* Stardeos */}
       <TouchableOpacity style={styles.stardeos} onPress= {() => navigation.navigate(routes.VIDEO_LIST)}>
         <Image source={require('../../assets/stardeos-logo.png')} style={styles.stardeoslogo} />
@@ -73,8 +75,8 @@ const Header = ({ navigation }) => {
 
       {/* Search Input */}
       {isSearchOpen && (
-        <View style={styles.searchInputContainer}>
-          <AppTextInput
+        <View style={[styles.searchInputContainer, { top: headerHeight}]}>
+        <AppTextInput
             style={styles.searchInput}
             placeholder="Search..."
             placeholderTextColor={colors.grayline}
