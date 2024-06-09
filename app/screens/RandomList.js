@@ -63,16 +63,12 @@ function RandomList({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-  },
+
   errortext: {
     color: colors.white,
     textAlign: 'center',
   },
-  adCard: {
-    marginVertical: 20,
-    alignItems: 'center',
-  },
+
 });
 
 export default RandomList;

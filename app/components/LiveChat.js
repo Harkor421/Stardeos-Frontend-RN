@@ -177,7 +177,7 @@ export const LiveChat = ({ stream, expand }) => {
                   <Text style={styles.commentText}>{item.message}</Text>
                 </View>
                 <View style={styles.amountContainer}>
-                  <Image source={require("../assets/verified-icon.png")} style={{ marginRight: 15 }} />
+                  <Image source={require("../assets/verified-icon.png")} style={{ marginRight: 15, width: 20, height:20, }} />
                   <Text style={styles.amount}>{item.amount}</Text>
                 </View>
               </View>
@@ -211,7 +211,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.headerblue,
-    borderRadius: 10,
   },
   header: {
     flexDirection: 'row',

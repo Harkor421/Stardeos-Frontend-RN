@@ -88,10 +88,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  adCard: {
-    marginVertical: 20,
-    alignItems: 'center',
-  },
+
 });
 
 export default SearchedVideoList;

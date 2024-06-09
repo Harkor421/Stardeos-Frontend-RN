@@ -76,9 +76,9 @@ function AccountScreen({ navigation }) {
                     </TouchableOpacity>
                     */}
                     <TouchableOpacity style={styles.section} onPress={() => setModalVisible(true)}>
-                <MaterialCommunityIcons name="delete" size={24} color="white" style={styles.icon} />
-                <AppText style={styles.sectionText}>Elimina tu cuenta</AppText>
-            </TouchableOpacity>
+                        <MaterialCommunityIcons name="delete" size={24} color="white" style={styles.icon} />
+                        <AppText style={styles.sectionText}>Elimina tu cuenta</AppText>
+                    </TouchableOpacity>
 
             <Modal
                 animationType="slide"
@@ -196,21 +196,11 @@ const styles = StyleSheet.create({
         color: colors.white,
         fontSize: 16,
     },
-    adCard: {
-        marginBottom: 20,
-    },
     logoutButton: {
         marginTop: 20,
         width: 350,
     },
-    section: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 10,
-        backgroundColor: 'red',
-        borderRadius: 5,
-        margin: 10,
-    },
+  
     icon: {
         marginRight: 10,
     },

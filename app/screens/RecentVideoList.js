@@ -78,10 +78,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
   },
-  adCard: {
-    marginVertical: 20,
-    alignItems: 'center',
-  },
 
 });
 

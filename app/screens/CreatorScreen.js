@@ -11,8 +11,14 @@ import routes from '../components/navigation/routes';
 
 function CreatorScreen({ navigation, route }) {
     const creator = route.params;
-    const formattedFollowers = useFormatViews(creator.channelId.subscriberCount);
-    const formattedSubs = useFormatViews(creator.channelId.user.subscriptionCount);
+
+    // Function to handle null or invalid formatted views
+    const handleFormattedViews = (views) => {
+        return isNaN(views) || views === null || views === '' ? 0 : views;
+    };
+
+    const formattedFollowers = handleFormattedViews(useFormatViews(creator.channelId.subscriberCount));
+    const formattedSubs = handleFormattedViews(useFormatViews(creator.channelId.user.subscriptionCount));
     const { data: stream, error, loading, request: loadStream } = useApi(() => streamsApi.getStreams(creator.channelId.user.username));
     const [modalVisible, setModalVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
@@ -61,7 +67,6 @@ function CreatorScreen({ navigation, route }) {
                         <Image style={styles.verifiedIcon} source={require('../assets/verified-icon.png')} />
                         <AppText style={styles.creatorName}>{creator.channelId.displayName}</AppText>
                     </View>
-                    {/* Remove the "Bloquear Usuario" button from here */}
                     {stream && !loading && stream.running && (
                         <TouchableOpacity style={styles.livePanel} onPress={handleLivePress}>
                             <AppText style={styles.liveText}>{creator.channelId.user.username} está en vivo</AppText>
@@ -108,29 +113,28 @@ function CreatorScreen({ navigation, route }) {
             </Modal>
 
             <Modal
-            animationType="fade"
-            transparent={true}
-            visible={menuVisible && !modalVisible} // Ensure that the menu is visible only if the blocking modal is not active
-            onRequestClose={() => setMenuVisible(false)}
+                animationType="fade"
+                transparent={true}
+                visible={menuVisible && !modalVisible} // Ensure that the menu is visible only if the blocking modal is not active
+                onRequestClose={() => setMenuVisible(false)}
             >
-            <TouchableOpacity style={styles.menuOverlay} onPress={() => setMenuVisible(false)}>
-                <View style={styles.menuContainer}>
-                    {isBlocked ? (
-                        <TouchableOpacity style={styles.menuItem} onPress={handleUnblockUser}>
-                            <Text style={styles.menuItemText}>Desbloquear Usuario</Text>
-                        </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity style={styles.menuItem} onPress={() => setModalVisible(true)}>
-                            <Text style={styles.menuItemText}>Bloquear Usuario</Text>
-                        </TouchableOpacity>
-                    )}
-                </View>
-            </TouchableOpacity>
-        </Modal>
+                <TouchableOpacity style={styles.menuOverlay} onPress={() => setMenuVisible(false)}>
+                    <View style={styles.menuContainer}>
+                        {isBlocked ? (
+                            <TouchableOpacity style={styles.menuItem} onPress={handleUnblockUser}>
+                                <Text style={styles.menuItemText}>Desbloquear Usuario</Text>
+                            </TouchableOpacity>
+                        ) : (
+                            <TouchableOpacity style={styles.menuItem} onPress={() => setModalVisible(true)}>
+                                <Text style={styles.menuItemText}>Bloquear Usuario</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </TouchableOpacity>
+            </Modal>
         </Screen>
     );
 }
-
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',

@@ -20,9 +20,12 @@ function VideoList({ navigation, route}) {
   const [refresh, setRefresh] = useState(false); // State variable to force refresh
   const flatListRef = useRef(null);
 
-  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getVideosWithStreams(page));
+  const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getVideosWithStreams(randomPage()));
 
-  
+  const randomPage = () => {
+    return Math.floor(Math.random() * 10) + 1; // Assuming there are 100 pages of videos
+  };
+
   const scrollToTop = () => {
     flatListRef.current.scrollToOffset({ animated: true, offset: 0 });
   };
@@ -90,10 +93,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
   },
-  adCard: {
-    marginVertical: 20,
-    alignItems: 'center',
-  },
+
 });
 
 export default VideoList;

@@ -90,7 +90,7 @@ function StreamScreen({ route, navigation }) {
           <AppText style={styles.title}>{video.title}</AppText>
           <AppText style={styles.streamAnnouncement}>{video.description}</AppText>
         </View>
-        <BannerAdComponent style={styles.adCard} />
+        <BannerAdComponent />
         {streamEnded && (
           <AppText style={{ color: colors.white, textAlign: 'center', fontSize: 18}}>
             Este directo ha terminado.
@@ -125,9 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 700,
   },
-  adCard: {
-    marginBottom: 10,
-},  
+
 });
 
 export default StreamScreen;

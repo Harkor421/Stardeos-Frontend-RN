@@ -5,7 +5,7 @@
       "expo-secure-store"
     ],
     "slug": "Stardeos",
-    "version": "1.0.16",
+    "version": "1.0.28",
     "orientation": "portrait",
     "icon": "./app/assets/adaptive-icon.png",
     "userInterfaceStyle": "light",
@@ -19,15 +19,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.appsstardeos.stardeos",
-      "buildNumber": "1.0.1"
+      "bundleIdentifier": "com.appsstardeos.stardeos"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/adaptive-icon.png",
         "backgroundColor": "#0e1121"
       },
-      "package": "com.appsstardeos.stardeos"
+      "package": "com.appsstardeos.stardeos",
+      "versionCode": 8
     },
     "web": {
       "favicon": "./assets/favicon.png"
