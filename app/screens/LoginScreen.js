@@ -2,15 +2,17 @@ import React, { useContext, useState } from 'react';
 import { StyleSheet, Image, View, TouchableOpacity } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Yup from 'yup';
-
+import { Platform } from 'react-native';
 import Screen from '../components/Screen';
 import colors from '../config/colors';
 import AppText from '../components/AppText';
+import { Linking } from 'react-native';
 import { AppForm, ErrorMessage, AppFormField, SubmitButton } from '../components/forms';
 import authApi from '../api/auth';
 import AuthContext from '../auth/context';
 import authStorage from '../auth/storage';
 import CheckBox from '@react-native-community/checkbox';
+import { ScrollView } from 'react-native-gesture-handler';
 
 const validationSchema = Yup.object().shape({
   username: Yup.string().required().label('Username'),
@@ -43,12 +45,17 @@ function LoginScreen(props) {
   };
 
   const openWebBrowser = async (url) => {
-    let result = await WebBrowser.openBrowserAsync(url);
-    console.log(result);
+    if (Platform.OS === 'ios') {
+      await WebBrowser.openBrowserAsync(url);
+    } else if (Platform.OS === 'android') {
+      await Linking.openURL(url);
+    }
   };
-
+  
   return (
+    
     <Screen style={styles.container}>
+    <ScrollView>
       <Image
         style={styles.logo}
         source={require('../assets/stardeos-logo.png')}
@@ -110,6 +117,7 @@ function LoginScreen(props) {
           <AppText style={styles.crearcuentaurl}>¡Créala aquí mismo!</AppText>
         </TouchableOpacity>
       </AppForm>
+      </ScrollView>
     </Screen>
   );
 }
