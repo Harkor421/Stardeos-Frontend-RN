@@ -1,14 +1,12 @@
-import React, { useContext, useState } from 'react';
-import { TouchableOpacity, View, StyleSheet, Image, TextInput } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { TouchableOpacity, View, StyleSheet, Image } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { useEffect } from 'react';
-import colors from '../../config/colors';
-import AppText from '../AppText';
-import AuthContext from '../../auth/context';
-import AppTextInput from '../AppTextInput';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AuthContext from '../../auth/context';
+import AppText from '../AppText';
+import AppTextInput from '../AppTextInput';
+import colors from '../../config/colors';
 import routes from './routes';
-import FeedNavigator from './FeedNavigator';
 import notificationsApi from '../../api/notifications';
 import useApi from '../../hooks/useApi';
 
@@ -19,37 +17,50 @@ const Header = ({ navigation }) => {
   const [hasNotifications, setHasNotifications] = useState(false);
   const [headerHeight, setHeaderHeight] = useState(0);
 
-
-  const handleSearchIconPress = () => {
-    setIsSearchOpen(!isSearchOpen);
-  };
-
-  const handleSearchSubmit = () => {
-  setIsSearchOpen(false);
-  navigation.navigate('SearchedVideos', { search: searchText });
-};
-
   const { data: notifications, error, loading, request: loadNotifications } = useApi(() => notificationsApi.getNotifications());
 
   useEffect(() => {
-      loadNotifications();
-      updateUser();
-      console.log(notifications);
+    loadNotifications();
+    updateUser();
   }, []);
-  
+
   useEffect(() => {
     if (notifications && notifications.notifications) {
       setHasNotifications(notifications.notifications.length > 0);
     }
   }, [notifications]);
 
+  // Function to update user data
+  const updateUserAndNotifications = () => {
+    updateUser();
+    loadNotifications();
+  };
+
+  useEffect(() => {
+    // Set interval to update user data and notifications every 2 minutes (120000 milliseconds)
+    const interval = setInterval(updateUserAndNotifications, 240000);
+
+    // Clear interval on component unmount
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleSearchIconPress = () => {
+    setIsSearchOpen(!isSearchOpen);
+  };
+
+  const handleSearchSubmit = () => {
+    setIsSearchOpen(false);
+    navigation.navigate('SearchedVideos', { search: searchText });
+  };
+
   return (
     <SafeAreaView style={styles.headerContainer} onLayout={(event) => setHeaderHeight(event.nativeEvent.layout.height)}>
       {/* Stardeos */}
-      <TouchableOpacity style={styles.stardeos} onPress= {() => navigation.navigate(routes.VIDEO_LIST)}>
+      <TouchableOpacity style={styles.stardeos} onPress={() => navigation.navigate(routes.VIDEO_LIST)}>
         <Image source={require('../../assets/stardeos-logo.png')} style={styles.stardeoslogo} />
         <Image source={require('../../assets/stardeos-letters.png')} style={styles.stardeosletters} />
       </TouchableOpacity>
+      
       {/* Spacing */}
       <View style={styles.spacing} />
 
@@ -75,8 +86,8 @@ const Header = ({ navigation }) => {
 
       {/* Search Input */}
       {isSearchOpen && (
-        <View style={[styles.searchInputContainer, { top: headerHeight}]}>
-        <AppTextInput
+        <View style={[styles.searchInputContainer, { top: headerHeight }]}>
+          <AppTextInput
             style={styles.searchInput}
             placeholder="Search..."
             placeholderTextColor={colors.grayline}
@@ -90,11 +101,6 @@ const Header = ({ navigation }) => {
 
       {/* Spacing */}
       <View style={styles.spacing} />
-
-      {/* Avatar */}
-      <TouchableOpacity onPress={() => navigation.navigate('Account')}>
-        <Image style={styles.avatar} source={user.data.user.avatar ? { uri: user.data.user.avatar } : require('../../assets/default-avatar-icon.jpeg')}/>
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -129,7 +135,7 @@ const styles = StyleSheet.create({
     borderRadius: 11,
     alignItems: 'center',
     marginLeft: 'auto',
-    marginRight: 11,
+    marginRight: 12,
   },
   stardusticon: {
     width: 22,
@@ -150,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 22,
   },
   spacing: {
-    width: 11,
+    width: 10,
   },
   searchInputContainer: {
     position: 'absolute',
@@ -176,7 +182,6 @@ const styles = StyleSheet.create({
     height: 10,
     borderRadius: 5,
   },
-  
 });
 
 export default Header;
