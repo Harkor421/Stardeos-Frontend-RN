@@ -15,12 +15,12 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
             <View style={styles.card}>
                 <TouchableOpacity style={styles.imageContainer} onPress={onPress}>
                     {item.isLiveStream ? (
-                        <Image style={styles.image} source={require('../assets/Directo.png')} />
+                        <Image style={styles.image} source={require('../assets/Directo.png')} resizeMode="contain" />
                     ) : (
-                        <Image style={styles.image} source={{ uri: thumbnail }} />
+                        <Image style={styles.image} source={{ uri: thumbnail }} resizeMode="cover" />
                     )}
                     <View style={styles.bannerContainer}>
-                        <AppText style={styles.bannerText}>Subscríbete para ver</AppText>
+                        <AppText style={styles.bannerText}>Suscríbete para ver</AppText>
                     </View>
                     <View style={styles.durationContainer}>
                         <AppText style={styles.durationText}>{formattedDuration}</AppText>
@@ -35,7 +35,7 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                         navigate={() => navigation.navigate(routes.CREATOR_DETAILS, item)}
                     />
                 </View>
-                <AppText style={styles.views}>{views}</AppText>
+                <AppText style={styles.views}>{views + " Vistas"}</AppText>
             </View>
         );
     } else {
@@ -44,9 +44,9 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
                 <View style={styles.card}>
                     <TouchableOpacity style={styles.imageContainer} onPress={onPress}>
                         {item.isLiveStream ? (
-                            <Image style={styles.image} source={require('../assets/Directo.png')} />
+                            <Image style={styles.image} source={require('../assets/Directo.png')} resizeMode="contain" />
                         ) : (
-                            <Image style={styles.image} source={{ uri: thumbnail }} />
+                            <Image style={styles.image} source={{ uri: thumbnail }} resizeMode="cover" />
                         )}
                         <View style={styles.durationContainer}>
                             <AppText style={styles.durationText}>{formattedDuration}</AppText>
@@ -77,7 +77,6 @@ function Card({ title, subTitle, views, thumbnail, avatar, onPress, duration, su
 
 const styles = StyleSheet.create({
     card: {
-        borderRadius: 10,
         backgroundColor: colors.primary,
         marginBottom: 20,
         overflow: 'hidden',
