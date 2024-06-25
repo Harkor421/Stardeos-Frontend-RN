@@ -11,28 +11,32 @@ import routes from '../components/navigation/routes';
 import VideoItem from '../components/VideoItem'; // Import the VideoItem component
 import BannerAdComponent from '../components/BannerAd';
 
-function RecentVideoList({ navigation, route}) {
+function RecentVideoList({ navigation, route }) {
   const [page, setPage] = useState(1);
   const [allVideos, setAllVideos] = useState([]);
   const [refresh, setRefresh] = useState(false); // State variable to force refresh
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getLatestVideos(page));
 
-
-  const renderItem = useCallback(({ item, index }) => {
-    if ((index + 1) % 5 === 0) {
-      // Render ad card every 5th item
+  const renderItem = useCallback(({ item }) => {
+    if (item.isAd) {
+      // Render ad component
       return <BannerAdComponent style={styles.adCard} />;
     } else {
       // Render video item
       return <VideoItem item={item} navigation={navigation} replace={0} />;
     }
   }, [navigation]);
-  
-
 
   useEffect(() => {
     if (videos && videos.videos) {
-      setAllVideos((prevVideos) => [...prevVideos, ...videos.videos]);
+      const videosWithAds = [...allVideos];
+      videos.videos.forEach((video, index) => {
+        videosWithAds.push(video);
+        if ((videosWithAds.length + 1) % 5 === 0) {
+          videosWithAds.push({ isAd: true, id: `ad-${index}-${Date.now()}` });
+        }
+      });
+      setAllVideos(videosWithAds);
     }
   }, [videos]);
 
@@ -57,7 +61,7 @@ function RecentVideoList({ navigation, route}) {
       )}
       <ActivityIndicator visible={loading} />
       <FlatList
-        style = {{marginHorizontal: 10,}}
+        style={{ marginHorizontal: 10 }}
         data={allVideos}
         keyExtractor={(item, index) => item.id.toString() + index} // Ensure unique keys
         renderItem={renderItem}
@@ -78,7 +82,9 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: 'center',
   },
-
+  adCard: {
+    // Add styles for the ad card if necessary
+  },
 });
 
 export default RecentVideoList;
