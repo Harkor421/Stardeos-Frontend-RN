@@ -1,13 +1,25 @@
 import React from 'react';
-import { View, StyleSheet, Image, Text } from 'react-native';
+import { View, StyleSheet, Image, Text, TouchableOpacity } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons'; // Import the icon component
 import AppText from './AppText';
 import colors from '../config/colors';
 import useTimeAgo from '../hooks/useTimeAgo';
 import TextGradient from './TextGradient'; // Import the TextGradient component
+import ReportModal from './ReportModal';
+import { useState } from 'react';
 
 function CommentItem({ title, subTitle, avatar, date, stardustamount }) {
+  const [modalVisible, setModalVisible] = useState(false);
   const elapsedTime = useTimeAgo(date);
-
+  
+  const handleModalOpen = () => {
+    setModalVisible(true);
+  };
+  
+  const handleModalClose = () => {
+    setModalVisible(false);
+  };
+  
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={avatar} />
@@ -34,6 +46,10 @@ function CommentItem({ title, subTitle, avatar, date, stardustamount }) {
         </View>
         <AppText style={styles.subTitle}>{subTitle}</AppText>
       </View>
+      <TouchableOpacity onPress={handleModalOpen} style={styles.iconContainer}>
+        <MaterialCommunityIcons name="dots-vertical" size={18} color={colors.white} />
+      </TouchableOpacity>
+      <ReportModal modalVisible={modalVisible} onRequestClose={handleModalClose} />
     </View>
   );
 }
@@ -104,6 +120,11 @@ const styles = StyleSheet.create({
     width: 18,
     height: 18,
     marginRight: 5,
+  },
+  iconContainer: {
+    position: 'absolute',
+    right: 10,
+    top: 10,
   },
 });
 
