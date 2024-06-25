@@ -23,7 +23,7 @@ function VideoList({ navigation, route}) {
   const { data: videos, error, loading, request: loadVideos } = useApi(() => videosApi.getVideosWithStreams(randomPage()));
 
   const randomPage = () => {
-    return Math.floor(Math.random() * 10) + 1; // Assuming there are 100 pages of videos
+    return Math.floor(Math.random() * 40) + 1; // Assuming there are 100 pages of videos
   };
 
   const scrollToTop = () => {
