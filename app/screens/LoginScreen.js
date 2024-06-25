@@ -75,7 +75,7 @@ function LoginScreen(props) {
           autoCorrect={false}
           keyboardType="default"
           icon="user"
-          placeholder="Usuario"
+          placeholder="Usuario o correo electrónico"
           placeholderTextColor={colors.lightgray}
         />
         <AppFormField
