@@ -12,13 +12,13 @@ import routes from '../components/navigation/routes';
 function CreatorScreen({ navigation, route }) {
     const creator = route.params;
 
-    // Function to handle null or invalid formatted views
-    const handleFormattedViews = (views) => {
-        return isNaN(views) || views === null || views === '' ? 0 : views;
+    // Function to format views or set to 0 if null
+    const formatViewsOrDefault = (views) => {
+        return useFormatViews(views ?? 0);
     };
 
-    const formattedFollowers = handleFormattedViews(useFormatViews(creator.channelId.subscriberCount));
-    const formattedSubs = handleFormattedViews(useFormatViews(creator.channelId.user.subscriptionCount));
+    const formattedFollowers = formatViewsOrDefault(creator.channelId.subscriberCount);
+    const formattedSubs = formatViewsOrDefault(creator.channelId.user.subscriptionCount);
     const { data: stream, error, loading, request: loadStream } = useApi(() => streamsApi.getStreams(creator.channelId.user.username));
     const [modalVisible, setModalVisible] = useState(false);
     const [menuVisible, setMenuVisible] = useState(false);
@@ -135,6 +135,7 @@ function CreatorScreen({ navigation, route }) {
         </Screen>
     );
 }
+
 const styles = StyleSheet.create({
     header: {
         flexDirection: 'row',
