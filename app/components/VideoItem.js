@@ -46,10 +46,10 @@ function VideoItem({ item, index, navigation, replace }) {
       duration={item.duration}
       subsOnly={item.subscribersOnly}
       creator={item.creator}
-      item = {item}
+      item={item}
       navigation={navigation}
     />
   );
 }
 
-export default VideoItem;
+export default React.memo(VideoItem);
