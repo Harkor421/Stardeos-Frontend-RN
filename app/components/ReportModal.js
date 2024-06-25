@@ -4,7 +4,7 @@ import colors from '../config/colors';
 import AppButton from './AppButton';
 import CheckBox from '@react-native-community/checkbox';
 
-const ReportModal = ({ modalVisible, onRequestClose, handleReport, video }) => {
+const ReportModal = ({ modalVisible, onRequestClose, handleReport }) => {
     const [reportOptions, setReportOptions] = useState({
       inappropriateContent: false,
       spam: false,
@@ -19,7 +19,7 @@ const ReportModal = ({ modalVisible, onRequestClose, handleReport, video }) => {
     const handleReportAction = () => {
         // Create an object with the report options to send in the request body
         const requestBody = {
-          video: video.id,
+          video: "13123124",
           reportOptions: reportOptions
         };
       
@@ -36,7 +36,6 @@ const ReportModal = ({ modalVisible, onRequestClose, handleReport, video }) => {
           body: JSON.stringify(requestBody) // Convert the object to JSON string
         })
         .then(response => {
-    
           console.log('Report submitted successfully');
           onRequestClose();
         })
