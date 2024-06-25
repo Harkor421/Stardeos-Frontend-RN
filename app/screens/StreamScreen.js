@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
   },
   detailsContainer: {
     padding: 10,
-    marginTop: 15,
+    marginTop: 8,
   },
   title: {
     color: colors.white,
