@@ -1,10 +1,26 @@
-# Stardeos
+<p align="center">
+  <img src="app/assets/stardeos-logo.png" alt="Stardeos" width="120" />
+</p>
+
+<h1 align="center">Stardeos</h1>
+
+<p align="center">
+  A video streaming platform built for <strong>Dalas Review</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/React_Native-0.74-61DAFB?logo=react&logoColor=white" alt="React Native" />
+  <img src="https://img.shields.io/badge/Expo_SDK-51-000020?logo=expo&logoColor=white" alt="Expo" />
+  <img src="https://img.shields.io/badge/Platform-iOS%20%7C%20Android-lightgrey?logo=apple&logoColor=white" alt="Platform" />
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License" />
+  <img src="https://img.shields.io/badge/Version-1.0.28-ff5093" alt="Version" />
+</p>
+
+---
 
 A cross-platform mobile streaming application built for **Dalas Review** — one of the largest Spanish-speaking YouTubers. Stardeos is a fully independent video platform where creators upload content, interact with their audience through live streams, and build communities outside of traditional social media.
 
 This repository contains the **React Native mobile client** powering the iOS and Android apps.
-
----
 
 ## Overview
 
@@ -66,7 +82,7 @@ app/
 ### Installation
 
 ```bash
-git clone https://github.com/your-username/Stardeos-Frontend-RN.git
+git clone https://github.com/Harkor421/Stardeos-Frontend-RN.git
 cd Stardeos-Frontend-RN
 npm install
 ```

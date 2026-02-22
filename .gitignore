@@ -131,6 +131,9 @@ dist
 .vscode/
 *.iml
 
+# Claude Code
+.claude/
+
 # Misc
 .expo-shared/
 path
